@@ -4,6 +4,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
   type ReactNode,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -95,8 +96,13 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     linkingNodeId: null,
   });
 
-  // Initialize on mount
+  // Prevent StrictMode double-initialization (ref persists across mount/unmount/remount)
+  const initRef = useRef(false);
+
   useEffect(() => {
+    if (initRef.current) return;
+    initRef.current = true;
+
     (async () => {
       const activeId = await ensureDefaultRepertoire();
       const { repertoire, nodesMap } = await loadRepertoire(activeId);
@@ -117,6 +123,9 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const addChildNode = useCallback(async (parentId: string, move: string, fen: string) => {
+    // Generate UUID before setState so StrictMode double-invocations use the same ID
+    const newNodeId = uuidv4();
+
     setState((prev) => {
       const parent = prev.nodesMap.get(parentId);
       if (!parent || !prev.repertoire) return prev;
@@ -129,7 +138,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         return { ...prev, selectedNodeId: existingChild.id };
       }
 
-      const newNodeId = uuidv4();
       const newNode: RepertoireNode = {
         id: newNodeId,
         repertoireId: prev.repertoire.id,
@@ -152,9 +160,9 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       newMap.set(newNodeId, newNode);
       newMap.set(parentId, updatedParent);
 
-      // Persist async (fire and forget with error logging)
+      // Use put() for idempotent writes (safe under StrictMode double-invocation)
       db.transaction('rw', db.nodes, db.repertoires, async () => {
-        await db.nodes.add(newNode);
+        await db.nodes.put(newNode);
         await db.nodes.update(parentId, { childIds: updatedParent.childIds });
         await db.repertoires.update(prev.repertoire!.id, { updatedAt: Date.now() });
       }).catch(console.error);
@@ -183,28 +191,34 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         };
         newMap.set(node.parentId, updatedParent);
 
-        // Persist
+        // Clear transposesTo references pointing to deleted nodes
+        const deletedSet = new Set(idsToDelete);
+        for (const [id, n] of newMap) {
+          if (n.transposesTo && deletedSet.has(n.transposesTo)) {
+            newMap.set(id, { ...n, transposesTo: null });
+          }
+        }
+
+        // All these operations are idempotent (safe under StrictMode double-invocation)
         db.transaction('rw', db.nodes, db.repertoires, async () => {
           await db.nodes.bulkDelete(idsToDelete);
           await db.nodes.update(node.parentId!, { childIds: updatedParent.childIds });
           await db.repertoires.update(prev.repertoire!.id, { updatedAt: Date.now() });
+          for (const [id, n] of newMap) {
+            if (n.transposesTo === null && prev.nodesMap.get(id)?.transposesTo && deletedSet.has(prev.nodesMap.get(id)!.transposesTo!)) {
+              await db.nodes.update(id, { transposesTo: null });
+            }
+          }
         }).catch(console.error);
+
+        const newSelected = prev.selectedNodeId && deletedSet.has(prev.selectedNodeId)
+          ? node.parentId
+          : prev.selectedNodeId;
+
+        return { ...prev, nodesMap: newMap, selectedNodeId: newSelected, contextMenu: null };
       }
 
-      // Clear transposesTo references pointing to deleted nodes
-      const deletedSet = new Set(idsToDelete);
-      for (const [id, n] of newMap) {
-        if (n.transposesTo && deletedSet.has(n.transposesTo)) {
-          newMap.set(id, { ...n, transposesTo: null });
-          db.nodes.update(id, { transposesTo: null }).catch(console.error);
-        }
-      }
-
-      const newSelected = prev.selectedNodeId && deletedSet.has(prev.selectedNodeId)
-        ? node.parentId
-        : prev.selectedNodeId;
-
-      return { ...prev, nodesMap: newMap, selectedNodeId: newSelected, contextMenu: null };
+      return prev;
     });
   }, []);
 
@@ -217,6 +231,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       const newMap = new Map(prev.nodesMap);
       newMap.set(nodeId, updatedNode);
 
+      // Idempotent DB writes (safe under StrictMode double-invocation)
       db.nodes.update(nodeId, updates).catch(console.error);
       if (prev.repertoire) {
         db.repertoires.update(prev.repertoire.id, { updatedAt: Date.now() }).catch(console.error);

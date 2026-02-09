@@ -1,4 +1,5 @@
 import dagre from 'dagre';
+import { MarkerType } from '@xyflow/react';
 import type { RepertoireNode, MoveFlowNode, MoveFlowEdge, MoveNodeData } from '../types/index.ts';
 
 const NODE_WIDTH = 120;
@@ -35,6 +36,7 @@ export function computeLayout(
         target: id,
         type: 'smoothstep',
         style: { stroke: '#71717a' },
+        markerEnd: { type: MarkerType.ArrowClosed, color: '#71717a' },
         data: { isTransposition: false },
       });
       g.setEdge(node.parentId, id);
@@ -48,6 +50,7 @@ export function computeLayout(
         target: node.transposesTo,
         animated: true,
         style: { stroke: '#f59e0b', strokeDasharray: '5 5' },
+        markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b' },
         data: { isTransposition: true },
       });
     }

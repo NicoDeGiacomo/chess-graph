@@ -40,3 +40,17 @@ The app combines a chess board view (react-chessboard) with a graph view (@xyflo
 ## Git Rules
 
 - **Never add `Co-Authored-By` lines to commit messages.** Do not include any co-author trailers.
+
+## Agent Workflow
+
+After every code change, always:
+
+1. Run `npm run build` — fix any TypeScript errors before proceeding
+2. Run `npm run lint` — fix any lint errors
+3. Run `npm test` — ensure all unit tests pass
+4. Run `npm run test:e2e` — ensure all E2E tests pass
+5. Write new tests for any new or changed functionality
+
+## TODO
+
+- All graphs page view (browse all repertoires as a grid/list)

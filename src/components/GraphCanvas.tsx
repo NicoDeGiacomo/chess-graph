@@ -75,7 +75,6 @@ export function GraphCanvas() {
         onNodeContextMenu={onNodeContextMenu}
         onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
-        nodesDraggable={false}
         nodesConnectable={false}
         colorMode="dark"
         fitView
