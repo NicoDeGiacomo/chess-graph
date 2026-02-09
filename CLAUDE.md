@@ -12,8 +12,9 @@ Chess Graph is a chess game tree visualization app. Players can explore chess va
 - **Build**: `npm run build` (runs `tsc -b` then `vite build`)
 - **Lint**: `npm run lint`
 - **Preview production build**: `npm run preview`
-
-No test framework is configured yet.
+- **Test**: `npm test` (runs Vitest)
+- **Test watch**: `npm run test:watch`
+- **E2E test**: `npm run test:e2e` (runs Playwright)
 
 ## Architecture
 
