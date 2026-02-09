@@ -36,3 +36,7 @@ The app combines a chess board view (react-chessboard) with a graph view (@xyflo
 - **ESM throughout** — `"type": "module"` in package.json
 - **Strict TypeScript** — `noUnusedLocals`, `noUnusedParameters`, `noFallthroughCasesInSwitch` all enabled
 - **ESLint 9** flat config with typescript-eslint and react-hooks plugins
+
+## Git Rules
+
+- **Never add `Co-Authored-By` lines to commit messages.** Do not include any co-author trailers.
