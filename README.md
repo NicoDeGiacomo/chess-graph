@@ -1,73 +1,86 @@
-# React + TypeScript + Vite
+# Chess Graph
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A chess opening repertoire builder that visualizes game trees as interactive node-based graphs. Explore variations, annotate positions, and build your repertoire visually.
 
-Currently, two official plugins are available:
+![Chess Graph — initial view](chess-graph-initial.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Interactive graph view** — positions are nodes, moves are edges; drag, zoom, and navigate freely
+- **Chessboard sync** — clicking a node updates the board; making a move on the board creates a new node
+- **Multiple repertoires** — create, rename, export, and import opening repertoires
+- **Node annotations** — add comments, tags, and colors to any position
+- **Transposition linking** — connect nodes that reach the same position via different move orders
+- **Context menu actions** — right-click nodes to edit, delete, change color, tag, or link transpositions
+- **PGN import/export** — share repertoires as PGN files
+- **Local persistence** — all data stored client-side in IndexedDB (no account required)
+- **Minimap** — overview of the full graph in the corner
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+![Chess Graph — after 1. e4](chess-graph-after-e4.png)
 
-## Expanding the ESLint configuration
+![Chess Graph — context menu](chess-graph-context-menu.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) + [Vite 7](https://vite.dev/)
+- [@xyflow/react](https://reactflow.dev/) — graph visualization
+- [react-chessboard](https://github.com/Clariity/react-chessboard) — interactive chess board
+- [chess.js](https://github.com/jhlywa/chess.js) — move validation and game state
+- [dagre](https://github.com/dagrejs/dagre) — automatic graph layout
+- [dexie](https://dexie.org/) — IndexedDB wrapper for local persistence
+- [Tailwind CSS v4](https://tailwindcss.com/)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Clone the repository
+git clone https://github.com/NicoDeGiacomo/chess-graph.git
+cd chess-graph
+
+# Install dependencies
+npm install
+
+# Start the dev server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Type-check and build for production |
+| `npm run lint` | Run ESLint |
+| `npm run preview` | Preview production build |
+| `npm test` | Run unit tests (Vitest) |
+| `npm run test:watch` | Run unit tests in watch mode |
+| `npm run test:e2e` | Run end-to-end tests (Playwright) |
+
+## Project Structure
+
 ```
+src/
+├── components/       # React components
+│   ├── ChessboardPanel.tsx   # Chess board with move handling
+│   ├── GraphCanvas.tsx       # Main graph view (React Flow)
+│   ├── MoveNode.tsx          # Custom node component for moves
+│   ├── NodeDetails.tsx       # Side panel showing position details
+│   ├── ContextMenu.tsx       # Right-click menu on nodes
+│   ├── Sidebar.tsx           # Left sidebar
+│   ├── TopBar.tsx            # Top navigation bar
+│   ├── EditNodeDialog.tsx    # Dialog for editing node properties
+│   └── LinkTranspositionDialog.tsx  # Dialog for linking transpositions
+├── hooks/
+│   ├── useRepertoire.tsx     # Core state management for repertoire data
+│   └── useGraphLayout.ts    # Dagre-based graph layout logic
+├── db/               # Dexie database schema and operations
+├── types/            # TypeScript type definitions
+├── App.tsx           # Root application component
+└── main.tsx          # Entry point
+```
+
+## License
+
+[MIT](LICENSE)
