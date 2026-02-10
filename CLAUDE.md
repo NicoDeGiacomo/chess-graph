@@ -53,4 +53,4 @@ After every code change, always:
 
 ## TODO
 
-- All graphs page view (browse all repertoires as a grid/list)
+- ~~All graphs page view (browse all repertoires as a grid/list)~~ Done

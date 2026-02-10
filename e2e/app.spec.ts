@@ -15,7 +15,8 @@ async function waitForSettle(page: Page) {
   await page.waitForTimeout(400);
 }
 
-test.beforeEach(async ({ page }) => {
+/** Clear IndexedDB, reload, and navigate from All Graphs page into the first repertoire */
+async function resetAndEnterEditor(page: Page) {
   await page.goto('/');
   // Properly await IndexedDB deletion
   await page.evaluate(() => new Promise<void>((resolve, reject) => {
@@ -25,7 +26,16 @@ test.beforeEach(async ({ page }) => {
     req.onblocked = () => resolve(); // proceed even if blocked
   }));
   await page.reload();
-  await expect(page.locator('select')).toHaveValue(/.+/);
+  // Wait for All Graphs page to load with at least one card
+  await expect(page.getByText('My Repertoires')).toBeVisible();
+  // Click the first repertoire card to enter the editor
+  await page.locator('button.bg-zinc-900').first().click();
+  // Wait for the editor to load (graph node visible)
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
+}
+
+test.beforeEach(async ({ page }) => {
+  await resetAndEnterEditor(page);
 });
 
 // ─── App Initialization ──────────────────────────────────────────────
@@ -45,9 +55,10 @@ test('loads app with default repertoire and creates a child node via drag', asyn
 });
 
 test('default repertoire is not named "New Opening"', async ({ page }) => {
-  const select = page.locator('select');
-  const selectedText = await select.locator('option:checked').textContent();
-  expect(selectedText).not.toBe('New Opening');
+  // The repertoire name is shown in the EditorTopBar
+  const nameSpan = page.locator('.font-medium').first();
+  const name = await nameSpan.textContent();
+  expect(name).not.toBe('New Opening');
 });
 
 test('graph nodes are draggable', async ({ page }) => {
@@ -130,44 +141,48 @@ test('branching: two different moves from same position', async ({ page }) => {
 
 // ─── Repertoire Management ───────────────────────────────────────────
 
-test('no duplicate nodes after switching repertoires', async ({ page }) => {
-  // Remember the first repertoire value before making moves
-  const select = page.locator('select');
-  const firstValue = await select.locator('option').first().getAttribute('value');
-
+test('no duplicate nodes after switching repertoires via All Graphs', async ({ page }) => {
   await dragPiece(page, 'e2', 'e4');
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
 
-  // Wait for DB write to flush (fire-and-forget transaction in addChildNode)
+  // Wait for DB write to flush
   await page.waitForTimeout(800);
 
+  // Go back to All Graphs
+  await page.getByText('Back').click();
+  await expect(page.getByText('My Repertoires')).toBeVisible();
+
   // Create a second repertoire
-  await page.getByRole('button', { name: /New Opening/i }).click();
-  const nameInput = page.getByPlaceholder('Opening name...');
-  await expect(nameInput).toBeVisible({ timeout: 3000 });
-  await nameInput.fill('Sicilian');
+  await page.getByRole('button', { name: /New Repertoire/i }).click();
+  await page.getByPlaceholder('Opening name...').fill('Sicilian');
   await page.getByRole('button', { name: 'Create' }).click();
 
-  // Sicilian has 1 root node
-  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(1);
+  // Should navigate to editor with 1 root node
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(1, { timeout: 5000 });
 
-  // Switch back to the first repertoire
-  await select.selectOption(firstValue!);
+  // Go back and click the original repertoire (not the Sicilian)
+  await page.getByText('Back').click();
+  await expect(page.getByText('My Repertoires')).toBeVisible();
+  await page.getByText('My Repertoire', { exact: true }).click();
 
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2, { timeout: 5000 });
 });
 
-test('create and switch between repertoires', async ({ page }) => {
-  await page.getByRole('button', { name: /New Opening/i }).click();
+test('create repertoire from All Graphs page', async ({ page }) => {
+  // Go back to All Graphs
+  await page.getByText('Back').click();
+  await expect(page.getByText('My Repertoires')).toBeVisible();
+
+  await page.getByRole('button', { name: /New Repertoire/i }).click();
   await page.getByPlaceholder('Opening name...').fill('Sicilian');
   await page.getByRole('button', { name: 'Create' }).click();
 
-  const options = page.locator('select option');
-  await expect(options).toHaveCount(2);
+  // Should be in editor now
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
-  const select = page.locator('select');
-  const selectedText = await select.locator('option:checked').textContent();
-  expect(selectedText).toBe('Sicilian');
+  // Go back — should see 2 cards
+  await page.getByText('Back').click();
+  await expect(page.locator('button.bg-zinc-900')).toHaveCount(2);
 });
 
 test('rename repertoire', async ({ page }) => {
@@ -179,28 +194,30 @@ test('rename repertoire', async ({ page }) => {
   await expect(renameInput).toBeVisible();
   await renameInput.fill('Italian Game');
 
-  // Press Enter to save (or click Save)
+  // Press Enter to save
   await renameInput.press('Enter');
   await waitForSettle(page);
 
-  // Dropdown should show new name
-  const selectedText = await page.locator('select option:checked').textContent();
-  expect(selectedText).toBe('Italian Game');
+  // EditorTopBar should show new name
+  await expect(page.locator('.font-medium').first()).toHaveText('Italian Game');
 });
 
-test('delete repertoire falls back to remaining one', async ({ page }) => {
+test('delete repertoire redirects to All Graphs', async ({ page }) => {
   // Create a second repertoire first
-  await page.getByRole('button', { name: /New Opening/i }).click();
+  await page.getByText('Back').click();
+  await page.getByRole('button', { name: /New Repertoire/i }).click();
   await page.getByPlaceholder('Opening name...').fill('Temp');
   await page.getByRole('button', { name: 'Create' }).click();
-  await expect(page.locator('select option')).toHaveCount(2);
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
   // Delete current repertoire (Temp)
   page.on('dialog', (dialog) => dialog.accept());
   await page.getByRole('button', { name: 'Delete' }).click();
 
-  // Should fall back to the other repertoire
-  await expect(page.locator('select option')).toHaveCount(1);
+  // Should redirect to All Graphs
+  await expect(page.getByText('My Repertoires')).toBeVisible();
+  // Should see 1 remaining card
+  await expect(page.locator('button.bg-zinc-900')).toHaveCount(1);
 });
 
 // ─── Node Details ────────────────────────────────────────────────────
@@ -320,9 +337,9 @@ test('data persists after page reload', async ({ page }) => {
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
   await waitForSettle(page);
 
-  // Reload (without clearing DB)
+  // Reload (without clearing DB) — stays on the editor route
   await page.reload();
-  await expect(page.locator('select')).toHaveValue(/.+/);
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
   // Should still have 2 nodes
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
@@ -336,9 +353,9 @@ test('comment persists after page reload', async ({ page }) => {
   await page.getByRole('button', { name: 'Save' }).click();
   await waitForSettle(page);
 
-  // Reload
+  // Reload — stays on the editor route
   await page.reload();
-  await expect(page.locator('select')).toHaveValue(/.+/);
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
   // Comment should still be there
   await expect(page.getByText('Test comment')).toBeVisible();

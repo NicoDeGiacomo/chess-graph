@@ -41,9 +41,10 @@ interface RepertoireContextValue {
   linkTransposition: (sourceId: string, targetId: string) => Promise<void>;
   removeTransposition: (sourceId: string) => Promise<void>;
   switchRepertoire: (id: string) => Promise<void>;
-  createRepertoire: (name: string, side: RepertoireSide) => Promise<void>;
+  createRepertoire: (name: string, side: RepertoireSide) => Promise<string>;
   deleteRepertoire: (id: string) => Promise<void>;
   renameRepertoire: (id: string, name: string) => Promise<void>;
+  refreshRepertoireList: () => Promise<void>;
   exportData: () => Promise<ExportData>;
   importData: (data: ExportData) => Promise<void>;
   setContextMenu: (menu: ContextMenuState | null) => void;
@@ -104,14 +105,10 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     initRef.current = true;
 
     (async () => {
-      const activeId = await ensureDefaultRepertoire();
-      const { repertoire, nodesMap } = await loadRepertoire(activeId);
+      await ensureDefaultRepertoire();
       const repertoireList = await db.repertoires.toArray();
       setState((prev) => ({
         ...prev,
-        repertoire,
-        nodesMap,
-        selectedNodeId: repertoire.rootNodeId,
         repertoireList,
         isLoading: false,
       }));
@@ -272,7 +269,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const switchRepertoire = useCallback(async (id: string) => {
-    setState((prev) => ({ ...prev, isLoading: true }));
     const { repertoire, nodesMap } = await loadRepertoire(id);
     setState((prev) => ({
       ...prev,
@@ -282,11 +278,10 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       contextMenu: null,
       editingNodeId: null,
       linkingNodeId: null,
-      isLoading: false,
     }));
   }, []);
 
-  const createRepertoire = useCallback(async (name: string, side: RepertoireSide) => {
+  const createRepertoire = useCallback(async (name: string, side: RepertoireSide): Promise<string> => {
     const rootNodeId = uuidv4();
     const repertoireId = uuidv4();
     const now = Date.now();
@@ -319,18 +314,13 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     });
 
     const repertoireList = await db.repertoires.toArray();
-    const nodesMap = new Map<string, RepertoireNode>([[rootNodeId, rootNode]]);
 
     setState((prev) => ({
       ...prev,
-      repertoire,
-      nodesMap,
-      selectedNodeId: rootNodeId,
       repertoireList,
-      contextMenu: null,
-      editingNodeId: null,
-      linkingNodeId: null,
     }));
+
+    return repertoireId;
   }, []);
 
   const deleteRepertoire = useCallback(async (id: string) => {
@@ -340,30 +330,17 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     });
 
     const repertoireList = await db.repertoires.toArray();
-    if (repertoireList.length === 0) {
-      // Re-seed a default
-      const newId = await ensureDefaultRepertoire();
-      const { repertoire, nodesMap } = await loadRepertoire(newId);
-      const updatedList = await db.repertoires.toArray();
-      setState((prev) => ({
-        ...prev,
-        repertoire,
-        nodesMap,
-        selectedNodeId: repertoire.rootNodeId,
-        repertoireList: updatedList,
-        contextMenu: null,
-      }));
-    } else {
-      const { repertoire, nodesMap } = await loadRepertoire(repertoireList[0].id);
-      setState((prev) => ({
-        ...prev,
-        repertoire,
-        nodesMap,
-        selectedNodeId: repertoire.rootNodeId,
-        repertoireList,
-        contextMenu: null,
-      }));
-    }
+
+    setState((prev) => ({
+      ...prev,
+      repertoire: prev.repertoire?.id === id ? null : prev.repertoire,
+      nodesMap: prev.repertoire?.id === id ? new Map() : prev.nodesMap,
+      selectedNodeId: prev.repertoire?.id === id ? null : prev.selectedNodeId,
+      repertoireList,
+      contextMenu: null,
+      editingNodeId: null,
+      linkingNodeId: null,
+    }));
   }, []);
 
   const renameRepertoire = useCallback(async (id: string, name: string) => {
@@ -411,6 +388,11 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const refreshRepertoireList = useCallback(async () => {
+    const repertoireList = await db.repertoires.toArray();
+    setState((prev) => ({ ...prev, repertoireList }));
+  }, []);
+
   const setContextMenu = useCallback((menu: ContextMenuState | null) => {
     setState((prev) => ({ ...prev, contextMenu: menu }));
   }, []);
@@ -435,6 +417,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     createRepertoire,
     deleteRepertoire,
     renameRepertoire,
+    refreshRepertoireList,
     exportData,
     importData,
     setContextMenu,

@@ -1,32 +1,22 @@
 import { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
-import type { ExportData, RepertoireSide } from '../types/index.ts';
+import type { ExportData } from '../types/index.ts';
 
-export function TopBar() {
+export function EditorTopBar() {
   const {
     state,
-    switchRepertoire,
-    createRepertoire,
     deleteRepertoire,
     renameRepertoire,
     exportData,
     importData,
   } = useRepertoire();
-  const { repertoire, repertoireList } = state;
+  const { repertoire } = state;
+  const navigate = useNavigate();
 
-  const [showNewForm, setShowNewForm] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [newSide, setNewSide] = useState<RepertoireSide>('white');
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameDraft, setRenameDraft] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleCreate = async () => {
-    if (!newName.trim()) return;
-    await createRepertoire(newName.trim(), newSide);
-    setNewName('');
-    setShowNewForm(false);
-  };
 
   const handleExport = async () => {
     const data = await exportData();
@@ -46,11 +36,11 @@ export function TopBar() {
       const text = await file.text();
       const data = JSON.parse(text) as ExportData;
       await importData(data);
+      navigate('/');
     } catch (err) {
       console.error('Import failed:', err);
       alert('Failed to import. Please check the file format.');
     }
-    // Reset file input
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -66,20 +56,31 @@ export function TopBar() {
     setIsRenaming(false);
   };
 
+  const handleDelete = async () => {
+    if (!repertoire) return;
+    if (confirm(`Delete "${repertoire.name}"?`)) {
+      await deleteRepertoire(repertoire.id);
+      navigate('/');
+    }
+  };
+
   return (
     <div className="h-12 border-b border-zinc-800 flex items-center gap-3 px-4 bg-zinc-950 shrink-0">
-      {/* Repertoire selector */}
-      <select
-        className="bg-zinc-900 border border-zinc-700 rounded px-2 py-1 text-sm text-zinc-100 outline-none focus:border-blue-500"
-        value={repertoire?.id || ''}
-        onChange={(e) => switchRepertoire(e.target.value)}
+      {/* Back button */}
+      <Link
+        to="/"
+        className="text-zinc-400 hover:text-zinc-100 text-sm flex items-center gap-1"
+        title="All Repertoires"
       >
-        {repertoireList.map((r) => (
-          <option key={r.id} value={r.id}>{r.name}</option>
-        ))}
-      </select>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+          <path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" />
+        </svg>
+        Back
+      </Link>
 
-      {/* Rename button */}
+      <div className="h-4 w-px bg-zinc-700" />
+
+      {/* Repertoire name + side */}
       {isRenaming ? (
         <div className="flex items-center gap-1">
           <input
@@ -100,6 +101,18 @@ export function TopBar() {
           </button>
         </div>
       ) : (
+        <>
+          {repertoire && (
+            <span className="text-sm text-zinc-100 font-medium">{repertoire.name}</span>
+          )}
+          {repertoire && (
+            <span className="text-xs text-zinc-500">({repertoire.side})</span>
+          )}
+        </>
+      )}
+
+      {/* Rename button */}
+      {!isRenaming && (
         <button
           className="text-xs text-zinc-500 hover:text-zinc-300"
           onClick={startRename}
@@ -109,73 +122,16 @@ export function TopBar() {
         </button>
       )}
 
-      {/* Side indicator */}
-      {repertoire && (
-        <span className="text-xs text-zinc-500">
-          ({repertoire.side})
-        </span>
-      )}
-
       <div className="flex-1" />
 
-      {/* New Opening */}
-      {showNewForm ? (
-        <div className="flex items-center gap-2">
-          <input
-            autoFocus
-            className="bg-zinc-900 border border-zinc-700 rounded px-2 py-0.5 text-sm text-zinc-100 outline-none focus:border-blue-500 w-36"
-            placeholder="Opening name..."
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleCreate();
-              if (e.key === 'Escape') setShowNewForm(false);
-            }}
-          />
-          <select
-            className="bg-zinc-900 border border-zinc-700 rounded px-1 py-0.5 text-xs text-zinc-100"
-            value={newSide}
-            onChange={(e) => setNewSide(e.target.value as RepertoireSide)}
-          >
-            <option value="white">White</option>
-            <option value="black">Black</option>
-          </select>
-          <button
-            className="text-xs bg-blue-600 hover:bg-blue-500 text-white rounded px-2 py-0.5"
-            onClick={handleCreate}
-          >
-            Create
-          </button>
-          <button
-            className="text-xs text-zinc-500 hover:text-zinc-300"
-            onClick={() => setShowNewForm(false)}
-          >
-            Cancel
-          </button>
-        </div>
-      ) : (
-        <button
-          className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded px-3 py-1 border border-zinc-700"
-          onClick={() => setShowNewForm(true)}
-        >
-          + New Opening
-        </button>
-      )}
-
-      {/* Delete repertoire */}
-      {repertoireList.length > 1 && (
-        <button
-          className="text-xs text-zinc-500 hover:text-red-400"
-          onClick={() => {
-            if (repertoire && confirm(`Delete "${repertoire.name}"?`)) {
-              deleteRepertoire(repertoire.id);
-            }
-          }}
-          title="Delete repertoire"
-        >
-          Delete
-        </button>
-      )}
+      {/* Delete */}
+      <button
+        className="text-xs text-zinc-500 hover:text-red-400"
+        onClick={handleDelete}
+        title="Delete repertoire"
+      >
+        Delete
+      </button>
 
       <div className="h-4 w-px bg-zinc-700" />
 

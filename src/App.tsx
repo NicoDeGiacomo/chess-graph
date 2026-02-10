@@ -1,14 +1,10 @@
-import { ReactFlowProvider } from '@xyflow/react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { RepertoireProvider } from './hooks/useRepertoire.tsx';
-import { TopBar } from './components/TopBar.tsx';
-import { GraphCanvas } from './components/GraphCanvas.tsx';
-import { Sidebar } from './components/Sidebar.tsx';
-import { ContextMenu } from './components/ContextMenu.tsx';
-import { EditNodeDialog } from './components/EditNodeDialog.tsx';
-import { LinkTranspositionDialog } from './components/LinkTranspositionDialog.tsx';
+import { AllGraphsPage } from './pages/AllGraphsPage.tsx';
+import { EditorPage } from './pages/EditorPage.tsx';
 import { useRepertoire } from './hooks/useRepertoire.tsx';
 
-function AppContent() {
+function AppRoutes() {
   const { state } = useRepertoire();
 
   if (state.isLoading) {
@@ -20,25 +16,20 @@ function AppContent() {
   }
 
   return (
-    <div className="h-screen bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">
-      <TopBar />
-      <div className="flex flex-1 min-h-0">
-        <ReactFlowProvider>
-          <GraphCanvas />
-        </ReactFlowProvider>
-        <Sidebar />
-      </div>
-      <ContextMenu />
-      <EditNodeDialog />
-      <LinkTranspositionDialog />
-    </div>
+    <Routes>
+      <Route path="/" element={<AllGraphsPage />} />
+      <Route path="/repertoire/:id" element={<EditorPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
 function App() {
   return (
     <RepertoireProvider>
-      <AppContent />
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </RepertoireProvider>
   );
 }
