@@ -3,6 +3,8 @@ import type { Repertoire } from '../types/index.ts';
 interface GraphCardProps {
   repertoire: Repertoire;
   nodeCount: number;
+  tags: string[];
+  comment: string;
   onClick: () => void;
 }
 
@@ -19,7 +21,12 @@ function formatRelativeTime(timestamp: number): string {
   return `${months}mo ago`;
 }
 
-export function GraphCard({ repertoire, nodeCount, onClick }: GraphCardProps) {
+const MAX_VISIBLE_TAGS = 3;
+
+export function GraphCard({ repertoire, nodeCount, tags, comment, onClick }: GraphCardProps) {
+  const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
+  const overflowCount = tags.length - MAX_VISIBLE_TAGS;
+
   return (
     <button
       onClick={onClick}
@@ -31,6 +38,24 @@ export function GraphCard({ repertoire, nodeCount, onClick }: GraphCardProps) {
         </span>
         <h3 className="text-zinc-100 font-medium truncate">{repertoire.name}</h3>
       </div>
+
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-2">
+          {visibleTags.map((tag) => (
+            <span key={tag} className="bg-zinc-800 text-zinc-300 rounded px-2 py-0.5 text-xs">
+              {tag}
+            </span>
+          ))}
+          {overflowCount > 0 && (
+            <span className="text-zinc-500 text-xs px-1 py-0.5">+{overflowCount}</span>
+          )}
+        </div>
+      )}
+
+      {comment && (
+        <p className="text-zinc-400 text-xs truncate mb-2">{comment}</p>
+      )}
+
       <div className="flex items-center justify-between text-xs text-zinc-500">
         <span>{nodeCount} {nodeCount === 1 ? 'node' : 'nodes'}</span>
         <span>{formatRelativeTime(repertoire.updatedAt)}</span>

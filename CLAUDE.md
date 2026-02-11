@@ -51,6 +51,16 @@ After every code change, always:
 4. Run `npm run test:e2e` — ensure all E2E tests pass
 5. Write new tests for any new or changed functionality
 
+## TODO File Management
+
+After every development session, always update `TODO.md`:
+
+- Mark completed items with ~~strikethrough~~ and "Done"
+- Add newly discovered issues (warnings, errors, incomplete features)
+- Add any ideas or improvements noticed during development
+- **Always inform the user** when editing the TODO file
+
 ## TODO
 
 - ~~All graphs page view (browse all repertoires as a grid/list)~~ Done
+- ~~Root node tags & comments shown on graph cards~~ Done

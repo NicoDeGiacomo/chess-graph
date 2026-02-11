@@ -13,21 +13,29 @@ export function AllGraphsPage() {
 
   const [search, setSearch] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [nodeCounts, setNodeCounts] = useState<Record<string, number>>({});
+  const [cardData, setCardData] = useState<Record<string, { nodeCount: number; tags: string[]; comment: string }>>({});
 
   useEffect(() => {
     refreshRepertoireList();
   }, [refreshRepertoireList]);
 
-  // Fetch node counts whenever the repertoire list changes
+  // Fetch node counts and root node data whenever the repertoire list changes
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const counts: Record<string, number> = {};
+      const data: Record<string, { nodeCount: number; tags: string[]; comment: string }> = {};
       for (const r of repertoireList) {
-        counts[r.id] = await db.nodes.where('repertoireId').equals(r.id).count();
+        const [count, rootNode] = await Promise.all([
+          db.nodes.where('repertoireId').equals(r.id).count(),
+          db.nodes.get(r.rootNodeId),
+        ]);
+        data[r.id] = {
+          nodeCount: count,
+          tags: rootNode?.tags ?? [],
+          comment: rootNode?.comment ?? '',
+        };
       }
-      if (!cancelled) setNodeCounts(counts);
+      if (!cancelled) setCardData(data);
     })();
     return () => { cancelled = true; };
   }, [repertoireList]);
@@ -77,7 +85,9 @@ export function AllGraphsPage() {
               <GraphCard
                 key={r.id}
                 repertoire={r}
-                nodeCount={nodeCounts[r.id] ?? 0}
+                nodeCount={cardData[r.id]?.nodeCount ?? 0}
+                tags={cardData[r.id]?.tags ?? []}
+                comment={cardData[r.id]?.comment ?? ''}
                 onClick={() => navigate(`/repertoire/${r.id}`)}
               />
             ))}

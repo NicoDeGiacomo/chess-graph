@@ -104,3 +104,38 @@ test('invalid repertoire ID redirects to All Graphs', async ({ page }) => {
   await page.goto('/repertoire/nonexistent-id');
   await expect(page.getByText('My Repertoires')).toBeVisible({ timeout: 5000 });
 });
+
+test('card shows root node tags and comment', async ({ page }) => {
+  // Enter editor
+  await page.locator('button.bg-zinc-900').first().click();
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
+
+  // Add a tag via context menu on root node
+  const rootNode = page.locator('[data-testid^="rf__node-"]').first();
+  await rootNode.click({ button: 'right' });
+  await page.getByText('Add Tag').click();
+  const tagInput = page.getByPlaceholder('Tag name...');
+  await expect(tagInput).toBeVisible();
+  await tagInput.fill('repertoire-tag');
+  await tagInput.press('Enter');
+  await expect(page.getByText('repertoire-tag').first()).toBeVisible();
+
+  // Close context menu by clicking elsewhere
+  await page.locator('.react-flow__pane').click();
+
+  // Add a comment via NodeDetails panel
+  await rootNode.click();
+  await page.getByRole('button', { name: 'Add' }).click();
+  const textarea = page.locator('textarea');
+  await textarea.fill('This is my repertoire description');
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  // Navigate back to All Graphs
+  await page.getByText('Back').click();
+  await expect(page.getByText('My Repertoires')).toBeVisible();
+
+  // Assert tag pill and comment preview are visible on the card
+  const card = page.locator('button.bg-zinc-900').first();
+  await expect(card.getByText('repertoire-tag')).toBeVisible();
+  await expect(card.getByText('This is my repertoire description')).toBeVisible();
+});
