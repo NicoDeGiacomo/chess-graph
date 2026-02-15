@@ -17,7 +17,7 @@
 
 ## Warnings
 
-- Vite build warns about chunk size >500 kB (`index-BWurblDp.js` is ~748 kB). Consider code-splitting or `manualChunks`.
+- ~~Vite build warns about chunk size >500 kB (`index-BWurblDp.js` is ~748 kB). Consider code-splitting or `manualChunks`.~~ Done (split into chess + graph chunks via `manualChunks`)
 
 ## Nice To Have
 

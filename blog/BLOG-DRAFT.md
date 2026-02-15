@@ -24,6 +24,8 @@
 
 The File Between Us: A Human-AI Collaboration Pattern
 
+![A human and an AI facing each other with a glowing document between them](hero.png)
+
 If you've worked with an AI coding assistant for more than a few sessions, you've felt the friction. The AI is useful in the moment but forgetful between moments. You end up repeating yourself, re-explaining context, re-discovering things that were already found. The usual fix is a config file that tells the AI about your project. That helps. But it's a monologue — you talk, the AI listens. What if the AI could talk back? Not in chat, which vanishes, but in a file you both maintain. A shared document that carries the project's state forward, session after session, written by both sides. This post describes that pattern and how to set it up in about two minutes.
 
 ## 1. The Vanishing Context
@@ -51,6 +53,8 @@ There are existing patterns that aim at some of those problems:
 All of these solve real problems. But none of them give you a shared space where both sides read, both sides write, and the document evolves over time, while keeping a detailed log of the work.
 
 ## 3. A Bidirectional Living Document
+
+![Diagram showing Developer and Agent both reading and writing to TODO.md, with git tracking history below](diagram.png)
 
 The setup is simple. Create a markdown file in your repo, something like `TODO.md`, and add one instruction to whatever file your AI assistant reads at the start of every session. Where that goes depends on the tool:
 
