@@ -17,7 +17,7 @@ async function waitForSettle(page: Page) {
 
 /** Clear IndexedDB, reload, and navigate from All Graphs page into the first repertoire */
 async function resetAndEnterEditor(page: Page) {
-  await page.goto('/');
+  await page.goto('/repertoires');
   // Properly await IndexedDB deletion
   await page.evaluate(() => new Promise<void>((resolve, reject) => {
     const req = indexedDB.deleteDatabase('chess-graph');

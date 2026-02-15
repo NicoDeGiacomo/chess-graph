@@ -36,7 +36,7 @@ export function EditorTopBar() {
       const text = await file.text();
       const data = JSON.parse(text) as ExportData;
       await importData(data);
-      navigate('/');
+      navigate('/repertoires');
     } catch (err) {
       console.error('Import failed:', err);
       alert('Failed to import. Please check the file format.');
@@ -60,7 +60,7 @@ export function EditorTopBar() {
     if (!repertoire) return;
     if (confirm(`Delete "${repertoire.name}"?`)) {
       await deleteRepertoire(repertoire.id);
-      navigate('/');
+      navigate('/repertoires');
     }
   };
 
@@ -68,7 +68,7 @@ export function EditorTopBar() {
     <div className="h-12 border-b border-zinc-800 flex items-center gap-3 px-4 bg-zinc-950 shrink-0">
       {/* Back button */}
       <Link
-        to="/"
+        to="/repertoires"
         className="text-zinc-400 hover:text-zinc-100 text-sm flex items-center gap-1"
         title="All Repertoires"
       >

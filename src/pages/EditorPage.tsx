@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useDocumentTitle } from '../hooks/useDocumentTitle.ts';
 import { useParams, useNavigate, Navigate } from 'react-router';
 import { ReactFlowProvider } from '@xyflow/react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
@@ -14,6 +15,7 @@ export function EditorPage() {
   const navigate = useNavigate();
   const { state, switchRepertoire } = useRepertoire();
   const switchingRef = useRef<string | null>(null);
+  useDocumentTitle(state.repertoire?.name ? `${state.repertoire.name} — Chess Graph` : 'Chess Graph');
 
   // Trigger switchRepertoire when id changes and list is ready
   useEffect(() => {
@@ -22,7 +24,7 @@ export function EditorPage() {
     // Check if repertoire exists in the list
     const exists = state.repertoireList.some((r) => r.id === id);
     if (!exists) {
-      navigate('/', { replace: true });
+      navigate('/repertoires', { replace: true });
       return;
     }
 
@@ -46,7 +48,7 @@ export function EditorPage() {
 
   // Invalid ID — redirect
   if (!id || !state.repertoireList.some((r) => r.id === id)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/repertoires" replace />;
   }
 
   // Waiting for switchRepertoire to complete

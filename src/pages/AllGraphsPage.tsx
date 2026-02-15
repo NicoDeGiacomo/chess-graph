@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useDocumentTitle } from '../hooks/useDocumentTitle.ts';
 import { useNavigate } from 'react-router';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { GraphCard } from '../components/GraphCard.tsx';
@@ -7,6 +8,7 @@ import { db } from '../db/index.ts';
 import type { RepertoireSide } from '../types/index.ts';
 
 export function AllGraphsPage() {
+  useDocumentTitle('My Repertoires — Chess Graph');
   const { state, createRepertoire, refreshRepertoireList } = useRepertoire();
   const { repertoireList } = state;
   const navigate = useNavigate();

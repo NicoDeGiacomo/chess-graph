@@ -1,0 +1,16 @@
+{
+  "name": "Chess Graph",
+  "short_name": "Chess Graph",
+  "description": "Visualize your opening repertoire as an interactive game tree",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

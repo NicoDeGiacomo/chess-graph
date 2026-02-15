@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { RepertoireProvider } from './hooks/useRepertoire.tsx';
+import { LandingPage } from './pages/LandingPage.tsx';
 import { AllGraphsPage } from './pages/AllGraphsPage.tsx';
 import { EditorPage } from './pages/EditorPage.tsx';
 import { useRepertoire } from './hooks/useRepertoire.tsx';
@@ -17,7 +18,8 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<AllGraphsPage />} />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/repertoires" element={<AllGraphsPage />} />
       <Route path="/repertoire/:id" element={<EditorPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

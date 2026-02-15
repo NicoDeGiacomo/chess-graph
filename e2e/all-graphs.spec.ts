@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 /** Clear IndexedDB and reload to start fresh on the All Graphs page */
 async function resetToAllGraphs(page: import('@playwright/test').Page) {
-  await page.goto('/');
+  await page.goto('/repertoires');
   await page.evaluate(() => new Promise<void>((resolve, reject) => {
     const req = indexedDB.deleteDatabase('chess-graph');
     req.onsuccess = () => resolve();

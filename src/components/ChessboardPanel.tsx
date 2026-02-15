@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { outlinePieces } from './outlinePieces.tsx';
 
 export function ChessboardPanel() {
   const { state, addChildNode } = useRepertoire();
@@ -46,6 +47,7 @@ export function ChessboardPanel() {
             position: fen,
             onPieceDrop,
             boardOrientation: repertoire?.side || 'white',
+            pieces: outlinePieces,
             animationDurationInMs: 200,
             darkSquareStyle: { backgroundColor: '#52525b' },
             lightSquareStyle: { backgroundColor: '#a1a1aa' },
