@@ -9,7 +9,14 @@
 - **Process:** Work section by section. Write a draft, the human revises, iterate until both sides are happy.
 - **Structure:** Draft at the top, then outline (with remaining bullet points for unwritten sections), then prior investigation and sources at the bottom.
 - **References:** Use numbered references [N] in the text, collected in a References section at the end of the draft.
-- **Status:** Sections 1-7 drafted. Still needs: intro paragraph (marked as "(into)"), final review pass.
+
+---
+
+## SEO Metadata
+
+- **Display Title:** The File Between Us: A Human-AI Collaboration Pattern
+- **SEO Title:** Shared Document Pattern for AI Coding Assistants
+- **SEO Description:** Your AI coding assistant forgets everything between sessions. This pattern fixes it with a shared document you both maintain — the Human-Agent Ledger (HAL).
 
 ---
 
