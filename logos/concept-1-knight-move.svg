@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" role="img" aria-labelledby="c1-title">
+  <title id="c1-title">Chess Graph Logo</title>
+  <defs>
+    <linearGradient id="c1-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+  </defs>
+
+  <!-- Icon: Knight's L-move as a connected graph -->
+  <g transform="translate(6, 10)">
+    <!-- L-shaped main edge -->
+    <path d="M14,10 L14,48 L52,48" fill="none" stroke="#4F46E5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Branch edges -->
+    <line x1="14" y1="10" x2="38" y2="10" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+    <line x1="52" y1="48" x2="62" y2="28" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.65"/>
+    <line x1="14" y1="48" x2="14" y2="62" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+    <line x1="38" y1="10" x2="54" y2="4" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- Primary nodes -->
+    <circle cx="14" cy="10" r="8" fill="url(#c1-grad)"/>
+    <circle cx="14" cy="48" r="7" fill="#4F46E5"/>
+    <circle cx="52" cy="48" r="8" fill="url(#c1-grad)"/>
+
+    <!-- Secondary nodes -->
+    <circle cx="38" cy="10" r="5.5" fill="#7C3AED" opacity="0.85"/>
+    <circle cx="62" cy="28" r="5" fill="#7C3AED" opacity="0.7"/>
+    <circle cx="14" cy="62" r="4.5" fill="#7C3AED" opacity="0.6"/>
+    <circle cx="54" cy="4" r="3.5" fill="#A78BFA" opacity="0.55"/>
+
+    <!-- Inner highlights on primary nodes -->
+    <circle cx="12" cy="8" r="2.5" fill="white" opacity="0.25"/>
+    <circle cx="50" cy="46" r="2.5" fill="white" opacity="0.25"/>
+  </g>
+
+  <!-- Text: "Chess Graph" -->
+  <text x="94" y="58" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-1.5">
+    <tspan fill="#1E1B4B">Chess</tspan><tspan fill="#4F46E5" dx="6">Graph</tspan>
+  </text>
+</svg>

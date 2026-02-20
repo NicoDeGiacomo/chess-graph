@@ -8,8 +8,10 @@
 
 - ~~Landing page with features, about, etc.~~ Done
 - ~~SEO~~ Done
+- ~~Blog post~~ Done
 - Update OG/sitemap URLs when deployment domain is finalized (currently placeholder `chessgraph.app`)
-- Generate PNG favicon variants (favicon-32x32.png, favicon-192x192.png, favicon-512x512.png, apple-touch-icon.png) for older browser support
+- ~~Generate PNG favicon variants (favicon-32x32.png, favicon-192x192.png, favicon-512x512.png, apple-touch-icon.png) for older browser support~~ Done
+- ~~Use new logo (concept-6a-pawn-dissolve-tree) as favicon and on landing page~~ Done
 
 ## New Features
 

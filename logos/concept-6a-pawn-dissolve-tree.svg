@@ -1,18 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Chess Graph">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" role="img" aria-labelledby="c6a-title">
+  <title id="c6a-title">Chess Graph Logo</title>
   <defs>
     <clipPath id="a-dissolve">
       <path d="M0,0 L0,70 L50,70 L44,50 L38,34 L34,22 L32,12 L28,0 Z"/>
     </clipPath>
   </defs>
 
-  <g transform="translate(1, 1)">
-    <!-- Graph edges -->
+  <g transform="translate(4, 5)">
+    <!-- Graph edges (drawn first, behind everything) -->
     <line x1="36" y1="10" x2="50" y2="8" stroke="#4F46E5" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
     <line x1="38" y1="22" x2="52" y2="22" stroke="#4F46E5" stroke-width="1.2" opacity="0.35" stroke-linecap="round"/>
     <line x1="42" y1="38" x2="54" y2="34" stroke="#4F46E5" stroke-width="1.2" opacity="0.28" stroke-linecap="round"/>
     <line x1="50" y1="8" x2="58" y2="14" stroke="#4F46E5" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
 
-    <!-- Graph nodes -->
+    <!-- Graph nodes (behind pawn, using lighter shades for fade effect) -->
     <circle cx="36" cy="10" r="3.5" fill="#6366F1"/>
     <circle cx="38" cy="22" r="3" fill="#818CF8"/>
     <circle cx="42" cy="38" r="2.5" fill="#A5B4FC"/>
@@ -21,10 +22,13 @@
     <circle cx="54" cy="34" r="2.5" fill="#C7D2FE"/>
     <circle cx="58" cy="14" r="2.2" fill="#C7D2FE"/>
 
-    <!-- Pawn silhouette (clipped for dissolve) -->
+    <!-- Pawn silhouette on top (clipped for dissolve) -->
     <g clip-path="url(#a-dissolve)">
+      <!-- Head (ball finial) -->
       <circle cx="30" cy="11" r="9" fill="#4F46E5"/>
+      <!-- Collar (wide shelf directly under head, no gap) -->
       <rect x="17" y="18" width="26" height="5" fill="#4F46E5"/>
+      <!-- Narrow stem → widening body → base with rim -->
       <path d="
         M25,23
         L25,30
@@ -39,4 +43,9 @@
         Z" fill="#4F46E5"/>
     </g>
   </g>
+
+  <!-- Text: minimalist -->
+  <text x="86" y="50" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="34" font-weight="500" fill="#1E1B4B" letter-spacing="-0.5">
+    Chess<tspan fill="#4F46E5" dx="3">Graph</tspan>
+  </text>
 </svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" role="img" aria-labelledby="c6b-title">
+  <title id="c6b-title">Chess Graph Logo</title>
+  <defs>
+    <clipPath id="b-dissolve">
+      <path d="M0,0 L0,80 L54,80 L50,52 L44,36 L40,24 L36,14 L34,6 L30,0 Z"/>
+    </clipPath>
+  </defs>
+
+  <g transform="translate(4, 5)">
+    <!-- Solid pawn (clipped) -->
+    <g clip-path="url(#b-dissolve)">
+      <circle cx="30" cy="13" r="10" fill="#4F46E5"/>
+      <path d="M22,22 Q30,19 38,22 L42,52 Q30,56 18,52 Z" fill="#4F46E5"/>
+      <rect x="14" y="53" width="32" height="7" rx="3" fill="#4F46E5"/>
+    </g>
+
+    <!-- Dissolving particles — organic scatter -->
+    <!-- Near edge (large, opaque) -->
+    <circle cx="36" cy="6" r="3.5" fill="#4F46E5" opacity="0.85"/>
+    <circle cx="38" cy="16" r="3" fill="#4F46E5" opacity="0.75"/>
+    <circle cx="42" cy="26" r="2.5" fill="#4F46E5" opacity="0.65"/>
+    <circle cx="44" cy="36" r="2.5" fill="#4F46E5" opacity="0.6"/>
+    <circle cx="46" cy="46" r="2.5" fill="#4F46E5" opacity="0.55"/>
+
+    <!-- Mid distance -->
+    <circle cx="46" cy="8" r="2.5" fill="#4F46E5" opacity="0.5"/>
+    <circle cx="48" cy="20" r="2" fill="#4F46E5" opacity="0.45"/>
+    <circle cx="50" cy="32" r="2" fill="#4F46E5" opacity="0.4"/>
+    <circle cx="52" cy="44" r="2" fill="#4F46E5" opacity="0.35"/>
+
+    <!-- Far (small, faded) -->
+    <circle cx="54" cy="12" r="1.8" fill="#4F46E5" opacity="0.3"/>
+    <circle cx="56" cy="24" r="1.5" fill="#4F46E5" opacity="0.25"/>
+    <circle cx="58" cy="38" r="1.5" fill="#4F46E5" opacity="0.22"/>
+    <circle cx="62" cy="16" r="1.2" fill="#4F46E5" opacity="0.18"/>
+    <circle cx="64" cy="30" r="1.2" fill="#4F46E5" opacity="0.15"/>
+
+    <!-- Graph edges (sparse, connecting scattered nodes) -->
+    <line x1="46" y1="8" x2="48" y2="20" stroke="#4F46E5" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <line x1="48" y1="20" x2="54" y2="12" stroke="#4F46E5" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+    <line x1="48" y1="20" x2="50" y2="32" stroke="#4F46E5" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+    <line x1="50" y1="32" x2="56" y2="24" stroke="#4F46E5" stroke-width="1" opacity="0.2" stroke-linecap="round"/>
+    <line x1="54" y1="12" x2="62" y2="16" stroke="#4F46E5" stroke-width="1" opacity="0.18" stroke-linecap="round"/>
+    <line x1="56" y1="24" x2="64" y2="30" stroke="#4F46E5" stroke-width="1" opacity="0.15" stroke-linecap="round"/>
+    <line x1="52" y1="44" x2="58" y2="38" stroke="#4F46E5" stroke-width="1" opacity="0.18" stroke-linecap="round"/>
+  </g>
+
+  <!-- Text -->
+  <text x="86" y="50" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="34" font-weight="500" fill="#1E1B4B" letter-spacing="-0.5">
+    Chess<tspan fill="#4F46E5" dx="3">Graph</tspan>
+  </text>
+</svg>

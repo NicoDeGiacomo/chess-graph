@@ -65,9 +65,11 @@ export function LandingPage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       {/* Hero */}
       <section className="max-w-4xl mx-auto px-4 pt-24 pb-16 text-center">
-        <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">
-          Chess Graph
-        </h1>
+        <img
+          src="/logo.svg"
+          alt="Chess Graph"
+          className="h-14 sm:h-18 mx-auto"
+        />
         <p className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto">
           Visualize your opening repertoire as an interactive game tree.
           Branch, explore, and master your lines — all in your browser.

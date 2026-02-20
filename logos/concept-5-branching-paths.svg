@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" role="img" aria-labelledby="c5-title">
+  <title id="c5-title">Chess Graph Logo</title>
+  <defs>
+    <linearGradient id="c5-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+  </defs>
+
+  <!-- Icon: Central piece node with branching exploration paths -->
+  <g transform="translate(4, 6)">
+    <!-- Main trunk from root -->
+    <line x1="12" y1="40" x2="30" y2="40" stroke="#4F46E5" stroke-width="3.5" stroke-linecap="round"/>
+
+    <!-- Primary branches from mid-node -->
+    <line x1="30" y1="40" x2="52" y2="14" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+    <line x1="30" y1="40" x2="52" y2="40" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+    <line x1="30" y1="40" x2="52" y2="66" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Secondary branches -->
+    <line x1="52" y1="14" x2="70" y2="6" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+    <line x1="52" y1="14" x2="70" y2="22" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+    <line x1="52" y1="40" x2="70" y2="36" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.65"/>
+    <line x1="52" y1="40" x2="70" y2="48" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.65"/>
+    <line x1="52" y1="66" x2="70" y2="60" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+    <line x1="52" y1="66" x2="70" y2="74" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- Root node (chess piece: circle with cross = king) -->
+    <circle cx="12" cy="40" r="10" fill="url(#c5-grad)"/>
+    <!-- King cross on root -->
+    <line x1="12" y1="34" x2="12" y2="30" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="9" y1="32" x2="15" y2="32" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- Mid nodes -->
+    <circle cx="30" cy="40" r="6" fill="#4F46E5"/>
+
+    <!-- Branch endpoint nodes -->
+    <circle cx="52" cy="14" r="6.5" fill="url(#c5-grad)"/>
+    <circle cx="52" cy="40" r="6" fill="#4F46E5"/>
+    <circle cx="52" cy="66" r="6" fill="#6D28D9"/>
+
+    <!-- Leaf nodes -->
+    <circle cx="70" cy="6" r="4.5" fill="#7C3AED" opacity="0.8"/>
+    <circle cx="70" cy="22" r="4.5" fill="#7C3AED" opacity="0.75"/>
+    <circle cx="70" cy="36" r="4" fill="#7C3AED" opacity="0.65"/>
+    <circle cx="70" cy="48" r="4" fill="#7C3AED" opacity="0.6"/>
+    <circle cx="70" cy="60" r="3.5" fill="#A78BFA" opacity="0.6"/>
+    <circle cx="70" cy="74" r="3.5" fill="#A78BFA" opacity="0.5"/>
+
+    <!-- Highlight on root -->
+    <circle cx="10" cy="38" r="3" fill="white" opacity="0.2"/>
+  </g>
+
+  <!-- Text -->
+  <text x="94" y="58" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-1.5">
+    <tspan fill="#1E1B4B">Chess</tspan><tspan fill="#4F46E5" dx="6">Graph</tspan>
+  </text>
+</svg>

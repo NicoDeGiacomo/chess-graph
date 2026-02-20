@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" role="img" aria-labelledby="c2-title">
+  <title id="c2-title">Chess Graph Logo</title>
+  <defs>
+    <linearGradient id="c2-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+  </defs>
+
+  <!-- Icon: Game tree branching upward from root -->
+  <g transform="translate(4, 4)">
+    <!-- Edges: root to level 1 -->
+    <line x1="36" y1="68" x2="18" y2="44" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+    <line x1="36" y1="68" x2="54" y2="44" stroke="#4F46E5" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Edges: level 1 to level 2 -->
+    <line x1="18" y1="44" x2="8" y2="22" stroke="#6D28D9" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="18" y1="44" x2="28" y2="22" stroke="#6D28D9" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="54" y1="44" x2="44" y2="22" stroke="#6D28D9" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="54" y1="44" x2="64" y2="22" stroke="#6D28D9" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Edges: level 2 to level 3 (selective) -->
+    <line x1="8" y1="22" x2="4" y2="6" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <line x1="28" y1="22" x2="22" y2="6" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <line x1="28" y1="22" x2="34" y2="6" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <line x1="64" y1="22" x2="70" y2="6" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+
+    <!-- Root node (large, pawn-like) -->
+    <circle cx="36" cy="68" r="9" fill="url(#c2-grad)"/>
+    <!-- Pawn cross on root -->
+    <line x1="36" y1="63" x2="36" y2="59" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+    <!-- Level 1 nodes -->
+    <circle cx="18" cy="44" r="7" fill="#4F46E5"/>
+    <circle cx="54" cy="44" r="7" fill="#4F46E5"/>
+
+    <!-- Level 2 nodes -->
+    <circle cx="8" cy="22" r="5.5" fill="#6D28D9"/>
+    <circle cx="28" cy="22" r="5.5" fill="#6D28D9"/>
+    <circle cx="44" cy="22" r="5.5" fill="#6D28D9"/>
+    <circle cx="64" cy="22" r="5.5" fill="#6D28D9"/>
+
+    <!-- Level 3 nodes (smallest) -->
+    <circle cx="4" cy="6" r="4" fill="#A78BFA" opacity="0.8"/>
+    <circle cx="22" cy="6" r="4" fill="#A78BFA" opacity="0.8"/>
+    <circle cx="34" cy="6" r="4" fill="#A78BFA" opacity="0.8"/>
+    <circle cx="70" cy="6" r="4" fill="#A78BFA" opacity="0.8"/>
+
+    <!-- Highlight on root -->
+    <circle cx="34" cy="66" r="3" fill="white" opacity="0.2"/>
+  </g>
+
+  <!-- Text -->
+  <text x="94" y="58" font-family="'Inter', 'Helvetica Neue', Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-1.5">
+    <tspan fill="#1E1B4B">Chess</tspan><tspan fill="#4F46E5" dx="6">Graph</tspan>
+  </text>
+</svg>
