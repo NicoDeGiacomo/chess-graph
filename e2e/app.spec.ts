@@ -77,6 +77,15 @@ test('edges have arrow markers', async ({ page }) => {
   await expect(markers.first()).toBeAttached();
 });
 
+test('creates a child node via click-to-move', async ({ page }) => {
+  // Click e2 to select, then click e4 to move
+  await page.locator('[data-square="e2"]').click();
+  await page.locator('[data-square="e4"]').click();
+
+  // 2 nodes in graph (root + e4)
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+});
+
 // ─── Move Creation ───────────────────────────────────────────────────
 
 test('plays multiple moves building a line (e4 e5 Nf3)', async ({ page }) => {
