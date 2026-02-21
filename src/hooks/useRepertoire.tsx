@@ -37,6 +37,7 @@ interface RepertoireContextValue {
   selectNode: (nodeId: string) => void;
   addChildNode: (parentId: string, move: string, fen: string) => Promise<void>;
   deleteNode: (nodeId: string) => Promise<void>;
+  clearGraph: () => Promise<void>;
   updateNode: (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags'>>) => Promise<void>;
   linkTransposition: (sourceId: string, targetId: string) => Promise<void>;
   removeTransposition: (sourceId: string) => Promise<void>;
@@ -216,6 +217,34 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       }
 
       return prev;
+    });
+  }, []);
+
+  const clearGraph = useCallback(async () => {
+    setState((prev) => {
+      if (!prev.repertoire) return prev;
+
+      const rootNodeId = prev.repertoire.rootNodeId;
+      const idsToDelete = collectDescendants(rootNodeId, prev.nodesMap).filter(
+        (id) => id !== rootNodeId,
+      );
+
+      if (idsToDelete.length === 0) return prev;
+
+      const root = prev.nodesMap.get(rootNodeId);
+      if (!root) return prev;
+
+      const updatedRoot = { ...root, childIds: [] as string[] };
+      const newMap = new Map<string, RepertoireNode>();
+      newMap.set(rootNodeId, updatedRoot);
+
+      db.transaction('rw', db.nodes, db.repertoires, async () => {
+        await db.nodes.bulkDelete(idsToDelete);
+        await db.nodes.update(rootNodeId, { childIds: [] });
+        await db.repertoires.update(prev.repertoire!.id, { updatedAt: Date.now() });
+      }).catch(console.error);
+
+      return { ...prev, nodesMap: newMap, selectedNodeId: rootNodeId, contextMenu: null };
     });
   }, []);
 
@@ -410,6 +439,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     selectNode,
     addChildNode,
     deleteNode,
+    clearGraph,
     updateNode,
     linkTransposition,
     removeTransposition,

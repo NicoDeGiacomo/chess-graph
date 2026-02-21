@@ -219,14 +219,28 @@ test('delete repertoire redirects to All Graphs', async ({ page }) => {
   await page.getByRole('button', { name: 'Create' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
-  // Delete current repertoire (Temp)
-  page.on('dialog', (dialog) => dialog.accept());
+  // Delete current repertoire (Temp) via styled confirm dialog
   await page.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.getByText('Delete Graph')).toBeVisible();
+  await page.locator('.bg-red-600').click();
 
   // Should redirect to All Graphs
   await expect(page.getByText('My Graphs')).toBeVisible();
   // Should see 1 remaining card
   await expect(page.locator('button.bg-zinc-900')).toHaveCount(1);
+});
+
+test('delete confirm dialog can be cancelled', async ({ page }) => {
+  // Open the delete confirm dialog
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.getByText('Delete Graph')).toBeVisible();
+
+  // Click Cancel
+  await page.getByRole('button', { name: 'Cancel' }).click();
+
+  // Dialog should close, still in editor
+  await expect(page.getByText('Delete Graph')).not.toBeVisible();
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible();
 });
 
 // ─── Node Details ────────────────────────────────────────────────────
@@ -368,4 +382,58 @@ test('comment persists after page reload', async ({ page }) => {
 
   // Comment should still be there
   await expect(page.getByText('Test comment')).toBeVisible();
+});
+
+// ─── Clear Graph ─────────────────────────────────────────────────────
+
+test('clear graph removes all moves and keeps root', async ({ page }) => {
+  // Build a line: e4 → e5 → Nf3
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await dragPiece(page, 'e7', 'e5');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(3);
+  await dragPiece(page, 'g1', 'f3');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(4);
+
+  // Clear via styled confirm dialog
+  await page.getByRole('button', { name: 'Clear' }).click();
+  await expect(page.getByText('Clear Graph')).toBeVisible();
+  await page.locator('.bg-red-600').click();
+
+  // Should be back to 1 node (root only)
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(1);
+});
+
+test('clear graph cancel does not remove moves', async ({ page }) => {
+  // Play a move
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+
+  // Open clear dialog and cancel
+  await page.getByRole('button', { name: 'Clear' }).click();
+  await expect(page.getByText('Clear Graph')).toBeVisible();
+  await page.getByRole('button', { name: 'Cancel' }).click();
+
+  // Nodes should remain
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+});
+
+test('clear graph persists after reload', async ({ page }) => {
+  // Play moves
+  await dragPiece(page, 'e2', 'e4');
+  await dragPiece(page, 'e7', 'e5');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(3);
+
+  // Clear
+  await page.getByRole('button', { name: 'Clear' }).click();
+  await page.locator('.bg-red-600').click();
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(1);
+  await waitForSettle(page);
+
+  // Reload
+  await page.reload();
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
+
+  // Should still have only 1 node
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(1);
 });

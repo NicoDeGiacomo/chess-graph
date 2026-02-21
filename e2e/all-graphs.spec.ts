@@ -91,9 +91,10 @@ test('delete from editor redirects to All Graphs', async ({ page }) => {
   await page.getByRole('button', { name: 'Create' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
-  // Delete it
-  page.on('dialog', (dialog) => dialog.accept());
+  // Delete it via styled confirm dialog
   await page.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.getByText('Delete Graph')).toBeVisible();
+  await page.locator('.bg-red-600').click();
 
   // Should be back at All Graphs
   await expect(page.getByText('My Graphs')).toBeVisible();
