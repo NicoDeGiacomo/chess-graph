@@ -36,7 +36,7 @@ const features = [
   {
     title: 'PGN Import & Export',
     description:
-      'Bring in games from any source via JSON export, or back up your repertoires anytime.',
+      'Bring in games from any source via JSON export, or back up your graphs anytime.',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
         <path d="M12 3v12m0 0l-4-4m4 4l4-4" />
@@ -145,7 +145,7 @@ export function LandingPage() {
           <div>
             <h3 className="text-lg font-semibold mb-2">No Account Required</h3>
             <p className="text-sm text-zinc-400">
-              Chess Graph runs entirely in your browser. Your repertoires are saved locally
+              Chess Graph runs entirely in your browser. Your graphs are saved locally
               using IndexedDB — no sign-up, no server, no data collection. Open the app
               and start building your opening preparation immediately. Export your data
               anytime as a backup.
@@ -168,7 +168,7 @@ export function LandingPage() {
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">Chess Coaches</h3>
             <p className="text-sm text-zinc-400">
-              Build visual lesson plans for students. Share repertoires as exported files and
+              Build visual lesson plans for students. Share graphs as exported files and
               walk through variations step by step.
             </p>
           </div>

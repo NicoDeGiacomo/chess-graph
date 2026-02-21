@@ -26,7 +26,7 @@ function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoir
         className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 w-full max-w-sm mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-medium text-zinc-100 mb-4">New Repertoire</h2>
+        <h2 className="text-lg font-medium text-zinc-100 mb-4">New Graph</h2>
 
         <div className="space-y-3">
           <div>
@@ -34,7 +34,7 @@ function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoir
             <input
               ref={inputRef}
               className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 outline-none focus:border-blue-500"
-              placeholder="Opening name..."
+              placeholder="Graph name..."
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => {

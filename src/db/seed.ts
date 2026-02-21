@@ -31,7 +31,7 @@ export async function ensureDefaultRepertoire(): Promise<string> {
 
   const repertoire: Repertoire = {
     id: repertoireId,
-    name: 'My First Opening',
+    name: 'My Initial Graph',
     side: 'white',
     rootNodeId,
     createdAt: now,

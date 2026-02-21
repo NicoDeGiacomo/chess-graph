@@ -9,9 +9,9 @@ import type { RepertoireSide } from '../types/index.ts';
 
 export function AllGraphsPage() {
   useDocumentMeta({
-    title: 'My Repertoires — Chess Graph',
+    title: 'My Graphs — Chess Graph',
     description:
-      'Browse and manage your chess opening repertoires. Create, edit, and organize your variations in interactive graph form.',
+      'Browse and manage your chess graphs. Create, edit, and organize your variations in interactive graph form.',
     canonical: 'https://chessgraph.net/repertoires',
   });
   const { state, createRepertoire, refreshRepertoireList } = useRepertoire();
@@ -62,12 +62,12 @@ export function AllGraphsPage() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">My Repertoires</h1>
+          <h1 className="text-2xl font-bold">My Graphs</h1>
           <button
             className="text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-lg px-4 py-2"
             onClick={() => setShowCreateDialog(true)}
           >
-            + New Repertoire
+            + New Graph
           </button>
         </div>
 
@@ -75,7 +75,7 @@ export function AllGraphsPage() {
         {repertoireList.length > 1 && (
           <input
             className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 outline-none focus:border-zinc-600 mb-6"
-            placeholder="Search repertoires..."
+            placeholder="Search graphs..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -84,7 +84,7 @@ export function AllGraphsPage() {
         {/* Card grid */}
         {filtered.length === 0 ? (
           <p className="text-zinc-500 text-center py-12">
-            {search ? 'No repertoires match your search.' : 'No repertoires yet. Create one to get started!'}
+            {search ? 'No graphs match your search.' : 'No graphs yet. Create one to get started!'}
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

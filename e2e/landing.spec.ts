@@ -9,7 +9,7 @@ test('landing page hero loads', async ({ page }) => {
 test('Get Started CTA navigates to repertoires', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Get Started' }).click();
-  await expect(page.getByText('My Repertoires')).toBeVisible({ timeout: 5000 });
+  await expect(page.getByText('My Graphs')).toBeVisible({ timeout: 5000 });
   expect(page.url()).toContain('/repertoires');
 });
 

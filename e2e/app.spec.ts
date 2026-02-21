@@ -27,7 +27,7 @@ async function resetAndEnterEditor(page: Page) {
   }));
   await page.reload();
   // Wait for All Graphs page to load with at least one card
-  await expect(page.getByText('My Repertoires')).toBeVisible();
+  await expect(page.getByText('My Graphs')).toBeVisible();
   // Click the first repertoire card to enter the editor
   await page.locator('button.bg-zinc-900').first().click();
   // Wait for the editor to load (graph node visible)
@@ -159,11 +159,11 @@ test('no duplicate nodes after switching repertoires via All Graphs', async ({ p
 
   // Go back to All Graphs
   await page.getByText('Back').click();
-  await expect(page.getByText('My Repertoires')).toBeVisible();
+  await expect(page.getByText('My Graphs')).toBeVisible();
 
   // Create a second repertoire
-  await page.getByRole('button', { name: /New Repertoire/i }).click();
-  await page.getByPlaceholder('Opening name...').fill('Sicilian');
+  await page.getByRole('button', { name: /New Graph/i }).click();
+  await page.getByPlaceholder('Graph name...').fill('Sicilian');
   await page.getByRole('button', { name: 'Create' }).click();
 
   // Should navigate to editor with 1 root node
@@ -171,8 +171,8 @@ test('no duplicate nodes after switching repertoires via All Graphs', async ({ p
 
   // Go back and click the original repertoire (not the Sicilian)
   await page.getByText('Back').click();
-  await expect(page.getByText('My Repertoires')).toBeVisible();
-  await page.getByText('My First Opening', { exact: true }).click();
+  await expect(page.getByText('My Graphs')).toBeVisible();
+  await page.getByText('My Initial Graph', { exact: true }).click();
 
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2, { timeout: 5000 });
 });
@@ -180,10 +180,10 @@ test('no duplicate nodes after switching repertoires via All Graphs', async ({ p
 test('create repertoire from All Graphs page', async ({ page }) => {
   // Go back to All Graphs
   await page.getByText('Back').click();
-  await expect(page.getByText('My Repertoires')).toBeVisible();
+  await expect(page.getByText('My Graphs')).toBeVisible();
 
-  await page.getByRole('button', { name: /New Repertoire/i }).click();
-  await page.getByPlaceholder('Opening name...').fill('Sicilian');
+  await page.getByRole('button', { name: /New Graph/i }).click();
+  await page.getByPlaceholder('Graph name...').fill('Sicilian');
   await page.getByRole('button', { name: 'Create' }).click();
 
   // Should be in editor now
@@ -214,8 +214,8 @@ test('rename repertoire', async ({ page }) => {
 test('delete repertoire redirects to All Graphs', async ({ page }) => {
   // Create a second repertoire first
   await page.getByText('Back').click();
-  await page.getByRole('button', { name: /New Repertoire/i }).click();
-  await page.getByPlaceholder('Opening name...').fill('Temp');
+  await page.getByRole('button', { name: /New Graph/i }).click();
+  await page.getByPlaceholder('Graph name...').fill('Temp');
   await page.getByRole('button', { name: 'Create' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
@@ -224,7 +224,7 @@ test('delete repertoire redirects to All Graphs', async ({ page }) => {
   await page.getByRole('button', { name: 'Delete' }).click();
 
   // Should redirect to All Graphs
-  await expect(page.getByText('My Repertoires')).toBeVisible();
+  await expect(page.getByText('My Graphs')).toBeVisible();
   // Should see 1 remaining card
   await expect(page.locator('button.bg-zinc-900')).toHaveCount(1);
 });
