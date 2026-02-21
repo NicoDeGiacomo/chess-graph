@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { useDocumentTitle } from '../hooks/useDocumentTitle.ts';
+import { useDocumentMeta } from '../hooks/useDocumentMeta.ts';
 
 const features = [
   {
@@ -59,7 +59,12 @@ const features = [
 ];
 
 export function LandingPage() {
-  useDocumentTitle('Chess Graph — Visualize Your Opening Repertoire');
+  useDocumentMeta({
+    title: 'Chess Graph — Visualize Your Opening Repertoire',
+    description:
+      'Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser.',
+    canonical: 'https://chessgraph.net/',
+  });
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -70,6 +75,7 @@ export function LandingPage() {
           alt="Chess Graph"
           className="h-14 sm:h-18 mx-auto"
         />
+        <h1 className="sr-only">Chess Graph — Chess Opening Repertoire Builder</h1>
         <p className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto">
           Visualize your opening repertoire as an interactive game tree.
           Branch, explore, and master your lines — all in your browser.
@@ -84,16 +90,22 @@ export function LandingPage() {
 
       {/* Screenshot */}
       <section className="max-w-5xl mx-auto px-4 pb-20">
-        <img
-          src="/screenshots/chess-graph-after-e4.png"
-          alt="Chess Graph showing an opening tree after 1. e4"
-          className="rounded-xl border border-zinc-800 shadow-2xl w-full"
-        />
+        <picture>
+          <source srcSet="/screenshots/chess-graph-after-e4.webp" type="image/webp" />
+          <img
+            src="/screenshots/chess-graph-after-e4.png"
+            alt="Chess Graph showing an opening tree after 1. e4"
+            className="rounded-xl border border-zinc-800 shadow-2xl w-full"
+            width={2400}
+            height={1636}
+            loading="lazy"
+          />
+        </picture>
       </section>
 
       {/* Features */}
       <section className="max-w-4xl mx-auto px-4 pb-24">
-        <h2 className="text-2xl font-bold text-center mb-12">Features</h2>
+        <h2 className="text-2xl font-bold text-center mb-12">Chess Opening Visualization Features</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {features.map((f) => (
             <div
@@ -108,12 +120,106 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* How It Works */}
+      <section className="max-w-4xl mx-auto px-4 pb-24">
+        <h2 className="text-2xl font-bold text-center mb-12">How It Works</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Build Your Repertoire Visually</h3>
+            <p className="text-sm text-zinc-400">
+              Start from any position and add moves directly on the chess board. Each move
+              creates a new node in your opening tree, letting you map out every variation
+              you want to study. The graph grows organically as you explore lines, giving you
+              a bird&apos;s-eye view of your entire repertoire.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Board and Graph Stay in Sync</h3>
+            <p className="text-sm text-zinc-400">
+              Click any node in the graph to instantly load that position on the board.
+              Make a move on the board and watch the graph update in real time. This
+              two-way sync makes it easy to navigate deep lines without losing your place
+              in the overall opening structure.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-2">No Account Required</h3>
+            <p className="text-sm text-zinc-400">
+              Chess Graph runs entirely in your browser. Your repertoires are saved locally
+              using IndexedDB — no sign-up, no server, no data collection. Open the app
+              and start building your opening preparation immediately. Export your data
+              anytime as a backup.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Who Uses Chess Graph */}
+      <section className="max-w-4xl mx-auto px-4 pb-24">
+        <h2 className="text-2xl font-bold text-center mb-12">Who Uses Chess Graph</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-semibold mb-2">Tournament Players</h3>
+            <p className="text-sm text-zinc-400">
+              Organize your preparation for both colors. Map out main lines and sidelines so
+              you&apos;re ready for any opponent.
+            </p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-semibold mb-2">Chess Coaches</h3>
+            <p className="text-sm text-zinc-400">
+              Build visual lesson plans for students. Share repertoires as exported files and
+              walk through variations step by step.
+            </p>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center">
+            <h3 className="text-lg font-semibold mb-2">Casual Improvers</h3>
+            <p className="text-sm text-zinc-400">
+              Tired of forgetting your openings? Build a personal cheat sheet that&apos;s
+              easy to read and always available in your browser.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* About Chess Graph */}
+      <section className="max-w-4xl mx-auto px-4 pb-24">
+        <h2 className="text-2xl font-bold text-center mb-12">About Chess Graph</h2>
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-sm text-zinc-400 mb-4">
+            Chess Graph is a free, open-source tool built by{' '}
+            <a
+              href="https://github.com/NicoDeGiacomo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Nico De Giacomo
+            </a>
+            . The project is maintained on{' '}
+            <a
+              href="https://github.com/NicoDeGiacomo/chess-graph"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              GitHub
+            </a>{' '}
+            and released under the MIT License.
+          </p>
+          <p className="text-sm text-zinc-400">
+            Contributions, bug reports, and feature requests are welcome.
+            If you find Chess Graph useful, consider starring the repository to help others discover it.
+          </p>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-zinc-800 py-8">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-500">
           <span>Chess Graph &middot; MIT License &middot; {new Date().getFullYear()}</span>
           <a
-            href="https://github.com/ndegiaco/chess-graph"
+            href="https://github.com/NicoDeGiacomo/chess-graph"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-zinc-300 transition-colors"

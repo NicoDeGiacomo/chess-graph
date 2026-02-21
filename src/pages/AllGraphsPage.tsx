@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDocumentTitle } from '../hooks/useDocumentTitle.ts';
+import { useDocumentMeta } from '../hooks/useDocumentMeta.ts';
 import { useNavigate } from 'react-router';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { GraphCard } from '../components/GraphCard.tsx';
@@ -8,7 +8,12 @@ import { db } from '../db/index.ts';
 import type { RepertoireSide } from '../types/index.ts';
 
 export function AllGraphsPage() {
-  useDocumentTitle('My Repertoires — Chess Graph');
+  useDocumentMeta({
+    title: 'My Repertoires — Chess Graph',
+    description:
+      'Browse and manage your chess opening repertoires. Create, edit, and organize your variations in interactive graph form.',
+    canonical: 'https://chessgraph.net/repertoires',
+  });
   const { state, createRepertoire, refreshRepertoireList } = useRepertoire();
   const { repertoireList } = state;
   const navigate = useNavigate();

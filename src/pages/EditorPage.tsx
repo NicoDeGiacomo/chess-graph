@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useDocumentTitle } from '../hooks/useDocumentTitle.ts';
+import { useDocumentMeta } from '../hooks/useDocumentMeta.ts';
 import { useParams, useNavigate, Navigate } from 'react-router';
 import { ReactFlowProvider } from '@xyflow/react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
@@ -15,7 +15,14 @@ export function EditorPage() {
   const navigate = useNavigate();
   const { state, switchRepertoire } = useRepertoire();
   const switchingRef = useRef<string | null>(null);
-  useDocumentTitle(state.repertoire?.name ? `${state.repertoire.name} — Chess Graph` : 'Chess Graph');
+  const repertoireName = state.repertoire?.name;
+  useDocumentMeta({
+    title: repertoireName ? `${repertoireName} — Chess Graph` : 'Chess Graph',
+    description: repertoireName
+      ? `Editing ${repertoireName} — explore moves and variations as an interactive graph.`
+      : 'Chess opening repertoire editor with interactive game tree visualization.',
+    canonical: 'https://chessgraph.net/repertoires',
+  });
 
   // Trigger switchRepertoire when id changes and list is ready
   useEffect(() => {

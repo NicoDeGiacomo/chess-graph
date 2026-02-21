@@ -15,14 +15,36 @@ test('Get Started CTA navigates to repertoires', async ({ page }) => {
 
 test('features section is visible', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Features' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Chess Opening Visualization Features' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Interactive Game Tree' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Synced Chess Board' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'PGN Import & Export' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Local Persistence' })).toBeVisible();
 });
 
+test('how it works section is visible', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'How It Works' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Build Your Repertoire Visually' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Board and Graph Stay in Sync' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'No Account Required' })).toBeVisible();
+});
+
+test('who uses section is visible', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Who Uses Chess Graph' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Tournament Players' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Chess Coaches' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Casual Improvers' })).toBeVisible();
+});
+
+test('about section is visible', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'About Chess Graph' })).toBeVisible();
+  await expect(page.getByText('Nico De Giacomo')).toBeVisible();
+});
+
 test('footer is visible', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('MIT License')).toBeVisible();
+  await expect(page.locator('footer').getByText('MIT License')).toBeVisible();
 });

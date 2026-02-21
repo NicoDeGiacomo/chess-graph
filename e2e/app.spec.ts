@@ -163,7 +163,7 @@ test('no duplicate nodes after switching repertoires via All Graphs', async ({ p
   // Go back and click the original repertoire (not the Sicilian)
   await page.getByText('Back').click();
   await expect(page.getByText('My Repertoires')).toBeVisible();
-  await page.getByText('My Repertoire', { exact: true }).click();
+  await page.getByText('My First Opening', { exact: true }).click();
 
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2, { timeout: 5000 });
 });

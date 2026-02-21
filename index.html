@@ -6,6 +6,7 @@
     <title>Chess Graph — Visualize Your Opening Repertoire</title>
     <meta name="description" content="Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser." />
     <meta name="theme-color" content="#09090b" />
+    <link rel="canonical" href="https://chessgraph.net/" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -16,17 +17,37 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Chess Graph — Visualize Your Opening Repertoire" />
     <meta property="og:description" content="Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser." />
-    <meta property="og:image" content="https://chessgraph.app/screenshots/chess-graph-after-e4.png" />
-    <meta property="og:url" content="https://chessgraph.app/" />
+    <meta property="og:image" content="https://chessgraph.net/screenshots/chess-graph-after-e4.png" />
+    <meta property="og:url" content="https://chessgraph.net/" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Chess Graph — Visualize Your Opening Repertoire" />
     <meta name="twitter:description" content="Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire." />
-    <meta name="twitter:image" content="https://chessgraph.app/screenshots/chess-graph-after-e4.png" />
+    <meta name="twitter:image" content="https://chessgraph.net/screenshots/chess-graph-after-e4.png" />
 
     <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Chess Graph",
+      "url": "https://chessgraph.net/",
+      "description": "Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires a modern web browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "screenshot": "https://chessgraph.net/screenshots/chess-graph-after-e4.png"
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
