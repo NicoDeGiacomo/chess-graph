@@ -20,6 +20,7 @@ export function EditorTopBar() {
   const [renameDraft, setRenameDraft] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [showImportError, setShowImportError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = async () => {
@@ -43,7 +44,7 @@ export function EditorTopBar() {
       navigate('/repertoires');
     } catch (err) {
       console.error('Import failed:', err);
-      alert('Failed to import. Please check the file format.');
+      setShowImportError(true);
     }
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -194,6 +195,16 @@ export function EditorTopBar() {
         confirmStyle="red"
         onConfirm={confirmClear}
         onClose={() => setShowClearConfirm(false)}
+      />
+
+      <ConfirmDialog
+        open={showImportError}
+        title="Import Failed"
+        message="Failed to import. Please check the file format."
+        confirmLabel="OK"
+        confirmStyle="blue"
+        onConfirm={() => setShowImportError(false)}
+        onClose={() => setShowImportError(false)}
       />
     </>
   );

@@ -21,7 +21,7 @@ import { NODE_COLORS } from '../types/index.ts';
 
 const DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
-interface RepertoireState {
+export interface RepertoireState {
   repertoire: Repertoire | null;
   nodesMap: Map<string, RepertoireNode>;
   selectedNodeId: string | null;

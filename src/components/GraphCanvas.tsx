@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   ReactFlow,
   useNodesState,
@@ -23,6 +23,7 @@ export function GraphCanvas() {
   const { repertoire, nodesMap, selectedNodeId } = state;
   const reactFlowInstance = useReactFlow();
   const prevNodeCount = useRef(0);
+  const [interactive, setInteractive] = useState(false);
 
   const layout = useMemo(() => {
     if (!repertoire) return { nodes: [] as MoveFlowNode[], edges: [] as MoveFlowEdge[] };
@@ -75,6 +76,8 @@ export function GraphCanvas() {
         onNodeContextMenu={onNodeContextMenu}
         onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
+        nodesDraggable={interactive}
+        elementsSelectable={interactive}
         nodesConnectable={false}
         colorMode="dark"
         fitView
@@ -91,7 +94,10 @@ export function GraphCanvas() {
           className="!bg-zinc-900 !border-zinc-700"
         />
         <Background color="#27272a" gap={20} />
-        <Controls className="!bg-zinc-800 !border-zinc-700 !shadow-lg [&>button]:!bg-zinc-800 [&>button]:!border-zinc-700 [&>button]:!fill-zinc-400 [&>button:hover]:!bg-zinc-700" />
+        <Controls
+          className="!bg-zinc-800 !border-zinc-700 !shadow-lg [&>button]:!bg-zinc-800 [&>button]:!border-zinc-700 [&>button]:!fill-zinc-400 [&>button:hover]:!bg-zinc-700"
+          onInteractiveChange={() => setInteractive((prev) => !prev)}
+        />
       </ReactFlow>
     </div>
   );

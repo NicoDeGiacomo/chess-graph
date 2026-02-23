@@ -61,12 +61,12 @@ test('default repertoire is not named "New Opening"', async ({ page }) => {
   expect(name).not.toBe('New Opening');
 });
 
-test('graph nodes are draggable', async ({ page }) => {
+test('graph nodes are not draggable by default', async ({ page }) => {
   const rootNode = page.locator('[data-testid^="rf__node-"]').first();
   await expect(rootNode).toBeVisible();
 
   const classList = await rootNode.getAttribute('class');
-  expect(classList).toContain('draggable');
+  expect(classList).not.toContain('draggable');
 });
 
 test('edges have arrow markers', async ({ page }) => {
@@ -436,4 +436,117 @@ test('clear graph persists after reload', async ({ page }) => {
 
   // Should still have only 1 node
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(1);
+});
+
+// ─── Import Error Dialog ──────────────────────────────────────────────
+
+test('import error shows styled dialog instead of alert', async ({ page }) => {
+  // Create a temp file with invalid JSON content via the file input
+  const fileInput = page.locator('input[type="file"]');
+  await fileInput.setInputFiles({
+    name: 'bad.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('not valid json!!!'),
+  });
+
+  // The styled dialog should appear
+  await expect(page.getByText('Import Failed')).toBeVisible();
+  await expect(page.getByText('Failed to import. Please check the file format.')).toBeVisible();
+
+  // Click OK to close
+  await page.getByRole('button', { name: 'OK' }).click();
+  await expect(page.getByText('Import Failed')).not.toBeVisible();
+});
+
+// ─── Arrow Key Navigation ─────────────────────────────────────────────
+
+test('arrow right navigates to first child node', async ({ page }) => {
+  // Play e4
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await waitForSettle(page);
+
+  // Go to root
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+
+  // FEN should show starting position
+  await expect(page.locator('text=8/8/PPPPPPPP')).toBeVisible();
+
+  // Press ArrowRight to go to first child (e4)
+  await page.keyboard.press('ArrowRight');
+  await waitForSettle(page);
+
+  // FEN should show e4 position
+  await expect(page.locator('text=4P3')).toBeVisible();
+});
+
+test('arrow left navigates to parent node', async ({ page }) => {
+  // Play e4 — auto-selected
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await waitForSettle(page);
+
+  // Press ArrowLeft to go back to root
+  await page.keyboard.press('ArrowLeft');
+  await waitForSettle(page);
+
+  // FEN should show starting position
+  await expect(page.locator('text=8/8/PPPPPPPP')).toBeVisible();
+});
+
+test('arrow down cycles to next sibling', async ({ page }) => {
+  // Play e4
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await waitForSettle(page);
+
+  // Go back to root
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+
+  // Play d4 from root — creates a branch
+  await dragPiece(page, 'd2', 'd4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(3);
+  await waitForSettle(page);
+
+  // Select e4 (navigate right from root to first child)
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+  await page.keyboard.press('ArrowRight');
+  await waitForSettle(page);
+
+  // FEN should show e4 position
+  await expect(page.locator('text=4P3')).toBeVisible();
+
+  // Press ArrowDown to cycle to next sibling (d4)
+  await page.keyboard.press('ArrowDown');
+  await waitForSettle(page);
+
+  // FEN should show d4 position (contains "3P4")
+  await expect(page.locator('text=3P4')).toBeVisible();
+});
+
+test('arrow keys do not navigate when input is focused', async ({ page }) => {
+  // Play e4 so there's a child to navigate to
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await waitForSettle(page);
+
+  // Go to root
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+  await expect(page.locator('text=8/8/PPPPPPPP')).toBeVisible();
+
+  // Start renaming (puts focus in an input)
+  await page.getByRole('button', { name: 'Rename' }).click();
+  const renameInput = page.locator('input').first();
+  await expect(renameInput).toBeVisible();
+
+  // Press ArrowRight — should NOT navigate since input is focused
+  await page.keyboard.press('ArrowRight');
+  await waitForSettle(page);
+
+  // FEN should still show starting position (no navigation happened)
+  await expect(page.locator('text=8/8/PPPPPPPP')).toBeVisible();
 });

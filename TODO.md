@@ -1,28 +1,35 @@
 # TODO
 
-## Fixes
-- ...
+## High Priority
 
-## To Do
-- ..
+- ~~Replace `alert()` in import error (`EditorTopBar.tsx`) with a styled modal~~ Done — last remaining native browser dialog replaced with ConfirmDialog
+- ~~Lock interactivity toggle by default (interactivity disabled)~~ Done — graph nodes locked by default, toggle via Controls button
+- ~~Arrow keys should move the game forwards and backwards~~ Done — Left/Right for parent/child, Up/Down for siblings
 
-## New Features
-- v2: login
+## Medium Priority
 
-## Warnings
-- ...
+- Auto-detect transpositions and join nodes in the graph — FEN comparison across nodes
+- Buttons at the side of the board with: open in chess.com, open in lichess, etc.
+- Ability to draw arrows and paint squares of different colors on the board, saved per node
 
-## Nice To Have
-- More optional views: top-down, floating window
-- Dark/light themes
+## Low Priority
+
 - CI / CD
 - Groupings (folders) of graphs
-- Buttons at the side of the board with: open in chess.com, open in lichess, etc.
-- Convert the repertoire on my main obsidian as an example graph to show the users.
-- Arrows should move the game forwards and backwards
-- Ability to draw arrows and paint squares of different colors on the board. And that they are saved with the position for that node.
-- ~~Using an alert for "Delete "My Repertoire"?" is ugly~~ Done — replaced with styled ConfirmDialog
-- ~~"Clear Graph" button with a confirmation modal.~~ Done — Clear button with red confirmation dialog
-- We should detect transpositions and join the nodes in the graph
-- There is a "toggle" interactivity button on the graph canvas, it should be locked by default (interactivity disabled)
+- More optional views: top-down, floating window
+- Dark/light themes
+- Convert the repertoire on my main obsidian as an example graph to show the users
 
+## Accessibility
+
+- Add aria-labels to icon-only buttons (back, color picker, delete)
+- Add `role="menu"` and keyboard navigation to ContextMenu
+
+## New Features
+
+- v2: login
+
+## Done
+
+- ~~Using an alert for "Delete "My Repertoire"?" is ugly~~ — replaced with styled ConfirmDialog
+- ~~"Clear Graph" button with a confirmation modal~~ — Clear button with red confirmation dialog

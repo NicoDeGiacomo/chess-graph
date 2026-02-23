@@ -3,6 +3,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta.ts';
 import { useParams, useNavigate, Navigate } from 'react-router';
 import { ReactFlowProvider } from '@xyflow/react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { useArrowKeyNav } from '../hooks/useArrowKeyNav.ts';
 import { EditorTopBar } from '../components/EditorTopBar.tsx';
 import { GraphCanvas } from '../components/GraphCanvas.tsx';
 import { Sidebar } from '../components/Sidebar.tsx';
@@ -13,8 +14,9 @@ import { LinkTranspositionDialog } from '../components/LinkTranspositionDialog.t
 export function EditorPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { state, switchRepertoire } = useRepertoire();
+  const { state, selectNode, switchRepertoire } = useRepertoire();
   const switchingRef = useRef<string | null>(null);
+  useArrowKeyNav(state, selectNode);
   const repertoireName = state.repertoire?.name;
   useDocumentMeta({
     title: repertoireName ? `${repertoireName} — Chess Graph` : 'Chess Graph',
