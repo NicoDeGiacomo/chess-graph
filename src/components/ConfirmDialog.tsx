@@ -42,9 +42,12 @@ function ConfirmDialogInner({
     >
       <div
         className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 w-full max-w-sm mx-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-dialog-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-medium text-zinc-100 mb-2">{title}</h2>
+        <h2 id="confirm-dialog-title" className="text-lg font-medium text-zinc-100 mb-2">{title}</h2>
         <p className="text-sm text-zinc-400 mb-5">{message}</p>
 
         <div className="flex justify-end gap-2">

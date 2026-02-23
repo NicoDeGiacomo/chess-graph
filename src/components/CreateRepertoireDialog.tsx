@@ -24,14 +24,18 @@ function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoir
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
       <div
         className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 w-full max-w-sm mx-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-repertoire-dialog-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-lg font-medium text-zinc-100 mb-4">New Graph</h2>
+        <h2 id="create-repertoire-dialog-title" className="text-lg font-medium text-zinc-100 mb-4">New Graph</h2>
 
         <div className="space-y-3">
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Name</label>
+            <label htmlFor="create-graph-name" className="block text-xs text-zinc-400 mb-1">Name</label>
             <input
+              id="create-graph-name"
               ref={inputRef}
               className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 outline-none focus:border-blue-500"
               placeholder="Graph name..."
@@ -45,8 +49,9 @@ function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoir
           </div>
 
           <div>
-            <label className="block text-xs text-zinc-400 mb-1">Side</label>
+            <label htmlFor="create-graph-side" className="block text-xs text-zinc-400 mb-1">Side</label>
             <select
+              id="create-graph-side"
               className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-sm text-zinc-100 outline-none focus:border-blue-500"
               value={side}
               onChange={(e) => setSide(e.target.value as RepertoireSide)}

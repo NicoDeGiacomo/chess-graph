@@ -255,7 +255,7 @@ test('node details show move path after playing moves', async ({ page }) => {
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
 
   // The move path badge should show "e4"
-  await expect(page.locator('.font-mono').getByText('e4')).toBeVisible();
+  await expect(page.locator('span.font-mono').getByText('e4')).toBeVisible();
 });
 
 test('add and save a comment on a node', async ({ page }) => {
@@ -525,6 +525,40 @@ test('arrow down cycles to next sibling', async ({ page }) => {
 
   // FEN should show d4 position (contains "3P4")
   await expect(page.locator('text=3P4')).toBeVisible();
+});
+
+// ─── External Analysis Links ─────────────────────────────────────────
+
+test('external links visible when node selected', async ({ page }) => {
+  // Root node is auto-selected on entry
+  const chesscomLink = page.getByRole('link', { name: 'Chess.com' });
+  const lichessLink = page.getByRole('link', { name: 'Lichess' });
+
+  await expect(chesscomLink).toBeVisible();
+  await expect(lichessLink).toBeVisible();
+
+  // Check hrefs contain the default FEN
+  const defaultFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  await expect(chesscomLink).toHaveAttribute('href', new RegExp(encodeURIComponent(defaultFen)));
+  // Lichess uses underscores instead of spaces in the URL path
+  await expect(lichessLink).toHaveAttribute('href', new RegExp(defaultFen.replace(/ /g, '_')));
+
+  // Both should open in new tab
+  await expect(chesscomLink).toHaveAttribute('target', '_blank');
+  await expect(lichessLink).toHaveAttribute('target', '_blank');
+});
+
+test('external links update on node change', async ({ page }) => {
+  // Play e4
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await waitForSettle(page);
+
+  // The new node (e4) is auto-selected — links should contain the new FEN
+  const chesscomLink = page.getByRole('link', { name: 'Chess.com' });
+  const href = await chesscomLink.getAttribute('href');
+  // e4 position FEN contains "4P3" — verify it's in the encoded href
+  expect(href).toContain(encodeURIComponent('4P3'));
 });
 
 test('arrow keys do not navigate when input is focused', async ({ page }) => {

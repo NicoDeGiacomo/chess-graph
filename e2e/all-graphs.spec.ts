@@ -106,6 +106,19 @@ test('invalid repertoire ID redirects to All Graphs', async ({ page }) => {
   await expect(page.getByText('My Graphs')).toBeVisible({ timeout: 5000 });
 });
 
+test('search input has aria-label', async ({ page }) => {
+  // Create a second repertoire so the search input appears
+  await page.getByRole('button', { name: /New Graph/i }).click();
+  await page.getByPlaceholder('Graph name...').fill('Sicilian');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
+  await page.getByText('Back').click();
+  await expect(page.getByText('My Graphs')).toBeVisible();
+
+  const searchInput = page.getByPlaceholder('Search graphs...');
+  await expect(searchInput).toHaveAttribute('aria-label', 'Search graphs');
+});
+
 test('card shows root node tags and comment', async ({ page }) => {
   // Enter editor
   await page.locator('button.bg-zinc-900').first().click();

@@ -70,7 +70,7 @@ export function EditorPage() {
   }
 
   return (
-    <div className="h-screen bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">
+    <main className="h-screen bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">
       <EditorTopBar />
       <div className="flex flex-1 min-h-0">
         <ReactFlowProvider>
@@ -81,6 +81,6 @@ export function EditorPage() {
       <ContextMenu />
       <EditNodeDialog />
       <LinkTranspositionDialog />
-    </div>
+    </main>
   );
 }

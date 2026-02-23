@@ -76,6 +76,7 @@ export function AllGraphsPage() {
           <input
             className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 outline-none focus:border-zinc-600 mb-6"
             placeholder="Search graphs..."
+            aria-label="Search graphs"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

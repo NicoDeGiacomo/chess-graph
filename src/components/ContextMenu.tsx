@@ -109,6 +109,7 @@ export function ContextMenu() {
                   className="w-6 h-6 rounded border border-zinc-600 hover:ring-1 hover:ring-zinc-400"
                   style={{ backgroundColor: color }}
                   title={NODE_COLOR_LABELS[color]}
+                  aria-label={`Set color to ${NODE_COLOR_LABELS[color]}`}
                   onClick={() => handleColorChange(color)}
                 />
               ))}
@@ -155,6 +156,7 @@ export function ContextMenu() {
               {tag}
               <button
                 className="text-zinc-500 hover:text-red-400"
+                aria-label={`Remove tag: ${tag}`}
                 onClick={() => handleRemoveTag(tag)}
               >
                 x

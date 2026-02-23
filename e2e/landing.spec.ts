@@ -44,6 +44,19 @@ test('about section is visible', async ({ page }) => {
   await expect(page.getByText('Nico De Giacomo')).toBeVisible();
 });
 
+test('GitHub links have accessible labels', async ({ page }) => {
+  await page.goto('/');
+  const githubLinks = page.locator('a[href*="github.com"]');
+  const count = await githubLinks.count();
+  expect(count).toBeGreaterThanOrEqual(2);
+
+  for (let i = 0; i < count; i++) {
+    const label = await githubLinks.nth(i).getAttribute('aria-label');
+    expect(label).toBeTruthy();
+    expect(label!).toContain('(opens in new tab)');
+  }
+});
+
 test('footer is visible', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('footer').getByText('MIT License')).toBeVisible();

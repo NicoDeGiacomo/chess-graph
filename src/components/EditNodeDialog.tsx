@@ -7,8 +7,8 @@ function EditNodeForm({ node, onSave, onClose }: { node: RepertoireNode; onSave:
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
-      <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 w-[400px] max-w-[90vw] shadow-xl" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-sm font-medium text-zinc-100 mb-2">
+      <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 w-[400px] max-w-[90vw] shadow-xl" role="dialog" aria-modal="true" aria-labelledby="edit-node-dialog-title" onClick={(e) => e.stopPropagation()}>
+        <h3 id="edit-node-dialog-title" className="text-sm font-medium text-zinc-100 mb-2">
           Edit Comment — {node.move || 'Start'}
         </h3>
         <textarea

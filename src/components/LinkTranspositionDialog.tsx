@@ -51,8 +51,8 @@ export function LinkTranspositionDialog() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setLinkingNodeId(null)}>
-      <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 w-[450px] max-w-[90vw] shadow-xl max-h-[70vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-sm font-medium text-zinc-100 mb-2">
+      <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 w-[450px] max-w-[90vw] shadow-xl max-h-[70vh] flex flex-col" role="dialog" aria-modal="true" aria-labelledby="link-transposition-dialog-title" onClick={(e) => e.stopPropagation()}>
+        <h3 id="link-transposition-dialog-title" className="text-sm font-medium text-zinc-100 mb-2">
           Link Transposition — {sourceNode.move || 'Start'}
         </h3>
         <p className="text-xs text-zinc-400 mb-3">

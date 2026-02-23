@@ -7,7 +7,7 @@ const features = [
     description:
       'Explore your openings as a visual node graph. Branch, merge, and navigate variations with drag-and-drop ease.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8" aria-hidden="true">
         <circle cx="12" cy="5" r="2.5" />
         <circle cx="5" cy="19" r="2.5" />
         <circle cx="19" cy="19" r="2.5" />
@@ -20,7 +20,7 @@ const features = [
     description:
       'Click any node to jump to that position. Make moves on the board and the graph updates in real time.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="1" />
         <rect x="3" y="3" width="4.5" height="4.5" fill="currentColor" opacity="0.3" />
         <rect x="12" y="3" width="4.5" height="4.5" fill="currentColor" opacity="0.3" />
@@ -38,7 +38,7 @@ const features = [
     description:
       'Bring in games from any source via JSON export, or back up your graphs anytime.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8" aria-hidden="true">
         <path d="M12 3v12m0 0l-4-4m4 4l4-4" />
         <path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
       </svg>
@@ -49,7 +49,7 @@ const features = [
     description:
       'All data lives in your browser via IndexedDB. No account required, no data sent to any server.',
     icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8" aria-hidden="true">
         <path d="M12 2a4 4 0 00-4 4v4h8V6a4 4 0 00-4-4z" />
         <rect x="4" y="10" width="16" height="12" rx="2" />
         <circle cx="12" cy="16" r="1.5" />
@@ -193,6 +193,7 @@ export function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-400 hover:text-blue-300 transition-colors"
+              aria-label="Nico De Giacomo (opens in new tab)"
             >
               Nico De Giacomo
             </a>
@@ -202,6 +203,7 @@ export function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-400 hover:text-blue-300 transition-colors"
+              aria-label="GitHub (opens in new tab)"
             >
               GitHub
             </a>{' '}
@@ -223,6 +225,7 @@ export function LandingPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-zinc-300 transition-colors"
+            aria-label="GitHub (opens in new tab)"
           >
             GitHub
           </a>
