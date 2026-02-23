@@ -37,7 +37,7 @@
 
 ## Done
 
-- ~~Using an alert for "Delete "My Repertoire"?" is ugly~~ — replaced with styled ConfirmDialog
+- ~~Using an alert for "Delete "My Repertoire"?" is ugly~~ — replaced with styled ConfirmDialo
 - ~~"Clear Graph" button with a confirmation modal~~ — Clear button with red confirmation dialog
 
 ## Improvements
@@ -45,4 +45,7 @@
 - The details shown in the root node vs the rest change significantly and its confusing when you navigate the position. The moves and tags row disappear, the FEN row changes its hight because it has no characters inside. We should normalize all of that.
 - Arrows dont appear on the bottom right overview of the graph.
 - The left and right dots at the side of the nodes look ugly. Remove them completely.
+
+## Security
+- Should we make sure editing the json of the graph is not possible / detect when it was tampered? Is that a security risk?
 

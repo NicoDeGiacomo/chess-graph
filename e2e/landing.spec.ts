@@ -47,6 +47,7 @@ test('about section is visible', async ({ page }) => {
 test('GitHub links have accessible labels', async ({ page }) => {
   await page.goto('/');
   const githubLinks = page.locator('a[href*="github.com"]');
+  await expect(githubLinks.first()).toBeVisible();
   const count = await githubLinks.count();
   expect(count).toBeGreaterThanOrEqual(2);
 

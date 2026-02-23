@@ -45,11 +45,16 @@ The app combines a chess board view (react-chessboard) with a graph view (@xyflo
 
 After every code change, always:
 
-1. Run `npm run build` — fix any TypeScript errors before proceeding
-2. Run `npm run lint` — fix any lint errors
+1. Run `npm run build` — fix any TypeScript errors **and warnings** before proceeding
+2. Run `npm run lint` — fix any lint errors **and warnings**
 3. Run `npm test` — ensure all unit tests pass
 4. Run `npm run test:e2e` — ensure all E2E tests pass
 5. Write new tests for any new or changed functionality
+6. Run the `/react-doctor` skill — notify the user if the skill is not installed
+
+## Project Status
+
+When the user asks "where do we stand", "where are we in the project", "what's left", or similar status questions, always read and analyze `TODO.md` to provide a summary of completed items, in-progress work, and remaining tasks.
 
 ## TODO File Management
 
