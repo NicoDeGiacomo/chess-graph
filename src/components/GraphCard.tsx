@@ -5,6 +5,7 @@ interface GraphCardProps {
   nodeCount: number;
   tags: string[];
   comment: string;
+  color: string;
   onClick: () => void;
 }
 
@@ -23,14 +24,15 @@ function formatRelativeTime(timestamp: number): string {
 
 const MAX_VISIBLE_TAGS = 3;
 
-export function GraphCard({ repertoire, nodeCount, tags, comment, onClick }: GraphCardProps) {
+export function GraphCard({ repertoire, nodeCount, tags, comment, color, onClick }: GraphCardProps) {
   const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
   const overflowCount = tags.length - MAX_VISIBLE_TAGS;
 
   return (
     <button
       onClick={onClick}
-      className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-left hover:border-zinc-600 hover:bg-zinc-800/50 transition-colors cursor-pointer w-full"
+      className="bg-zinc-900 border border-zinc-800 border-l-4 rounded-xl p-4 text-left hover:border-zinc-600 hover:bg-zinc-800/50 transition-colors cursor-pointer w-full"
+      style={{ borderLeftColor: color }}
     >
       <div className="flex items-center gap-2 mb-2">
         <span className="text-lg">

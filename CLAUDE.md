@@ -54,7 +54,7 @@ After every code change, always:
 
 ## Project Status
 
-When the user asks "where do we stand", "where are we in the project", "what's left", or similar status questions, always read and analyze `TODO.md` to provide a summary of completed items, in-progress work, and remaining tasks.
+When the user asks "where do we stand", "where are we in the project", "what's left", or similar status questions, always read and analyze `TODO.md` to provide a summary of completed items, in-progress work, and remaining tasks. Then re-prioritize the open items based on impact, dependencies, and effort, and suggest concrete next steps.
 
 ## TODO File Management
 

@@ -5,7 +5,7 @@ import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { GraphCard } from '../components/GraphCard.tsx';
 import { CreateRepertoireDialog } from '../components/CreateRepertoireDialog.tsx';
 import { db } from '../db/index.ts';
-import type { RepertoireSide } from '../types/index.ts';
+import { NODE_COLORS, type RepertoireSide } from '../types/index.ts';
 
 export function AllGraphsPage() {
   useDocumentMeta({
@@ -20,7 +20,7 @@ export function AllGraphsPage() {
 
   const [search, setSearch] = useState('');
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [cardData, setCardData] = useState<Record<string, { nodeCount: number; tags: string[]; comment: string }>>({});
+  const [cardData, setCardData] = useState<Record<string, { nodeCount: number; tags: string[]; comment: string; color: string }>>({});
 
   useEffect(() => {
     refreshRepertoireList();
@@ -30,7 +30,7 @@ export function AllGraphsPage() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const data: Record<string, { nodeCount: number; tags: string[]; comment: string }> = {};
+      const data: Record<string, { nodeCount: number; tags: string[]; comment: string; color: string }> = {};
       for (const r of repertoireList) {
         const [count, rootNode] = await Promise.all([
           db.nodes.where('repertoireId').equals(r.id).count(),
@@ -40,6 +40,7 @@ export function AllGraphsPage() {
           nodeCount: count,
           tags: rootNode?.tags ?? [],
           comment: rootNode?.comment ?? '',
+          color: rootNode?.color ?? NODE_COLORS.DEFAULT,
         };
       }
       if (!cancelled) setCardData(data);
@@ -96,6 +97,7 @@ export function AllGraphsPage() {
                 nodeCount={cardData[r.id]?.nodeCount ?? 0}
                 tags={cardData[r.id]?.tags ?? []}
                 comment={cardData[r.id]?.comment ?? ''}
+                color={cardData[r.id]?.color ?? NODE_COLORS.DEFAULT}
                 onClick={() => navigate(`/repertoire/${r.id}`)}
               />
             ))}

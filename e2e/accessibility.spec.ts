@@ -127,6 +127,55 @@ test('confirm dialog has ARIA attributes', async ({ page }) => {
   await expect(heading).toBeVisible();
 });
 
+// ─── Context Menu ARIA & Keyboard ────────────────────────────────
+
+test('context menu has role="menu" and menuitem roles', async ({ page }) => {
+  const rootNode = page.locator('[data-testid^="rf__node-"]').first();
+  await rootNode.click({ button: 'right' });
+
+  const menu = page.locator('[role="menu"]');
+  await expect(menu).toBeVisible();
+
+  const menuItems = menu.locator('[role="menuitem"]');
+  const count = await menuItems.count();
+  expect(count).toBeGreaterThanOrEqual(4); // Edit Comment, Change Color, Add Tag, Link Transposition
+});
+
+test('context menu closes on Escape key', async ({ page }) => {
+  const rootNode = page.locator('[data-testid^="rf__node-"]').first();
+  await rootNode.click({ button: 'right' });
+
+  const menu = page.locator('[role="menu"]');
+  await expect(menu).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(menu).not.toBeVisible();
+});
+
+test('context menu arrow keys move focus between items', async ({ page }) => {
+  const rootNode = page.locator('[data-testid^="rf__node-"]').first();
+  await rootNode.click({ button: 'right' });
+
+  const menu = page.locator('[role="menu"]');
+  await expect(menu).toBeVisible();
+
+  // First menuitem should be focused on open
+  const items = menu.locator('[role="menuitem"]');
+  await expect(items.first()).toBeFocused();
+
+  // Arrow down moves to next item
+  await page.keyboard.press('ArrowDown');
+  await expect(items.nth(1)).toBeFocused();
+
+  // Arrow up moves back
+  await page.keyboard.press('ArrowUp');
+  await expect(items.first()).toBeFocused();
+
+  // Arrow up from first wraps to last
+  await page.keyboard.press('ArrowUp');
+  await expect(items.last()).toBeFocused();
+});
+
 // ─── Back Link Label ─────────────────────────────────────────────────
 
 test('back link has aria-label', async ({ page }) => {

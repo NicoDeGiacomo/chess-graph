@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { NODE_COLORS, NODE_COLOR_LABELS, type NodeColor } from '../types/index.ts';
 
@@ -34,6 +34,34 @@ export function ContextMenu() {
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [contextMenu, setContextMenu]);
+
+  // Focus first menuitem when menu opens
+  useEffect(() => {
+    if (contextMenu && menuRef.current) {
+      const firstItem = menuRef.current.querySelector<HTMLElement>('[role="menuitem"]');
+      firstItem?.focus();
+    }
+  }, [contextMenu]);
+
+  const handleMenuKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      setContextMenu(null);
+      return;
+    }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+      if (!items || items.length === 0) return;
+      const currentIndex = Array.from(items).indexOf(document.activeElement as HTMLElement);
+      let nextIndex: number;
+      if (e.key === 'ArrowDown') {
+        nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+      } else {
+        nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+      }
+      items[nextIndex].focus();
+    }
+  }, [setContextMenu]);
 
   if (!contextMenu) return null;
 
@@ -71,10 +99,14 @@ export function ContextMenu() {
   return (
     <div
       ref={menuRef}
+      role="menu"
+      onKeyDown={handleMenuKeyDown}
       className="fixed z-50 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl py-1 min-w-[180px] text-sm"
       style={{ top: y, left: x }}
     >
       <button
+        role="menuitem"
+        tabIndex={-1}
         className="w-full text-left px-3 py-1.5 hover:bg-zinc-700 text-zinc-100"
         onClick={() => setEditingNodeId(contextMenu.nodeId)}
       >
@@ -83,6 +115,8 @@ export function ContextMenu() {
 
       {!isRoot && (
         <button
+          role="menuitem"
+          tabIndex={-1}
           className="w-full text-left px-3 py-1.5 hover:bg-zinc-700 text-red-400"
           onClick={() => deleteNode(contextMenu.nodeId)}
         >
@@ -94,6 +128,8 @@ export function ContextMenu() {
 
       <div className="relative">
         <button
+          role="menuitem"
+          tabIndex={-1}
           className="w-full text-left px-3 py-1.5 hover:bg-zinc-700 text-zinc-100 flex justify-between items-center"
           onClick={() => setShowColors(!showColors)}
         >
@@ -142,6 +178,8 @@ export function ContextMenu() {
         </div>
       ) : (
         <button
+          role="menuitem"
+          tabIndex={-1}
           className="w-full text-left px-3 py-1.5 hover:bg-zinc-700 text-zinc-100"
           onClick={() => setTagInput('')}
         >
@@ -169,6 +207,8 @@ export function ContextMenu() {
       <div className="border-t border-zinc-700 my-1" />
 
       <button
+        role="menuitem"
+        tabIndex={-1}
         className="w-full text-left px-3 py-1.5 hover:bg-zinc-700 text-zinc-100"
         onClick={() => setLinkingNodeId(contextMenu.nodeId)}
       >

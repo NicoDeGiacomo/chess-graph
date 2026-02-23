@@ -119,6 +119,13 @@ test('search input has aria-label', async ({ page }) => {
   await expect(searchInput).toHaveAttribute('aria-label', 'Search graphs');
 });
 
+test('card has colored left border', async ({ page }) => {
+  const card = page.locator('button.bg-zinc-900').first();
+  const borderLeft = await card.evaluate((el) => getComputedStyle(el).borderLeftColor);
+  // Default color #3f3f46 → rgb(63, 63, 70)
+  expect(borderLeft).toBe('rgb(63, 63, 70)');
+});
+
 test('card shows root node tags and comment', async ({ page }) => {
   // Enter editor
   await page.locator('button.bg-zinc-900').first().click();
