@@ -13,3 +13,13 @@ body {
   border: 1px solid #3f3f46 !important;
   border-radius: 4px;
 }
+
+.react-flow__node:focus,
+.react-flow__node:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.react-flow__node.selected {
+  box-shadow: none !important;
+}

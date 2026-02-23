@@ -11,6 +11,7 @@
 - Auto-detect transpositions and join nodes in the graph — FEN comparison across nodes
 - ~~Buttons at the side of the board with: open in chess.com, open in lichess, etc.~~ Done — Chess.com and Lichess analysis links below the board
 - Ability to draw arrows and paint squares of different colors on the board, saved per node
+- The colors, comments, and tags of the root node should be the colors, comments, and tags of the entire graph. So they shoud show on the all graphs screen.
 
 ## Low Priority
 
@@ -42,4 +43,6 @@
 ## Improvements
 - Are we using too much storage? Should we implement a compression strategy to save the graphs on the browser?
 - The details shown in the root node vs the rest change significantly and its confusing when you navigate the position. The moves and tags row disappear, the FEN row changes its hight because it has no characters inside. We should normalize all of that.
+- Arrows dont appear on the bottom right overview of the graph.
+- The left and right dots at the side of the nodes look ugly. Remove them completely.
 

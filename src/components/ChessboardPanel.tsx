@@ -3,6 +3,8 @@ import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { outlinePieces } from './outlinePieces.tsx';
+import chesscomLogo from '../../logos/chesscom.png';
+import lichessLogo from '../../logos/lichess.png';
 
 function isOwnPiece(pieceType: string, turn: 'w' | 'b'): boolean {
   return pieceType.startsWith(turn);
@@ -99,28 +101,34 @@ export function ChessboardPanel() {
         />
       </div>
       {selectedNodeId && (
-        <div className="flex justify-center gap-4 mt-2 max-w-[400px] mx-auto">
+        <div className="flex justify-center gap-2 mt-2 max-w-[400px] mx-auto">
           <a
             href={`https://www.chess.com/analysis?fen=${encodeURIComponent(fen)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-1"
+            aria-label="Chess.com"
+            className="inline-flex h-5 rounded overflow-hidden hover:brightness-110 transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
-              <path fillRule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5zm7.25-.75a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0V6.31l-5.47 5.47a.75.75 0 01-1.06-1.06l5.47-5.47H12.25a.75.75 0 01-.75-.75z" clipRule="evenodd" />
-            </svg>
-            Chess.com
+            <span className="flex items-center bg-zinc-700 px-1.5">
+              <img src={chesscomLogo} alt="" width="12" height="12" />
+            </span>
+            <span className="flex items-center px-1.5 text-[11px] font-medium text-white" style={{ backgroundColor: '#81b64c' }}>
+              Chess.com
+            </span>
           </a>
           <a
             href={`https://lichess.org/analysis/${fen.replace(/ /g, '_')}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-1"
+            aria-label="Lichess"
+            className="inline-flex h-5 rounded overflow-hidden hover:brightness-110 transition"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
-              <path fillRule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5zm7.25-.75a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0V6.31l-5.47 5.47a.75.75 0 01-1.06-1.06l5.47-5.47H12.25a.75.75 0 01-.75-.75z" clipRule="evenodd" />
-            </svg>
-            Lichess
+            <span className="flex items-center bg-zinc-700 px-1.5">
+              <img src={lichessLogo} alt="" width="12" height="12" className="invert" />
+            </span>
+            <span className="flex items-center px-1.5 text-[11px] font-medium text-white" style={{ backgroundColor: '#312e2b' }}>
+              Lichess
+            </span>
           </a>
         </div>
       )}
