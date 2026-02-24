@@ -2,7 +2,6 @@ import { useMemo, useRef, useState } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
-import { outlinePieces } from './outlinePieces.tsx';
 import chesscomLogo from '../../logos/chesscom.png';
 import lichessLogo from '../../logos/lichess.png';
 
@@ -89,7 +88,6 @@ export function ChessboardPanel() {
             onSquareClick,
             squareStyles,
             boardOrientation: repertoire?.side || 'white',
-            pieces: outlinePieces,
             animationDurationInMs: 200,
             darkSquareStyle: { backgroundColor: '#52525b' },
             lightSquareStyle: { backgroundColor: '#a1a1aa' },
