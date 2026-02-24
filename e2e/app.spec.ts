@@ -561,6 +561,35 @@ test('external links update on node change', async ({ page }) => {
   expect(href).toContain(encodeURIComponent('4P3'));
 });
 
+test('ESC dismiss of confirm dialog does not leave selection rectangle', async ({ page }) => {
+  // Play a move so Clear has something to clear
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+
+  // Open clear confirm dialog
+  await page.getByRole('button', { name: 'Clear' }).click();
+  await expect(page.getByText('Clear Graph')).toBeVisible();
+
+  // Dismiss with ESC
+  await page.keyboard.press('Escape');
+  await expect(page.getByText('Clear Graph')).not.toBeVisible();
+
+  // The selection rectangle should not be visible (hidden via CSS)
+  const selectionRect = page.locator('.react-flow__nodesselection-rect');
+  await expect(selectionRect).toHaveCount(0);
+});
+
+test('root node shows "Starting position" placeholder in move path', async ({ page }) => {
+  // Root node is auto-selected — should show placeholder instead of empty move path
+  await expect(page.getByText('Starting position')).toBeVisible();
+});
+
+test('root node shows Tags heading with "No tags" placeholder', async ({ page }) => {
+  // Root node is auto-selected — Tags heading should always be visible
+  await expect(page.getByText('Tags', { exact: true })).toBeVisible();
+  await expect(page.getByText('No tags')).toBeVisible();
+});
+
 test('arrow keys do not navigate when input is focused', async ({ page }) => {
   // Play e4 so there's a child to navigate to
   await dragPiece(page, 'e2', 'e4');

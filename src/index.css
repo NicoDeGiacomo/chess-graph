@@ -23,3 +23,7 @@ body {
 .react-flow__node.selected {
   box-shadow: none !important;
 }
+
+.react-flow__nodesselection-rect {
+  display: none !important;
+}

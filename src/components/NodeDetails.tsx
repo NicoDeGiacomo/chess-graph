@@ -78,18 +78,20 @@ export function NodeDetails() {
   return (
     <div className="p-3 space-y-3 text-sm overflow-y-auto">
       {/* Move path */}
-      {movePath.length > 0 && (
-        <div className="flex flex-wrap gap-1 items-center">
-          {movePath.map((move, i) => (
+      <div className="flex flex-wrap gap-1 items-center min-h-[28px]">
+        {movePath.length > 0 ? (
+          movePath.map((move, i) => (
             <span key={i} className="flex items-center gap-1">
               {i > 0 && <span className="text-zinc-600">→</span>}
               <span className="bg-zinc-800 rounded px-1.5 py-0.5 text-xs font-mono text-zinc-300">
                 {move}
               </span>
             </span>
-          ))}
-        </div>
-      )}
+          ))
+        ) : (
+          <span className="text-zinc-600 text-xs italic">Starting position</span>
+        )}
+      </div>
 
       {/* FEN */}
       <div>
@@ -109,14 +111,14 @@ export function NodeDetails() {
           <CopyButton text={pgn} label="PGN" />
         </div>
         <div className="font-mono text-[10px] text-zinc-400 bg-zinc-900 rounded p-1.5 truncate">
-          {pgn}
+          {pgn || <span className="text-zinc-600 italic">—</span>}
         </div>
       </div>
 
       {/* Tags */}
-      {selectedNode.tags.length > 0 && (
-        <div>
-          <div className="text-zinc-500 text-xs mb-1">Tags</div>
+      <div>
+        <div className="text-zinc-500 text-xs mb-1">Tags</div>
+        {selectedNode.tags.length > 0 ? (
           <div className="flex flex-wrap gap-1">
             {selectedNode.tags.map((tag) => (
               <span key={tag} className="bg-zinc-800 text-zinc-300 rounded px-2 py-0.5 text-xs">
@@ -124,8 +126,10 @@ export function NodeDetails() {
               </span>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="text-zinc-600 text-xs italic">No tags</div>
+        )}
+      </div>
 
       {/* Comment */}
       <div>
