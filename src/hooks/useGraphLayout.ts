@@ -4,6 +4,7 @@ import type { RepertoireNode, MoveFlowNode, MoveFlowEdge, MoveNodeData } from '.
 
 const NODE_WIDTH = 120;
 const NODE_HEIGHT = 40;
+const NODE_HEIGHT_WITH_TAGS = 52;
 
 export function computeLayout(
   nodesMap: Map<string, RepertoireNode>,
@@ -26,7 +27,8 @@ export function computeLayout(
   const flowEdges: MoveFlowEdge[] = [];
 
   for (const [id, node] of nodesMap) {
-    g.setNode(id, { width: NODE_WIDTH, height: NODE_HEIGHT });
+    const nodeHeight = node.tags.length > 0 ? NODE_HEIGHT_WITH_TAGS : NODE_HEIGHT;
+    g.setNode(id, { width: NODE_WIDTH, height: nodeHeight });
 
     // Parent-child edges (added to dagre for layout)
     if (node.parentId && nodesMap.has(node.parentId)) {
@@ -79,7 +81,7 @@ export function computeLayout(
       type: 'move',
       position: {
         x: dagreNode.x - NODE_WIDTH / 2,
-        y: dagreNode.y - NODE_HEIGHT / 2,
+        y: dagreNode.y - (node.tags.length > 0 ? NODE_HEIGHT_WITH_TAGS : NODE_HEIGHT) / 2,
       },
       data: nodeData,
     });

@@ -590,6 +590,72 @@ test('root node shows Tags heading with "No tags" placeholder', async ({ page })
   await expect(page.getByText('No tags')).toBeVisible();
 });
 
+test('child node inherits parent color', async ({ page }) => {
+  // Play e4 to create a child node
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+
+  // Right-click e4 node → Change Color → Green
+  const nodes = page.locator('[data-testid^="rf__node-"]');
+  await nodes.nth(1).click({ button: 'right' });
+  await page.getByText('Change Color').click();
+  await page.locator('button[title="Green"]').click();
+  await waitForSettle(page);
+
+  // Click e4 node to select it
+  await nodes.nth(1).click({ force: true });
+  await waitForSettle(page);
+
+  // Play e5 from e4 to create a grandchild
+  await dragPiece(page, 'e7', 'e5');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(3);
+  await waitForSettle(page);
+
+  // The e5 node should inherit the green color from e4
+  const e5Node = page.locator('[data-testid^="rf__node-"]').nth(2);
+  const styledDiv = e5Node.locator('div[style*="background-color"]');
+  await expect(styledDiv).toHaveCSS('background-color', 'rgb(22, 163, 74)');
+});
+
+test('tagged node does not overlap sibling in layout', async ({ page }) => {
+  // Create two sibling nodes: e4 and d4
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await waitForSettle(page);
+
+  // Go back to root
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+
+  // Play d4 from root
+  await dragPiece(page, 'd2', 'd4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(3);
+  await waitForSettle(page);
+
+  // Add a tag to e4 (first child)
+  const nodes = page.locator('[data-testid^="rf__node-"]');
+  await nodes.nth(1).click({ button: 'right' });
+  await page.getByText('Add Tag').click();
+  const tagInput = page.getByPlaceholder('Tag name...');
+  await expect(tagInput).toBeVisible();
+  await tagInput.fill('mainline');
+  await tagInput.press('Enter');
+  await waitForSettle(page);
+
+  // Get bounding boxes of both siblings
+  const box1 = (await nodes.nth(1).boundingBox())!;
+  const box2 = (await nodes.nth(2).boundingBox())!;
+
+  // The two sibling nodes should not overlap vertically
+  const top1 = box1.y;
+  const bottom1 = box1.y + box1.height;
+  const top2 = box2.y;
+  const bottom2 = box2.y + box2.height;
+
+  const overlaps = top1 < bottom2 && top2 < bottom1;
+  expect(overlaps).toBe(false);
+});
+
 test('arrow keys do not navigate when input is focused', async ({ page }) => {
   // Play e4 so there's a child to navigate to
   await dragPiece(page, 'e2', 'e4');

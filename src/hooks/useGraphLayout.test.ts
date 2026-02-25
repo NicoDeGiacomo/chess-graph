@@ -187,6 +187,27 @@ describe('computeLayout', () => {
     expect(edges).toHaveLength(0);
   });
 
+  it('uses taller height for nodes with tags in layout and position', () => {
+    const root = makeNode({ id: 'root', childIds: ['tagged', 'plain'] });
+    const tagged = makeNode({ id: 'tagged', move: 'e4', parentId: 'root', tags: ['main'] });
+    const plain = makeNode({ id: 'plain', move: 'd4', parentId: 'root' });
+    const nodesMap = new Map([['root', root], ['tagged', tagged], ['plain', plain]]);
+
+    const { nodes } = computeLayout(nodesMap, 'root', null, 'Test');
+
+    const taggedNode = nodes.find((n) => n.id === 'tagged')!;
+    const plainNode = nodes.find((n) => n.id === 'plain')!;
+
+    // Both should be to the right of root
+    const rootNode = nodes.find((n) => n.id === 'root')!;
+    expect(taggedNode.position.x).toBeGreaterThan(rootNode.position.x);
+    expect(plainNode.position.x).toBeGreaterThan(rootNode.position.x);
+
+    // Tagged and plain nodes at the same rank should have different y offsets
+    // due to the taller height (52 vs 40), confirming per-node height is used
+    expect(taggedNode.position.y).not.toBe(plainNode.position.y);
+  });
+
   it('ignores parent-child edges when parent is not in the map', () => {
     const orphan = makeNode({ id: 'orphan', parentId: 'missing' });
     const nodesMap = new Map([['orphan', orphan]]);

@@ -142,7 +142,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         move,
         fen,
         comment: '',
-        color: NODE_COLORS.DEFAULT,
+        color: parent.color,
         tags: [],
         parentId,
         childIds: [],
