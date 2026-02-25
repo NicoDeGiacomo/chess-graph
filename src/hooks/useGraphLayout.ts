@@ -45,16 +45,21 @@ export function computeLayout(
     }
 
     // Transposition edges (NOT added to dagre to avoid cycles)
-    if (node.transposesTo && nodesMap.has(node.transposesTo)) {
-      flowEdges.push({
-        id: `t-${id}-${node.transposesTo}`,
-        source: id,
-        target: node.transposesTo,
-        animated: true,
-        style: { stroke: '#f59e0b', strokeDasharray: '5 5' },
-        markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b' },
-        data: { isTransposition: true },
-      });
+    for (const te of node.transpositionEdges) {
+      if (nodesMap.has(te.targetId)) {
+        flowEdges.push({
+          id: `t-${id}-${te.targetId}`,
+          source: id,
+          target: te.targetId,
+          animated: true,
+          style: { stroke: '#f59e0b', strokeDasharray: '5 5' },
+          markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b' },
+          label: te.move,
+          labelStyle: { fill: '#f59e0b', fontSize: 10, fontWeight: 600 },
+          labelBgStyle: { fill: '#18181b', fillOpacity: 0.9 },
+          data: { isTransposition: true, move: te.move },
+        });
+      }
     }
   }
 

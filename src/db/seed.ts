@@ -26,7 +26,7 @@ export async function ensureDefaultRepertoire(): Promise<string> {
     tags: [],
     parentId: null,
     childIds: [],
-    transposesTo: null,
+    transpositionEdges: [],
   };
 
   const repertoire: Repertoire = {

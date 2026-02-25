@@ -3,7 +3,7 @@ import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { NODE_COLORS, NODE_COLOR_LABELS, type NodeColor } from '../types/index.ts';
 
 export function ContextMenu() {
-  const { state, deleteNode, updateNode, setContextMenu, setEditingNodeId, setLinkingNodeId } = useRepertoire();
+  const { state, deleteNode, updateNode, removeTranspositionEdge, setContextMenu, setEditingNodeId } = useRepertoire();
   const { contextMenu, nodesMap } = state;
   const menuRef = useRef<HTMLDivElement>(null);
   const prevNodeIdRef = useRef<string | null>(null);
@@ -204,21 +204,24 @@ export function ContextMenu() {
         </div>
       )}
 
-      <div className="border-t border-zinc-700 my-1" />
-
-      <button
-        role="menuitem"
-        tabIndex={-1}
-        className="w-full text-left px-3 py-1.5 hover:bg-zinc-700 text-zinc-100"
-        onClick={() => setLinkingNodeId(contextMenu.nodeId)}
-      >
-        Link Transposition
-      </button>
-
-      {node.transposesTo && (
-        <div className="px-3 py-1 text-yellow-400 text-[10px]">
-          Has transposition link
-        </div>
+      {node.transpositionEdges.length > 0 && (
+        <>
+          <div className="border-t border-zinc-700 my-1" />
+          {node.transpositionEdges.map((te) => (
+            <button
+              key={te.targetId}
+              role="menuitem"
+              tabIndex={-1}
+              className="w-full text-left px-3 py-1.5 hover:bg-zinc-700 text-yellow-400 text-xs"
+              onClick={() => {
+                removeTranspositionEdge(contextMenu.nodeId, te.targetId);
+                setContextMenu(null);
+              }}
+            >
+              Remove Transposition: {te.move}
+            </button>
+          ))}
+        </>
       )}
     </div>
   );

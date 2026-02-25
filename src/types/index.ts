@@ -23,6 +23,11 @@ export const NODE_COLOR_LABELS: Record<NodeColor, string> = {
 
 export type RepertoireSide = 'white' | 'black';
 
+export interface TranspositionEdge {
+  targetId: string;  // Existing node this move transposes to
+  move: string;      // SAN notation (e.g., "e4")
+}
+
 // Persisted in IndexedDB
 export interface RepertoireNode {
   id: string;
@@ -34,7 +39,7 @@ export interface RepertoireNode {
   tags: string[];
   parentId: string | null;   // null for root node
   childIds: string[];
-  transposesTo: string | null;
+  transpositionEdges: TranspositionEdge[];
 }
 
 export interface Repertoire {
@@ -62,6 +67,7 @@ export type MoveFlowNode = Node<MoveNodeData, 'move'>;
 
 export interface MoveEdgeData extends Record<string, unknown> {
   isTransposition: boolean;
+  move?: string;
 }
 
 export type MoveFlowEdge = Edge<MoveEdgeData>;
@@ -73,7 +79,7 @@ export interface ContextMenuState {
 }
 
 export interface ExportData {
-  version: 1;
+  version: 1 | 2;
   repertoires: Repertoire[];
   nodes: RepertoireNode[];
 }

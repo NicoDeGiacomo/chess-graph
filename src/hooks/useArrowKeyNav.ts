@@ -10,7 +10,7 @@ export function useArrowKeyNav(
       // Don't navigate when typing in inputs or when dialogs are open
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-      if (state.editingNodeId || state.linkingNodeId) return;
+      if (state.editingNodeId) return;
 
       const { selectedNodeId, nodesMap } = state;
       if (!selectedNodeId) return;
@@ -26,25 +26,42 @@ export function useArrowKeyNav(
           break;
         }
         case 'ArrowRight': {
-          if (node.childIds.length > 0) targetId = node.childIds[0];
+          // Combine childIds with transposition edge targets
+          const rightTargets = [
+            ...node.childIds,
+            ...node.transpositionEdges.map((te) => te.targetId),
+          ];
+          if (rightTargets.length > 0) targetId = rightTargets[0];
           break;
         }
         case 'ArrowUp': {
           if (!node.parentId) break;
           const parent = nodesMap.get(node.parentId);
-          if (!parent || parent.childIds.length <= 1) break;
-          const idx = parent.childIds.indexOf(selectedNodeId);
-          const prevIdx = idx <= 0 ? parent.childIds.length - 1 : idx - 1;
-          targetId = parent.childIds[prevIdx];
+          if (!parent) break;
+          // Combine childIds with transposition edge targets for sibling navigation
+          const siblings = [
+            ...parent.childIds,
+            ...parent.transpositionEdges.map((te) => te.targetId),
+          ];
+          if (siblings.length <= 1) break;
+          const idx = siblings.indexOf(selectedNodeId);
+          const prevIdx = idx <= 0 ? siblings.length - 1 : idx - 1;
+          targetId = siblings[prevIdx];
           break;
         }
         case 'ArrowDown': {
           if (!node.parentId) break;
           const parent = nodesMap.get(node.parentId);
-          if (!parent || parent.childIds.length <= 1) break;
-          const idx = parent.childIds.indexOf(selectedNodeId);
-          const nextIdx = idx >= parent.childIds.length - 1 ? 0 : idx + 1;
-          targetId = parent.childIds[nextIdx];
+          if (!parent) break;
+          // Combine childIds with transposition edge targets for sibling navigation
+          const siblings = [
+            ...parent.childIds,
+            ...parent.transpositionEdges.map((te) => te.targetId),
+          ];
+          if (siblings.length <= 1) break;
+          const idx = siblings.indexOf(selectedNodeId);
+          const nextIdx = idx >= siblings.length - 1 ? 0 : idx + 1;
+          targetId = siblings[nextIdx];
           break;
         }
       }

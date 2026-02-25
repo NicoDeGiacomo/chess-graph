@@ -18,6 +18,7 @@ import type {
   ExportData,
 } from '../types/index.ts';
 import { NODE_COLORS } from '../types/index.ts';
+import { positionKey, findTransposition } from '../utils/fen.ts';
 
 const DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
@@ -29,7 +30,6 @@ export interface RepertoireState {
   repertoireList: Repertoire[];
   isLoading: boolean;
   editingNodeId: string | null;
-  linkingNodeId: string | null;
 }
 
 interface RepertoireContextValue {
@@ -39,8 +39,7 @@ interface RepertoireContextValue {
   deleteNode: (nodeId: string) => Promise<void>;
   clearGraph: () => Promise<void>;
   updateNode: (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags'>>) => Promise<void>;
-  linkTransposition: (sourceId: string, targetId: string) => Promise<void>;
-  removeTransposition: (sourceId: string) => Promise<void>;
+  removeTranspositionEdge: (nodeId: string, targetId: string) => Promise<void>;
   switchRepertoire: (id: string) => Promise<void>;
   createRepertoire: (name: string, side: RepertoireSide) => Promise<string>;
   deleteRepertoire: (id: string) => Promise<void>;
@@ -50,7 +49,6 @@ interface RepertoireContextValue {
   importData: (data: ExportData) => Promise<void>;
   setContextMenu: (menu: ContextMenuState | null) => void;
   setEditingNodeId: (id: string | null) => void;
-  setLinkingNodeId: (id: string | null) => void;
 }
 
 const RepertoireContext = createContext<RepertoireContextValue | null>(null);
@@ -95,7 +93,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     repertoireList: [],
     isLoading: true,
     editingNodeId: null,
-    linkingNodeId: null,
   });
 
   // Prevent StrictMode double-initialization (ref persists across mount/unmount/remount)
@@ -136,6 +133,35 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         return { ...prev, selectedNodeId: existingChild.id };
       }
 
+      // Check for existing transposition edge with same move
+      const existingTransposition = parent.transpositionEdges.find((te) => te.move === move);
+      if (existingTransposition) {
+        return { ...prev, selectedNodeId: existingTransposition.targetId };
+      }
+
+      // Check if this position already exists (transposition detection)
+      const key = positionKey(fen);
+      const match = findTransposition(fen, prev.nodesMap);
+      if (match && positionKey(match.fen) === key) {
+        // Add transposition edge to parent instead of creating a new node
+        const newEdge = { targetId: match.id, move };
+        const updatedParent: RepertoireNode = {
+          ...parent,
+          transpositionEdges: [...parent.transpositionEdges, newEdge],
+        };
+
+        const newMap = new Map(prev.nodesMap);
+        newMap.set(parentId, updatedParent);
+
+        db.transaction('rw', db.nodes, db.repertoires, async () => {
+          await db.nodes.update(parentId, { transpositionEdges: updatedParent.transpositionEdges });
+          await db.repertoires.update(prev.repertoire!.id, { updatedAt: Date.now() });
+        }).catch(console.error);
+
+        return { ...prev, nodesMap: newMap, selectedNodeId: match.id };
+      }
+
+      // No transposition — create node normally
       const newNode: RepertoireNode = {
         id: newNodeId,
         repertoireId: prev.repertoire.id,
@@ -146,7 +172,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         tags: [],
         parentId,
         childIds: [],
-        transposesTo: null,
+        transpositionEdges: [],
       };
 
       const updatedParent: RepertoireNode = {
@@ -189,11 +215,14 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         };
         newMap.set(node.parentId, updatedParent);
 
-        // Clear transposesTo references pointing to deleted nodes
+        // Clean up transpositionEdges referencing deleted nodes across all remaining nodes
         const deletedSet = new Set(idsToDelete);
+        const transpositionUpdates: { id: string; edges: RepertoireNode['transpositionEdges'] }[] = [];
         for (const [id, n] of newMap) {
-          if (n.transposesTo && deletedSet.has(n.transposesTo)) {
-            newMap.set(id, { ...n, transposesTo: null });
+          const filtered = n.transpositionEdges.filter((te) => !deletedSet.has(te.targetId));
+          if (filtered.length !== n.transpositionEdges.length) {
+            newMap.set(id, { ...n, transpositionEdges: filtered });
+            transpositionUpdates.push({ id, edges: filtered });
           }
         }
 
@@ -202,10 +231,8 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
           await db.nodes.bulkDelete(idsToDelete);
           await db.nodes.update(node.parentId!, { childIds: updatedParent.childIds });
           await db.repertoires.update(prev.repertoire!.id, { updatedAt: Date.now() });
-          for (const [id, n] of newMap) {
-            if (n.transposesTo === null && prev.nodesMap.get(id)?.transposesTo && deletedSet.has(prev.nodesMap.get(id)!.transposesTo!)) {
-              await db.nodes.update(id, { transposesTo: null });
-            }
+          for (const { id, edges } of transpositionUpdates) {
+            await db.nodes.update(id, { transpositionEdges: edges });
           }
         }).catch(console.error);
 
@@ -234,13 +261,13 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       const root = prev.nodesMap.get(rootNodeId);
       if (!root) return prev;
 
-      const updatedRoot = { ...root, childIds: [] as string[] };
+      const updatedRoot = { ...root, childIds: [] as string[], transpositionEdges: [] };
       const newMap = new Map<string, RepertoireNode>();
       newMap.set(rootNodeId, updatedRoot);
 
       db.transaction('rw', db.nodes, db.repertoires, async () => {
         await db.nodes.bulkDelete(idsToDelete);
-        await db.nodes.update(rootNodeId, { childIds: [] });
+        await db.nodes.update(rootNodeId, { childIds: [], transpositionEdges: [] });
         await db.repertoires.update(prev.repertoire!.id, { updatedAt: Date.now() });
       }).catch(console.error);
 
@@ -267,31 +294,17 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const linkTransposition = useCallback(async (sourceId: string, targetId: string) => {
+  const removeTranspositionEdge = useCallback(async (nodeId: string, targetId: string) => {
     setState((prev) => {
-      const node = prev.nodesMap.get(sourceId);
+      const node = prev.nodesMap.get(nodeId);
       if (!node) return prev;
 
-      const updatedNode = { ...node, transposesTo: targetId };
+      const updatedEdges = node.transpositionEdges.filter((te) => te.targetId !== targetId);
+      const updatedNode = { ...node, transpositionEdges: updatedEdges };
       const newMap = new Map(prev.nodesMap);
-      newMap.set(sourceId, updatedNode);
+      newMap.set(nodeId, updatedNode);
 
-      db.nodes.update(sourceId, { transposesTo: targetId }).catch(console.error);
-
-      return { ...prev, nodesMap: newMap, linkingNodeId: null };
-    });
-  }, []);
-
-  const removeTransposition = useCallback(async (sourceId: string) => {
-    setState((prev) => {
-      const node = prev.nodesMap.get(sourceId);
-      if (!node) return prev;
-
-      const updatedNode = { ...node, transposesTo: null };
-      const newMap = new Map(prev.nodesMap);
-      newMap.set(sourceId, updatedNode);
-
-      db.nodes.update(sourceId, { transposesTo: null }).catch(console.error);
+      db.nodes.update(nodeId, { transpositionEdges: updatedEdges }).catch(console.error);
 
       return { ...prev, nodesMap: newMap };
     });
@@ -306,7 +319,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       selectedNodeId: repertoire.rootNodeId,
       contextMenu: null,
       editingNodeId: null,
-      linkingNodeId: null,
     }));
   }, []);
 
@@ -325,7 +337,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       tags: [],
       parentId: null,
       childIds: [],
-      transposesTo: null,
+      transpositionEdges: [],
     };
 
     const repertoire: Repertoire = {
@@ -368,7 +380,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       repertoireList,
       contextMenu: null,
       editingNodeId: null,
-      linkingNodeId: null,
     }));
   }, []);
 
@@ -385,19 +396,29 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
   const exportData = useCallback(async (): Promise<ExportData> => {
     const repertoires = await db.repertoires.toArray();
     const nodes = await db.nodes.toArray();
-    return { version: 1, repertoires, nodes };
+    return { version: 2, repertoires, nodes };
   }, []);
 
   const importData = useCallback(async (data: ExportData) => {
-    if (data.version !== 1 || !Array.isArray(data.repertoires) || !Array.isArray(data.nodes)) {
+    if (!Array.isArray(data.repertoires) || !Array.isArray(data.nodes)) {
       throw new Error('Invalid import data');
     }
+
+    // Normalize nodes: ensure transpositionEdges exists, strip legacy transposesTo
+    const normalizedNodes = data.nodes.map((node) => {
+      const n = { ...node } as Record<string, unknown>;
+      if (!Array.isArray(n.transpositionEdges)) {
+        n.transpositionEdges = [];
+      }
+      delete n.transposesTo;
+      return n as unknown as RepertoireNode;
+    });
 
     await db.transaction('rw', db.repertoires, db.nodes, async () => {
       await db.repertoires.clear();
       await db.nodes.clear();
       await db.repertoires.bulkAdd(data.repertoires);
-      await db.nodes.bulkAdd(data.nodes);
+      await db.nodes.bulkAdd(normalizedNodes);
     });
 
     const repertoireList = await db.repertoires.toArray();
@@ -411,7 +432,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         repertoireList,
         contextMenu: null,
         editingNodeId: null,
-        linkingNodeId: null,
         isLoading: false,
       }));
     }
@@ -430,10 +450,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, editingNodeId: id, contextMenu: null }));
   }, []);
 
-  const setLinkingNodeId = useCallback((id: string | null) => {
-    setState((prev) => ({ ...prev, linkingNodeId: id, contextMenu: null }));
-  }, []);
-
   const value: RepertoireContextValue = {
     state,
     selectNode,
@@ -441,8 +457,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     deleteNode,
     clearGraph,
     updateNode,
-    linkTransposition,
-    removeTransposition,
+    removeTranspositionEdge,
     switchRepertoire,
     createRepertoire,
     deleteRepertoire,
@@ -452,7 +467,6 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     importData,
     setContextMenu,
     setEditingNodeId,
-    setLinkingNodeId,
   };
 
   return (

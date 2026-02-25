@@ -9,7 +9,6 @@ import { GraphCanvas } from '../components/GraphCanvas.tsx';
 import { Sidebar } from '../components/Sidebar.tsx';
 import { ContextMenu } from '../components/ContextMenu.tsx';
 import { EditNodeDialog } from '../components/EditNodeDialog.tsx';
-import { LinkTranspositionDialog } from '../components/LinkTranspositionDialog.tsx';
 
 export function EditorPage() {
   const { id } = useParams<{ id: string }>();
@@ -80,7 +79,6 @@ export function EditorPage() {
       </div>
       <ContextMenu />
       <EditNodeDialog />
-      <LinkTranspositionDialog />
     </main>
   );
 }

@@ -6,8 +6,9 @@
 
 ## Medium Priority
 
-- Auto-detect transpositions and join nodes in the graph — FEN comparison across nodes
+- ~~Auto-detect transpositions and join nodes in the graph — FEN comparison across nodes~~ Done
 - Ability to draw arrows and paint squares of different colors on the board, saved per node
+- When I drag a node, it goes back to its orginal position if i select another node.
 
 ## Low Priority
 

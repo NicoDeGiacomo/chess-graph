@@ -282,7 +282,6 @@ test('right-click opens context menu on a node', async ({ page }) => {
 
   await expect(page.getByText('Edit Comment')).toBeVisible();
   await expect(page.getByText('Change Color')).toBeVisible();
-  await expect(page.getByText('Link Transposition')).toBeVisible();
 });
 
 test('context menu allows changing node color', async ({ page }) => {

@@ -138,7 +138,7 @@ test('context menu has role="menu" and menuitem roles', async ({ page }) => {
 
   const menuItems = menu.locator('[role="menuitem"]');
   const count = await menuItems.count();
-  expect(count).toBeGreaterThanOrEqual(4); // Edit Comment, Change Color, Add Tag, Link Transposition
+  expect(count).toBeGreaterThanOrEqual(3); // Edit Comment, Change Color, Add Tag
 });
 
 test('context menu closes on Escape key', async ({ page }) => {

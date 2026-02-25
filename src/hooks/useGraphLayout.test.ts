@@ -14,7 +14,7 @@ function makeNode(overrides: Partial<RepertoireNode> & { id: string }): Repertoi
     tags: [],
     parentId: null,
     childIds: [],
-    transposesTo: null,
+    transpositionEdges: [],
     ...overrides,
   };
 }
@@ -111,13 +111,16 @@ describe('computeLayout', () => {
     expect(edge.markerEnd).toEqual({ type: MarkerType.ArrowClosed, color: '#71717a' });
   });
 
-  it('creates transposition edges with arrow markers (not in dagre)', () => {
-    const root = makeNode({ id: 'root', childIds: ['a', 'b'] });
+  it('creates transposition edges with label from transpositionEdges', () => {
+    const root = makeNode({
+      id: 'root',
+      childIds: ['a', 'b'],
+      transpositionEdges: [{ targetId: 'b', move: 'e4' }],
+    });
     const nodeA = makeNode({
       id: 'a',
       move: 'e4',
       parentId: 'root',
-      transposesTo: 'b',
     });
     const nodeB = makeNode({
       id: 'b',
@@ -133,10 +136,32 @@ describe('computeLayout', () => {
 
     const transEdge = edges.find((e) => e.data?.isTransposition);
     expect(transEdge).toBeDefined();
-    expect(transEdge!.source).toBe('a');
+    expect(transEdge!.source).toBe('root');
     expect(transEdge!.target).toBe('b');
     expect(transEdge!.animated).toBe(true);
+    expect(transEdge!.label).toBe('e4');
+    expect(transEdge!.data?.move).toBe('e4');
     expect(transEdge!.markerEnd).toEqual({ type: MarkerType.ArrowClosed, color: '#f59e0b' });
+  });
+
+  it('renders multiple transposition edges from same node', () => {
+    const root = makeNode({
+      id: 'root',
+      childIds: ['a', 'b'],
+      transpositionEdges: [
+        { targetId: 'a', move: 'Nf3' },
+        { targetId: 'b', move: 'e4' },
+      ],
+    });
+    const nodeA = makeNode({ id: 'a', move: 'e4', parentId: 'root' });
+    const nodeB = makeNode({ id: 'b', move: 'd4', parentId: 'root' });
+    const nodesMap = new Map([['root', root], ['a', nodeA], ['b', nodeB]]);
+
+    const { edges } = computeLayout(nodesMap, 'root', 'root', 'Test');
+
+    const transEdges = edges.filter((e) => e.data?.isTransposition);
+    expect(transEdges).toHaveLength(2);
+    expect(transEdges.map((e) => e.data?.move).sort()).toEqual(['Nf3', 'e4']);
   });
 
   it('handles a deep linear tree (root → e4 → e5 → Nf3)', () => {
@@ -180,7 +205,10 @@ describe('computeLayout', () => {
   });
 
   it('ignores transposition edges pointing to nodes not in the map', () => {
-    const root = makeNode({ id: 'root', transposesTo: 'nonexistent' });
+    const root = makeNode({
+      id: 'root',
+      transpositionEdges: [{ targetId: 'nonexistent', move: 'e4' }],
+    });
     const nodesMap = new Map([['root', root]]);
 
     const { edges } = computeLayout(nodesMap, 'root', null, 'Test');

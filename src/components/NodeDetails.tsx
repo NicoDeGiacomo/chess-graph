@@ -181,13 +181,18 @@ export function NodeDetails() {
         )}
       </div>
 
-      {/* Transposition link info */}
-      {selectedNode.transposesTo && (
+      {/* Outgoing transposition edges */}
+      {selectedNode.transpositionEdges.length > 0 && (
         <div>
-          <div className="text-zinc-500 text-xs mb-0.5">Transposition</div>
-          <div className="text-yellow-400 text-xs">
-            Links to: {nodesMap.get(selectedNode.transposesTo)?.move || 'root'}
-          </div>
+          <div className="text-zinc-500 text-xs mb-0.5">Transpositions</div>
+          {selectedNode.transpositionEdges.map((te) => {
+            const target = nodesMap.get(te.targetId);
+            return (
+              <div key={te.targetId} className="text-yellow-400 text-xs">
+                {te.move} → {target?.move || 'root'}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
