@@ -68,6 +68,7 @@ export type MoveFlowNode = Node<MoveNodeData, 'move'>;
 export interface MoveEdgeData extends Record<string, unknown> {
   isTransposition: boolean;
   move?: string;
+  graphBottom?: number;
 }
 
 export type MoveFlowEdge = Edge<MoveEdgeData>;

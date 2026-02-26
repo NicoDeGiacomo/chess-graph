@@ -22,7 +22,7 @@ function makeNode(overrides: Partial<RepertoireNode> & { id: string }): Repertoi
 describe('computeLayout', () => {
   it('returns empty arrays for an empty nodesMap', () => {
     const nodesMap = new Map<string, RepertoireNode>();
-    const { nodes, edges } = computeLayout(nodesMap, 'root', null, 'Test');
+    const { nodes, edges } = computeLayout(nodesMap, 'root', 'Test');
     expect(nodes).toHaveLength(0);
     expect(edges).toHaveLength(0);
   });
@@ -31,7 +31,7 @@ describe('computeLayout', () => {
     const root = makeNode({ id: 'root' });
     const nodesMap = new Map([['root', root]]);
 
-    const { nodes, edges } = computeLayout(nodesMap, 'root', 'root', 'Sicilian');
+    const { nodes, edges } = computeLayout(nodesMap, 'root', 'Sicilian');
 
     expect(nodes).toHaveLength(1);
     expect(edges).toHaveLength(0);
@@ -41,30 +41,21 @@ describe('computeLayout', () => {
     expect(flowNode.type).toBe('move');
     expect(flowNode.data.isRoot).toBe(true);
     expect(flowNode.data.repertoireName).toBe('Sicilian');
-    expect(flowNode.data.isSelected).toBe(true);
+    expect(flowNode.data.isSelected).toBe(false);
     expect(flowNode.position.x).toBeTypeOf('number');
     expect(flowNode.position.y).toBeTypeOf('number');
   });
 
-  it('marks the correct node as selected when selectedNodeId differs from root', () => {
+  it('sets isSelected to false for all nodes', () => {
     const root = makeNode({ id: 'root', childIds: ['child1'] });
     const child = makeNode({ id: 'child1', move: 'e4', parentId: 'root' });
     const nodesMap = new Map([['root', root], ['child1', child]]);
 
-    const { nodes } = computeLayout(nodesMap, 'root', 'child1', 'Test');
+    const { nodes } = computeLayout(nodesMap, 'root', 'Test');
 
-    const rootNode = nodes.find((n) => n.id === 'root')!;
-    const childNode = nodes.find((n) => n.id === 'child1')!;
-    expect(rootNode.data.isSelected).toBe(false);
-    expect(childNode.data.isSelected).toBe(true);
-  });
-
-  it('marks no node as selected when selectedNodeId is null', () => {
-    const root = makeNode({ id: 'root' });
-    const nodesMap = new Map([['root', root]]);
-
-    const { nodes } = computeLayout(nodesMap, 'root', null, 'Test');
-    expect(nodes[0].data.isSelected).toBe(false);
+    for (const node of nodes) {
+      expect(node.data.isSelected).toBe(false);
+    }
   });
 
   it('passes node data fields correctly (move, fen, comment, color, tags)', () => {
@@ -78,7 +69,7 @@ describe('computeLayout', () => {
     });
     const nodesMap = new Map([['n1', node]]);
 
-    const { nodes } = computeLayout(nodesMap, 'n1', null, 'Test');
+    const { nodes } = computeLayout(nodesMap, 'n1', 'Test');
     const data = nodes[0].data;
 
     expect(data.move).toBe('Nf3');
@@ -98,7 +89,7 @@ describe('computeLayout', () => {
     });
     const nodesMap = new Map([['root', root], ['child1', child]]);
 
-    const { nodes, edges } = computeLayout(nodesMap, 'root', 'root', 'Test');
+    const { nodes, edges } = computeLayout(nodesMap, 'root', 'Test');
 
     expect(nodes).toHaveLength(2);
     expect(edges).toHaveLength(1);
@@ -106,7 +97,7 @@ describe('computeLayout', () => {
     const edge = edges[0];
     expect(edge.source).toBe('root');
     expect(edge.target).toBe('child1');
-    expect(edge.type).toBe('smoothstep');
+    expect(edge.type).toBe('default');
     expect(edge.data?.isTransposition).toBe(false);
     expect(edge.markerEnd).toEqual({ type: MarkerType.ArrowClosed, color: '#71717a' });
   });
@@ -129,7 +120,7 @@ describe('computeLayout', () => {
     });
     const nodesMap = new Map([['root', root], ['a', nodeA], ['b', nodeB]]);
 
-    const { edges } = computeLayout(nodesMap, 'root', 'root', 'Test');
+    const { edges } = computeLayout(nodesMap, 'root', 'Test');
 
     // 2 parent-child edges + 1 transposition edge
     expect(edges).toHaveLength(3);
@@ -141,6 +132,8 @@ describe('computeLayout', () => {
     expect(transEdge!.animated).toBe(true);
     expect(transEdge!.label).toBe('e4');
     expect(transEdge!.data?.move).toBe('e4');
+    expect(transEdge!.type).toBe('transposition');
+    expect(transEdge!.data?.graphBottom).toBeTypeOf('number');
     expect(transEdge!.markerEnd).toEqual({ type: MarkerType.ArrowClosed, color: '#f59e0b' });
   });
 
@@ -157,11 +150,15 @@ describe('computeLayout', () => {
     const nodeB = makeNode({ id: 'b', move: 'd4', parentId: 'root' });
     const nodesMap = new Map([['root', root], ['a', nodeA], ['b', nodeB]]);
 
-    const { edges } = computeLayout(nodesMap, 'root', 'root', 'Test');
+    const { edges } = computeLayout(nodesMap, 'root', 'Test');
 
     const transEdges = edges.filter((e) => e.data?.isTransposition);
     expect(transEdges).toHaveLength(2);
     expect(transEdges.map((e) => e.data?.move).sort()).toEqual(['Nf3', 'e4']);
+    for (const te of transEdges) {
+      expect(te.type).toBe('transposition');
+      expect(te.data?.graphBottom).toBeTypeOf('number');
+    }
   });
 
   it('handles a deep linear tree (root → e4 → e5 → Nf3)', () => {
@@ -171,7 +168,7 @@ describe('computeLayout', () => {
     const n3 = makeNode({ id: 'n3', move: 'Nf3', parentId: 'n2' });
     const nodesMap = new Map([['root', root], ['n1', n1], ['n2', n2], ['n3', n3]]);
 
-    const { nodes, edges } = computeLayout(nodesMap, 'root', null, 'Test');
+    const { nodes, edges } = computeLayout(nodesMap, 'root', 'Test');
 
     expect(nodes).toHaveLength(4);
     expect(edges).toHaveLength(3);
@@ -188,7 +185,7 @@ describe('computeLayout', () => {
     const d4 = makeNode({ id: 'd4', move: 'd4', parentId: 'root' });
     const nodesMap = new Map([['root', root], ['e4', e4], ['d4', d4]]);
 
-    const { nodes, edges } = computeLayout(nodesMap, 'root', null, 'Test');
+    const { nodes, edges } = computeLayout(nodesMap, 'root', 'Test');
 
     expect(nodes).toHaveLength(3);
     expect(edges).toHaveLength(2);
@@ -211,7 +208,7 @@ describe('computeLayout', () => {
     });
     const nodesMap = new Map([['root', root]]);
 
-    const { edges } = computeLayout(nodesMap, 'root', null, 'Test');
+    const { edges } = computeLayout(nodesMap, 'root', 'Test');
     expect(edges).toHaveLength(0);
   });
 
@@ -221,7 +218,7 @@ describe('computeLayout', () => {
     const plain = makeNode({ id: 'plain', move: 'd4', parentId: 'root' });
     const nodesMap = new Map([['root', root], ['tagged', tagged], ['plain', plain]]);
 
-    const { nodes } = computeLayout(nodesMap, 'root', null, 'Test');
+    const { nodes } = computeLayout(nodesMap, 'root', 'Test');
 
     const taggedNode = nodes.find((n) => n.id === 'tagged')!;
     const plainNode = nodes.find((n) => n.id === 'plain')!;
@@ -236,11 +233,33 @@ describe('computeLayout', () => {
     expect(taggedNode.position.y).not.toBe(plainNode.position.y);
   });
 
+  it('sets graphBottom at least as large as the lowest node bottom edge', () => {
+    const root = makeNode({
+      id: 'root',
+      childIds: ['a', 'b'],
+      transpositionEdges: [{ targetId: 'b', move: 'e4' }],
+    });
+    const nodeA = makeNode({ id: 'a', move: 'e4', parentId: 'root' });
+    const nodeB = makeNode({ id: 'b', move: 'd4', parentId: 'root' });
+    const nodesMap = new Map([['root', root], ['a', nodeA], ['b', nodeB]]);
+
+    const { nodes, edges } = computeLayout(nodesMap, 'root', 'Test');
+
+    const transEdge = edges.find((e) => e.data?.isTransposition);
+    const graphBottom = transEdge!.data!.graphBottom!;
+
+    // graphBottom should be >= the bottom edge of every node (position.y + node height)
+    for (const node of nodes) {
+      const nodeHeight = node.data.tags.length > 0 ? 52 : 40;
+      expect(graphBottom).toBeGreaterThanOrEqual(node.position.y + nodeHeight);
+    }
+  });
+
   it('ignores parent-child edges when parent is not in the map', () => {
     const orphan = makeNode({ id: 'orphan', parentId: 'missing' });
     const nodesMap = new Map([['orphan', orphan]]);
 
-    const { nodes, edges } = computeLayout(nodesMap, 'orphan', null, 'Test');
+    const { nodes, edges } = computeLayout(nodesMap, 'orphan', 'Test');
     expect(nodes).toHaveLength(1);
     expect(edges).toHaveLength(0);
   });

@@ -112,6 +112,49 @@ test('board shows correct position after clicking transposition target', async (
   await expect(page.locator('text=PPPP1PPP/RNBQKB1R')).toBeVisible();
 });
 
+test('clicking transposition in details panel navigates to target node', async ({ page }) => {
+  // Build transposition: 1. e4 e5 2. Nf3 via two move orders
+  await dragPiece(page, 'e2', 'e4');
+  await dragPiece(page, 'e7', 'e5');
+  await dragPiece(page, 'g1', 'f3');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(4);
+  await waitForSettle(page);
+
+  // Go back to root, play 1. Nf3 e5 2. e4 (transposition)
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+  await dragPiece(page, 'g1', 'f3');
+  await dragPiece(page, 'e7', 'e5');
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(6);
+  await waitForSettle(page);
+
+  // After transposition, selection moves to the target node.
+  // Find the source node (which has outgoing transposition edges) by clicking graph nodes.
+  const graphNodes = page.locator('.react-flow__node');
+  const count = await graphNodes.count();
+  for (let i = 0; i < count; i++) {
+    await graphNodes.nth(i).click({ force: true });
+    await page.waitForTimeout(200);
+    if (await page.getByText('Transpositions').isVisible()) break;
+  }
+
+  // The details panel should show a yellow transposition button
+  const transButton = page.locator('button.text-yellow-400');
+  await expect(transButton.first()).toBeVisible();
+
+  // Capture current FEN before clicking
+  const fenBefore = await page.locator('.font-mono.select-all').textContent();
+
+  // Click the transposition button to navigate to the target node
+  await transButton.first().click();
+  await waitForSettle(page);
+
+  // FEN should have changed (we navigated to the target node)
+  const fenAfter = await page.locator('.font-mono.select-all').textContent();
+  expect(fenAfter).not.toBe(fenBefore);
+});
+
 test('delete target node cleans up transposition edges', async ({ page }) => {
   // Build transposition
   await dragPiece(page, 'e2', 'e4');

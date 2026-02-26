@@ -32,7 +32,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 }
 
 export function NodeDetails() {
-  const { state, updateNode } = useRepertoire();
+  const { state, updateNode, selectNode } = useRepertoire();
   const { nodesMap, selectedNodeId } = state;
   const [isEditingComment, setIsEditingComment] = useState(false);
   const [commentDraft, setCommentDraft] = useState('');
@@ -188,9 +188,13 @@ export function NodeDetails() {
           {selectedNode.transpositionEdges.map((te) => {
             const target = nodesMap.get(te.targetId);
             return (
-              <div key={te.targetId} className="text-yellow-400 text-xs">
+              <button
+                key={te.targetId}
+                className="text-yellow-400 text-xs hover:text-yellow-300 cursor-pointer"
+                onClick={() => selectNode(te.targetId)}
+              >
                 {te.move} → {target?.move || 'root'}
-              </div>
+              </button>
             );
           })}
         </div>

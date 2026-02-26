@@ -9,7 +9,6 @@ const NODE_HEIGHT_WITH_TAGS = 52;
 export function computeLayout(
   nodesMap: Map<string, RepertoireNode>,
   rootNodeId: string,
-  selectedNodeId: string | null,
   repertoireName: string,
 ): { nodes: MoveFlowNode[]; edges: MoveFlowEdge[] } {
   if (nodesMap.size === 0) return { nodes: [], edges: [] };
@@ -36,7 +35,7 @@ export function computeLayout(
         id: `e-${node.parentId}-${id}`,
         source: node.parentId,
         target: id,
-        type: 'smoothstep',
+        type: 'default',
         style: { stroke: '#71717a' },
         markerEnd: { type: MarkerType.ArrowClosed, color: '#71717a' },
         data: { isTransposition: false },
@@ -65,6 +64,23 @@ export function computeLayout(
 
   dagre.layout(g);
 
+  // Compute the bottom of the graph (lowest node edge) for arc routing
+  let graphBottom = 0;
+  for (const nodeId of g.nodes()) {
+    const n = g.node(nodeId);
+    if (n) {
+      graphBottom = Math.max(graphBottom, n.y + n.height / 2);
+    }
+  }
+
+  // Set type and graphBottom on transposition edges
+  for (const edge of flowEdges) {
+    if (edge.data?.isTransposition) {
+      edge.type = 'transposition';
+      edge.data.graphBottom = graphBottom;
+    }
+  }
+
   const flowNodes: MoveFlowNode[] = [];
   for (const [id, node] of nodesMap) {
     const dagreNode = g.node(id);
@@ -78,7 +94,7 @@ export function computeLayout(
       tags: node.tags,
       isRoot: id === rootNodeId,
       repertoireName,
-      isSelected: id === selectedNodeId,
+      isSelected: false,
     };
 
     flowNodes.push({

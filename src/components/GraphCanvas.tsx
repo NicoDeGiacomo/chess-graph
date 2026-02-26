@@ -7,36 +7,60 @@ import {
   Background,
   Controls,
   type NodeTypes,
+  type EdgeTypes,
   type NodeMouseHandler,
+  type OnNodeDrag,
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { MoveNode } from './MoveNode.tsx';
+import { TranspositionEdge } from './TranspositionEdge.tsx';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { computeLayout } from '../hooks/useGraphLayout.ts';
 import type { MoveFlowNode, MoveFlowEdge } from '../types/index.ts';
 
 const nodeTypes: NodeTypes = { move: MoveNode };
+const edgeTypes: EdgeTypes = { transposition: TranspositionEdge };
 
 export function GraphCanvas() {
   const { state, selectNode, setContextMenu } = useRepertoire();
   const { repertoire, nodesMap, selectedNodeId } = state;
   const reactFlowInstance = useReactFlow();
   const prevNodeCount = useRef(0);
+  const draggedPositions = useRef(new Map<string, { x: number; y: number }>());
   const [interactive, setInteractive] = useState(false);
 
   const layout = useMemo(() => {
     if (!repertoire) return { nodes: [] as MoveFlowNode[], edges: [] as MoveFlowEdge[] };
-    return computeLayout(nodesMap, repertoire.rootNodeId, selectedNodeId, repertoire.name);
-  }, [nodesMap, repertoire, selectedNodeId]);
+    return computeLayout(nodesMap, repertoire.rootNodeId, repertoire.name);
+  }, [nodesMap, repertoire]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(layout.nodes);
   const [edges, setEdges] = useEdgesState(layout.edges);
 
   useEffect(() => {
-    setNodes(layout.nodes);
+    const layoutIds = new Set(layout.nodes.map((n) => n.id));
+    for (const id of draggedPositions.current.keys()) {
+      if (!layoutIds.has(id)) draggedPositions.current.delete(id);
+    }
+
+    setNodes(
+      layout.nodes.map((node) => {
+        const dragged = draggedPositions.current.get(node.id);
+        return dragged ? { ...node, position: dragged } : node;
+      }),
+    );
     setEdges(layout.edges);
   }, [layout, setNodes, setEdges]);
+
+  useEffect(() => {
+    setNodes((prev) =>
+      prev.map((node) => ({
+        ...node,
+        data: { ...node.data, isSelected: node.id === selectedNodeId },
+      }))
+    );
+  }, [selectedNodeId, setNodes]);
 
   // Fit view when node count changes (add/delete)
   useEffect(() => {
@@ -48,6 +72,10 @@ export function GraphCanvas() {
       return () => clearTimeout(timer);
     }
   }, [layout.nodes.length, reactFlowInstance]);
+
+  const onNodeDragStop: OnNodeDrag = useCallback((_event, node) => {
+    draggedPositions.current.set(node.id, node.position);
+  }, []);
 
   const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
     selectNode(node.id);
@@ -72,10 +100,12 @@ export function GraphCanvas() {
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
+        onNodeDragStop={onNodeDragStop}
         onNodeClick={onNodeClick}
         onNodeContextMenu={onNodeContextMenu}
         onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         nodesDraggable={interactive}
         elementsSelectable={interactive}
         nodesConnectable={false}
