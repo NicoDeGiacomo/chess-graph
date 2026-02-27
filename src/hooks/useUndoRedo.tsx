@@ -20,6 +20,7 @@ interface UndoRedoContextValue {
   clearGraph: () => Promise<void>;
   updateNode: (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags'>>) => Promise<void>;
   removeTranspositionEdge: (nodeId: string, targetId: string) => Promise<void>;
+  replaceNodesMap: (nodesMap: Map<string, RepertoireNode>) => Promise<void>;
   undo: () => void;
   redo: () => void;
   canUndo: boolean;
@@ -99,6 +100,12 @@ export function UndoRedoProvider({ children }: { children: ReactNode }) {
     await repertoire.removeTranspositionEdge(nodeId, targetId);
   }, [repertoire, pushUndo]);
 
+  const wrappedReplaceNodesMap = useCallback(async (nodesMap: Map<string, RepertoireNode>) => {
+    const snapshot = new Map(stateRef.current.nodesMap);
+    pushUndo(snapshot);
+    await repertoire.replaceNodesMap(nodesMap);
+  }, [repertoire, pushUndo]);
+
   const undo = useCallback(() => {
     const stack = undoStackRef.current;
     if (stack.length === 0) return;
@@ -164,6 +171,7 @@ export function UndoRedoProvider({ children }: { children: ReactNode }) {
     clearGraph: wrappedClearGraph,
     updateNode: wrappedUpdateNode,
     removeTranspositionEdge: wrappedRemoveTranspositionEdge,
+    replaceNodesMap: wrappedReplaceNodesMap,
     undo,
     redo,
     canUndo: undoStack.length > 0,

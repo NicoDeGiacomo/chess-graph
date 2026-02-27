@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { useUndoRedo } from '../hooks/useUndoRedo.tsx';
 import { ConfirmDialog } from './ConfirmDialog.tsx';
+import { ImportPgnDialog } from './ImportPgnDialog.tsx';
 import { ThemeToggle } from './ThemeToggle.tsx';
 import type { ExportData } from '../types/index.ts';
 
@@ -23,6 +24,7 @@ export function EditorTopBar() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showImportError, setShowImportError] = useState(false);
+  const [showPgnImport, setShowPgnImport] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = async () => {
@@ -207,6 +209,15 @@ export function EditorTopBar() {
           Import
         </button>
 
+        {/* Import PGN */}
+        <button
+          className="text-xs text-tertiary hover:text-secondary"
+          onClick={() => setShowPgnImport(true)}
+          data-testid="import-pgn-btn"
+        >
+          Import PGN
+        </button>
+
         <div className="h-4 w-px bg-border" />
 
         <ThemeToggle />
@@ -240,6 +251,11 @@ export function EditorTopBar() {
         confirmStyle="blue"
         onConfirm={() => setShowImportError(false)}
         onClose={() => setShowImportError(false)}
+      />
+
+      <ImportPgnDialog
+        open={showPgnImport}
+        onClose={() => setShowPgnImport(false)}
       />
     </>
   );
