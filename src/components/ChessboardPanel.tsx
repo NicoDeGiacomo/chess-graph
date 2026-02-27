@@ -147,7 +147,7 @@ export function ChessboardPanel() {
         }}
       >
         <Chessboard
-          key={clearKey}
+          key={`${selectedNodeId ?? 'none'}-${clearKey}`}
           options={{
             position: fen,
             onPieceDrop,

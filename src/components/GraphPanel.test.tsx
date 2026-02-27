@@ -75,8 +75,8 @@ describe('GraphPanel', () => {
     const items = screen.getAllByRole('button');
     // First item is close button, then repertoire items
     const repButtons = items.filter((btn) => btn.getAttribute('data-testid')?.startsWith('panel-item-'));
-    expect(repButtons[0].textContent).toContain('\u2659'); // white pawn
-    expect(repButtons[1].textContent).toContain('\u265F'); // black pawn
+    expect(repButtons[0].textContent).toContain('♔'); // white king
+    expect(repButtons[1].textContent).toContain('♚'); // black king
   });
 
   it('has hidden content when closed', () => {

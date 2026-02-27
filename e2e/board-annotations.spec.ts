@@ -84,6 +84,24 @@ test('right-click drag draws arrow on board', async ({ page }) => {
   await expect(arrowPaths.first()).toBeAttached();
 });
 
+test('arrows do not leak to another node after switching', async ({ page }) => {
+  // Draw an arrow on root node
+  await drawArrow(page, 'e2', 'e4');
+  await waitForSettle(page);
+
+  const initialCount = await countArrowPaths(page);
+  expect(initialCount).toBeGreaterThanOrEqual(1);
+
+  // Play a move to create and select a new child node
+  await dragPiece(page, 'e2', 'e4');
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
+  await waitForSettle(page);
+
+  // The child node has no saved arrows — the board should be clean
+  const childCount = await countArrowPaths(page);
+  expect(childCount).toBe(0);
+});
+
 test('arrows persist after switching nodes and returning', async ({ page }) => {
   // Draw an arrow on root
   await drawArrow(page, 'e2', 'e4');

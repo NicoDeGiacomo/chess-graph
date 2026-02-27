@@ -47,7 +47,7 @@ export function GraphPanel({ open, onClose }: GraphPanelProps) {
               data-testid={`panel-item-${r.id}`}
             >
               <span className="text-base leading-none" aria-hidden="true">
-                {r.side === 'white' ? '\u2659' : '\u265F'}
+                {r.side === 'white' ? '♔' : '♚'}
               </span>
               <span className="truncate">{r.name}</span>
             </button>

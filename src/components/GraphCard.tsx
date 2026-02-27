@@ -37,10 +37,8 @@ export function GraphCard({ repertoire, nodeCount, tags, comment, color, onClick
       style={{ borderLeftColor: resolveNodeColor(color) }}
     >
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-lg" style={
-          repertoire.side === 'black' ? { WebkitTextStroke: '0.5px var(--color-text-tertiary)' } : undefined
-        }>
-          {repertoire.side === 'white' ? '\u2659' : '\u265F'}
+        <span className="text-lg">
+          {repertoire.side === 'white' ? '♔' : '♚'}
         </span>
         <h3 className="text-primary font-medium truncate">{repertoire.name}</h3>
       </div>
