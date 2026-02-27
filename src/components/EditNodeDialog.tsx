@@ -6,14 +6,14 @@ function EditNodeForm({ node, onSave, onClose }: { node: RepertoireNode; onSave:
   const [comment, setComment] = useState(node.comment);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
-      <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 w-[400px] max-w-[90vw] shadow-xl" role="dialog" aria-modal="true" aria-labelledby="edit-node-dialog-title" onClick={(e) => e.stopPropagation()}>
-        <h3 id="edit-node-dialog-title" className="text-sm font-medium text-zinc-100 mb-2">
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backgroundColor: 'var(--color-overlay)' }} onClick={onClose}>
+      <div className="bg-card border border-border rounded-lg p-4 w-[400px] max-w-[90vw] shadow-xl" role="dialog" aria-modal="true" aria-labelledby="edit-node-dialog-title" onClick={(e) => e.stopPropagation()}>
+        <h3 id="edit-node-dialog-title" className="text-sm font-medium text-primary mb-2">
           Edit Comment — {node.move || 'Start'}
         </h3>
         <textarea
           autoFocus
-          className="w-full bg-zinc-950 border border-zinc-700 rounded p-2 text-sm text-zinc-100 outline-none focus:border-blue-500 resize-none"
+          className="w-full bg-page border border-border rounded p-2 text-sm text-primary outline-none focus:border-blue-500 resize-none"
           rows={4}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
@@ -25,7 +25,7 @@ function EditNodeForm({ node, onSave, onClose }: { node: RepertoireNode; onSave:
         />
         <div className="flex justify-end gap-2 mt-3">
           <button
-            className="text-sm text-zinc-400 hover:text-zinc-200 px-3 py-1"
+            className="text-sm text-tertiary hover:text-secondary px-3 py-1"
             onClick={onClose}
           >
             Cancel

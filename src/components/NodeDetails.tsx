@@ -12,7 +12,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 
   return (
     <button
-      className="text-xs text-zinc-400 hover:text-zinc-200 flex items-center gap-1"
+      className="text-xs text-tertiary hover:text-secondary flex items-center gap-1"
       onClick={handleCopy}
       aria-label={`Copy ${label}`}
     >
@@ -41,7 +41,7 @@ export function NodeDetails() {
 
   if (!selectedNode) {
     return (
-      <div className="p-3 text-zinc-500 text-sm">
+      <div className="p-3 text-muted text-sm">
         Select a node to view details
       </div>
     );
@@ -82,24 +82,24 @@ export function NodeDetails() {
         {movePath.length > 0 ? (
           movePath.map((move, i) => (
             <span key={i} className="flex items-center gap-1">
-              {i > 0 && <span className="text-zinc-600">→</span>}
-              <span className="bg-zinc-800 rounded px-1.5 py-0.5 text-xs font-mono text-zinc-300">
+              {i > 0 && <span className="text-faint">&rarr;</span>}
+              <span className="bg-input rounded px-1.5 py-0.5 text-xs font-mono text-secondary">
                 {move}
               </span>
             </span>
           ))
         ) : (
-          <span className="text-zinc-600 text-xs italic">Starting position</span>
+          <span className="text-faint text-xs italic">Starting position</span>
         )}
       </div>
 
       {/* FEN */}
       <div>
         <div className="flex items-center justify-between mb-0.5">
-          <div className="text-zinc-500 text-xs">FEN</div>
+          <div className="text-muted text-xs">FEN</div>
           <CopyButton text={selectedNode.fen} label="FEN" />
         </div>
-        <div className="font-mono text-[10px] text-zinc-400 bg-zinc-900 rounded p-1.5 break-all select-all">
+        <div className="font-mono text-[10px] text-tertiary bg-card rounded p-1.5 break-all select-all">
           {selectedNode.fen}
         </div>
       </div>
@@ -107,34 +107,34 @@ export function NodeDetails() {
       {/* PGN */}
       <div>
         <div className="flex items-center justify-between mb-0.5">
-          <div className="text-zinc-500 text-xs">PGN</div>
+          <div className="text-muted text-xs">PGN</div>
           <CopyButton text={pgn} label="PGN" />
         </div>
-        <div className="font-mono text-[10px] text-zinc-400 bg-zinc-900 rounded p-1.5 truncate">
-          {pgn || <span className="text-zinc-600 italic">—</span>}
+        <div className="font-mono text-[10px] text-tertiary bg-card rounded p-1.5 truncate">
+          {pgn || <span className="text-faint italic">&mdash;</span>}
         </div>
       </div>
 
       {/* Tags */}
       <div>
-        <div className="text-zinc-500 text-xs mb-1">Tags</div>
+        <div className="text-muted text-xs mb-1">Tags</div>
         {selectedNode.tags.length > 0 ? (
           <div className="flex flex-wrap gap-1">
             {selectedNode.tags.map((tag) => (
-              <span key={tag} className="bg-zinc-800 text-zinc-300 rounded px-2 py-0.5 text-xs">
+              <span key={tag} className="bg-input text-secondary rounded px-2 py-0.5 text-xs">
                 {tag}
               </span>
             ))}
           </div>
         ) : (
-          <div className="text-zinc-600 text-xs italic">No tags</div>
+          <div className="text-faint text-xs italic">No tags</div>
         )}
       </div>
 
       {/* Comment */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <div className="text-zinc-500 text-xs">Comment</div>
+          <div className="text-muted text-xs">Comment</div>
           {!isEditingComment && (
             <button
               className="text-xs text-blue-400 hover:text-blue-300"
@@ -148,7 +148,7 @@ export function NodeDetails() {
           <div className="space-y-1">
             <textarea
               autoFocus
-              className="w-full bg-zinc-900 border border-zinc-600 rounded p-2 text-xs text-zinc-100 outline-none focus:border-blue-500 resize-none"
+              className="w-full bg-card border border-muted rounded p-2 text-xs text-primary outline-none focus:border-blue-500 resize-none"
               rows={3}
               value={commentDraft}
               onChange={(e) => setCommentDraft(e.target.value)}
@@ -159,7 +159,7 @@ export function NodeDetails() {
             />
             <div className="flex gap-1 justify-end">
               <button
-                className="text-xs text-zinc-400 hover:text-zinc-300 px-2 py-0.5"
+                className="text-xs text-tertiary hover:text-secondary px-2 py-0.5"
                 onClick={() => setIsEditingComment(false)}
               >
                 Cancel
@@ -173,18 +173,18 @@ export function NodeDetails() {
             </div>
           </div>
         ) : selectedNode.comment ? (
-          <p className="text-zinc-300 text-xs bg-zinc-900 rounded p-2 whitespace-pre-wrap">
+          <p className="text-secondary text-xs bg-card rounded p-2 whitespace-pre-wrap">
             {selectedNode.comment}
           </p>
         ) : (
-          <p className="text-zinc-600 text-xs italic">No comment</p>
+          <p className="text-faint text-xs italic">No comment</p>
         )}
       </div>
 
       {/* Outgoing transposition edges */}
       {selectedNode.transpositionEdges.length > 0 && (
         <div>
-          <div className="text-zinc-500 text-xs mb-0.5">Transpositions</div>
+          <div className="text-muted text-xs mb-0.5">Transpositions</div>
           {selectedNode.transpositionEdges.map((te) => {
             const target = nodesMap.get(te.targetId);
             return (
@@ -193,7 +193,7 @@ export function NodeDetails() {
                 className="text-yellow-400 text-xs hover:text-yellow-300 cursor-pointer"
                 onClick={() => selectNode(te.targetId)}
               >
-                {te.move} → {target?.move || 'root'}
+                {te.move} &rarr; {target?.move || 'root'}
               </button>
             );
           })}

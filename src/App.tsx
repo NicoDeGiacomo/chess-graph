@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
+import { ThemeProvider } from './hooks/useTheme.tsx';
 import { RepertoireProvider } from './hooks/useRepertoire.tsx';
 import { LandingPage } from './pages/LandingPage.tsx';
 import { AllGraphsPage } from './pages/AllGraphsPage.tsx';
@@ -11,8 +12,8 @@ function AppRoutes() {
 
   if (state.isLoading) {
     return (
-      <div className="h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
-        <div className="text-zinc-500">Loading...</div>
+      <div className="h-screen bg-page text-primary flex items-center justify-center">
+        <div className="text-muted">Loading...</div>
       </div>
     );
   }
@@ -29,11 +30,13 @@ function AppRoutes() {
 
 function App() {
   return (
-    <RepertoireProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </RepertoireProvider>
+    <ThemeProvider>
+      <RepertoireProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </RepertoireProvider>
+    </ThemeProvider>
   );
 }
 

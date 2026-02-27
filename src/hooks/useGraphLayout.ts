@@ -36,8 +36,8 @@ export function computeLayout(
         source: node.parentId,
         target: id,
         type: 'default',
-        style: { stroke: '#71717a' },
-        markerEnd: { type: MarkerType.ArrowClosed, color: '#71717a' },
+        style: { stroke: 'var(--color-graph-edge)' },
+        markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-graph-edge)' },
         data: { isTransposition: false },
       });
       g.setEdge(node.parentId, id);
@@ -55,7 +55,7 @@ export function computeLayout(
           markerEnd: { type: MarkerType.ArrowClosed, color: '#f59e0b' },
           label: te.move,
           labelStyle: { fill: '#f59e0b', fontSize: 10, fontWeight: 600 },
-          labelBgStyle: { fill: '#18181b', fillOpacity: 0.9 },
+          labelBgStyle: { fill: 'var(--color-graph-transposition-label-bg)', fillOpacity: 0.9 },
           data: { isTransposition: true, move: te.move },
         });
       }

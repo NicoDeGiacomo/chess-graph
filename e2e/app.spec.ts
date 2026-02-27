@@ -29,7 +29,7 @@ async function resetAndEnterEditor(page: Page) {
   // Wait for All Graphs page to load with at least one card
   await expect(page.getByText('My Graphs')).toBeVisible();
   // Click the first repertoire card to enter the editor
-  await page.locator('button.bg-zinc-900').first().click();
+  await page.locator('[data-testid="graph-card"]').first().click();
   // Wait for the editor to load (graph node visible)
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
@@ -191,7 +191,7 @@ test('create repertoire from All Graphs page', async ({ page }) => {
 
   // Go back — should see 2 cards
   await page.getByText('Back').click();
-  await expect(page.locator('button.bg-zinc-900')).toHaveCount(2);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(2);
 });
 
 test('rename repertoire', async ({ page }) => {
@@ -227,7 +227,7 @@ test('delete repertoire redirects to All Graphs', async ({ page }) => {
   // Should redirect to All Graphs
   await expect(page.getByText('My Graphs')).toBeVisible();
   // Should see 1 remaining card
-  await expect(page.locator('button.bg-zinc-900')).toHaveCount(1);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(1);
 });
 
 test('delete confirm dialog can be cancelled', async ({ page }) => {
@@ -612,7 +612,7 @@ test('child node inherits parent color', async ({ page }) => {
 
   // The e5 node should inherit the green color from e4
   const e5Node = page.locator('[data-testid^="rf__node-"]').nth(2);
-  const styledDiv = e5Node.locator('div[style*="background-color"]');
+  const styledDiv = e5Node.locator('.min-h-\\[40px\\]');
   await expect(styledDiv).toHaveCSS('background-color', 'rgb(22, 163, 74)');
 });
 

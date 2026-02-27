@@ -1,16 +1,128 @@
 @import "tailwindcss";
 @import "@xyflow/react/dist/style.css";
 
+/* ── Theme: CSS Custom Properties ──────────────────────────────── */
+
+:root {
+  /* Surfaces */
+  --color-surface-page: #09090b;
+  --color-surface-card: #18181b;
+  --color-surface-input: #27272a;
+  --color-surface-elevated: #27272a;
+
+  /* Borders */
+  --color-border-default: #3f3f46;
+  --color-border-subtle: #27272a;
+
+  /* Text */
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #d4d4d8;
+  --color-text-tertiary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-text-faint: #52525b;
+
+  /* Board */
+  --color-board-dark: #52525b;
+  --color-board-light: #a1a1aa;
+  --color-board-notation-dark: #a1a1aa;
+  --color-board-notation-light: #52525b;
+  --color-board-shadow: rgba(0, 0, 0, 0.3);
+
+  /* Graph */
+  --color-graph-edge: #71717a;
+  --color-graph-bg-dot: #27272a;
+  --color-graph-transposition-label-bg: #18181b;
+
+  /* Nodes */
+  --color-node-default: #3f3f46;
+  --color-node-border: #52525b;
+  --color-node-selected-border: #60a5fa;
+  --color-node-text: #fafafa;
+  --color-node-tag-bg: rgba(39, 39, 42, 0.6);
+
+  /* Overlay */
+  --color-overlay: rgba(0, 0, 0, 0.6);
+
+  /* Minimap */
+  --color-minimap-bg: #18181b;
+  --color-minimap-border: #3f3f46;
+  --color-minimap-mask: rgba(0, 0, 0, 0.7);
+}
+
+.light {
+  /* Surfaces */
+  --color-surface-page: #ffffff;
+  --color-surface-card: #f4f4f5;
+  --color-surface-input: #e4e4e7;
+  --color-surface-elevated: #ffffff;
+
+  /* Borders */
+  --color-border-default: #d4d4d8;
+  --color-border-subtle: #e4e4e7;
+
+  /* Text */
+  --color-text-primary: #09090b;
+  --color-text-secondary: #27272a;
+  --color-text-tertiary: #52525b;
+  --color-text-muted: #71717a;
+  --color-text-faint: #a1a1aa;
+
+  /* Board */
+  --color-board-dark: #b58863;
+  --color-board-light: #f0d9b5;
+  --color-board-notation-dark: #f0d9b5;
+  --color-board-notation-light: #b58863;
+  --color-board-shadow: rgba(0, 0, 0, 0.1);
+
+  /* Graph */
+  --color-graph-edge: #a1a1aa;
+  --color-graph-bg-dot: #e4e4e7;
+  --color-graph-transposition-label-bg: #f4f4f5;
+
+  /* Nodes */
+  --color-node-default: #d4d4d8;
+  --color-node-border: #a1a1aa;
+  --color-node-selected-border: #3b82f6;
+  --color-node-text: #09090b;
+  --color-node-tag-bg: rgba(228, 228, 231, 0.6);
+
+  /* Overlay */
+  --color-overlay: rgba(0, 0, 0, 0.4);
+
+  /* Minimap */
+  --color-minimap-bg: #f4f4f5;
+  --color-minimap-border: #d4d4d8;
+  --color-minimap-mask: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Register as Tailwind theme tokens ─────────────────────────── */
+
+@theme {
+  --color-page: var(--color-surface-page);
+  --color-card: var(--color-surface-card);
+  --color-input: var(--color-surface-input);
+  --color-elevated: var(--color-surface-elevated);
+  --color-border: var(--color-border-default);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-primary: var(--color-text-primary);
+  --color-secondary: var(--color-text-secondary);
+  --color-tertiary: var(--color-text-tertiary);
+  --color-muted: var(--color-text-muted);
+  --color-faint: var(--color-text-faint);
+}
+
+/* ── Global styles ─────────────────────────────────────────────── */
+
 body {
   margin: 0;
-  background-color: #09090b;
-  color: #fafafa;
+  background-color: var(--color-surface-page);
+  color: var(--color-text-primary);
 }
 
 /* React Flow dark mode overrides */
 .react-flow__minimap {
-  background-color: #18181b !important;
-  border: 1px solid #3f3f46 !important;
+  background-color: var(--color-minimap-bg) !important;
+  border: 1px solid var(--color-minimap-border) !important;
   border-radius: 4px;
 }
 

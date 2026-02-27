@@ -3,6 +3,7 @@ import { Chessboard } from 'react-chessboard';
 import type { Arrow } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { useTheme } from '../hooks/useTheme.tsx';
 import type { HighlightedSquare } from '../types/index.ts';
 import chesscomLogo from '../../logos/chesscom.png';
 import lichessLogo from '../../logos/lichess.png';
@@ -26,6 +27,7 @@ function isOwnPiece(pieceType: string, turn: 'w' | 'b'): boolean {
 export function ChessboardPanel() {
   const { state, addChildNode, updateNode, flipBoardSide } = useRepertoire();
   const { repertoire, nodesMap, selectedNodeId } = state;
+  const { theme } = useTheme();
 
   const selectedNode = selectedNodeId ? nodesMap.get(selectedNodeId) : null;
   const fen = selectedNode?.fen || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
@@ -153,13 +155,13 @@ export function ChessboardPanel() {
             squareStyles,
             boardOrientation: repertoire?.side || 'white',
             animationDurationInMs: 200,
-            darkSquareStyle: { backgroundColor: '#52525b' },
-            lightSquareStyle: { backgroundColor: '#a1a1aa' },
-            darkSquareNotationStyle: { color: '#a1a1aa', pointerEvents: 'none' as const },
-            lightSquareNotationStyle: { color: '#52525b', pointerEvents: 'none' as const },
+            darkSquareStyle: { backgroundColor: 'var(--color-board-dark)' },
+            lightSquareStyle: { backgroundColor: 'var(--color-board-light)' },
+            darkSquareNotationStyle: { color: 'var(--color-board-notation-dark)', pointerEvents: 'none' as const },
+            lightSquareNotationStyle: { color: 'var(--color-board-notation-light)', pointerEvents: 'none' as const },
             boardStyle: {
               borderRadius: '4px',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+              boxShadow: '0 4px 6px -1px var(--color-board-shadow)',
             },
             arrows: selectedNode?.arrows || [],
             allowDrawingArrows: true,
@@ -173,7 +175,7 @@ export function ChessboardPanel() {
         <div className="flex justify-center items-center gap-2 mt-2 max-w-[400px] mx-auto">
           <button
             onClick={() => repertoire && flipBoardSide(repertoire.id)}
-            className="p-1 text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="p-1 text-tertiary hover:text-secondary transition-colors"
             aria-label="Flip board"
             title="Flip board"
           >
@@ -189,7 +191,7 @@ export function ChessboardPanel() {
             aria-label="Chess.com"
             className="inline-flex h-5 rounded overflow-hidden hover:brightness-110 transition"
           >
-            <span className="flex items-center bg-zinc-700 px-1.5">
+            <span className="flex items-center bg-input px-1.5">
               <img src={chesscomLogo} alt="" width="12" height="12" />
             </span>
             <span className="flex items-center px-1.5 text-[11px] font-medium text-white" style={{ backgroundColor: '#81b64c' }}>
@@ -203,8 +205,8 @@ export function ChessboardPanel() {
             aria-label="Lichess"
             className="inline-flex h-5 rounded overflow-hidden hover:brightness-110 transition"
           >
-            <span className="flex items-center bg-zinc-700 px-1.5">
-              <img src={lichessLogo} alt="" width="12" height="12" className="invert" />
+            <span className="flex items-center bg-input px-1.5">
+              <img src={lichessLogo} alt="" width="12" height="12" className={theme === 'dark' ? 'invert' : ''} />
             </span>
             <span className="flex items-center px-1.5 text-[11px] font-medium text-white" style={{ backgroundColor: '#312e2b' }}>
               Lichess
@@ -218,7 +220,7 @@ export function ChessboardPanel() {
                   updateNode(selectedNodeId!, { arrows: [], highlightedSquares: [] });
                   setClearKey(k => k + 1);
                 } : undefined}
-                className={`p-1 transition-colors ${hasAnnotations ? 'text-zinc-400 hover:text-zinc-200' : 'text-zinc-400 opacity-30 cursor-default'}`}
+                className={`p-1 transition-colors ${hasAnnotations ? 'text-tertiary hover:text-secondary' : 'text-tertiary opacity-30 cursor-default'}`}
                 aria-label="Clear annotations"
                 title="Clear annotations"
               >

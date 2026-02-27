@@ -11,8 +11,10 @@
 
 - Groupings (folders) of graphs
 - More optional views: top-down, floating window
-- Dark/light themes
+- Side bar to allow to jump to another graph without going back to the main screen.
+- ~~Dark/light themes~~ Done
 - Convert the repertoire on my main obsidian as an example graph to show the users. Use the full lenght of the features (tags, colors, branches, transpositions, etc)
+
 
 ## Accessibility
 

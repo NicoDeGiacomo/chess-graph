@@ -50,6 +50,19 @@
     </script>
   </head>
   <body>
+    <script>
+      // Prevent flash of wrong theme by synchronously setting the class before first paint
+      (function() {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || t === 'light') {
+          document.documentElement.classList.add(t);
+        } else {
+          document.documentElement.classList.add(
+            window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+          );
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

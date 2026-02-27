@@ -48,8 +48,8 @@ export function EditorPage() {
   // Provider still initializing
   if (state.isLoading) {
     return (
-      <div className="h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
-        <div className="text-zinc-500">Loading...</div>
+      <div className="h-screen bg-page text-primary flex items-center justify-center">
+        <div className="text-muted">Loading...</div>
       </div>
     );
   }
@@ -62,14 +62,14 @@ export function EditorPage() {
   // Waiting for switchRepertoire to complete
   if (!state.repertoire || state.repertoire.id !== id) {
     return (
-      <div className="h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
-        <div className="text-zinc-500">Loading...</div>
+      <div className="h-screen bg-page text-primary flex items-center justify-center">
+        <div className="text-muted">Loading...</div>
       </div>
     );
   }
 
   return (
-    <main className="h-screen bg-zinc-950 text-zinc-100 flex flex-col overflow-hidden">
+    <main className="h-screen bg-page text-primary flex flex-col overflow-hidden">
       <EditorTopBar />
       <div className="flex flex-1 min-h-0">
         <ReactFlowProvider>

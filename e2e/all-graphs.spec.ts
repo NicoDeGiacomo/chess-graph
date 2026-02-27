@@ -19,7 +19,7 @@ test.beforeEach(async ({ page }) => {
 
 test('page loads with repertoire cards', async ({ page }) => {
   // Should show at least the default repertoire card
-  await expect(page.locator('button.bg-zinc-900')).toHaveCount(1);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(1);
 });
 
 test('search filters cards', async ({ page }) => {
@@ -33,19 +33,19 @@ test('search filters cards', async ({ page }) => {
   await expect(page.getByText('My Graphs')).toBeVisible();
 
   // Both cards visible
-  await expect(page.locator('button.bg-zinc-900')).toHaveCount(2);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(2);
 
   // Search for "sicilian"
   const searchInput = page.getByPlaceholder('Search graphs...');
   await searchInput.fill('Sicilian');
 
   // Only one card visible
-  await expect(page.locator('button.bg-zinc-900')).toHaveCount(1);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(1);
   await expect(page.getByText('Sicilian Defense')).toBeVisible();
 
   // Search for something that doesn't match
   await searchInput.fill('xyz');
-  await expect(page.locator('button.bg-zinc-900')).toHaveCount(0);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(0);
   await expect(page.getByText('No graphs match your search.')).toBeVisible();
 });
 
@@ -64,7 +64,7 @@ test('create new repertoire from dialog', async ({ page }) => {
 
 test('click card navigates to editor', async ({ page }) => {
   // Click the first card
-  await page.locator('button.bg-zinc-900').first().click();
+  await page.locator('[data-testid="graph-card"]').first().click();
 
   // Should be in editor with graph visible
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
@@ -74,7 +74,7 @@ test('click card navigates to editor', async ({ page }) => {
 
 test('back button returns to All Graphs', async ({ page }) => {
   // Enter editor
-  await page.locator('button.bg-zinc-900').first().click();
+  await page.locator('[data-testid="graph-card"]').first().click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
   // Click back
@@ -98,7 +98,7 @@ test('delete from editor redirects to All Graphs', async ({ page }) => {
 
   // Should be back at All Graphs
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await expect(page.locator('button.bg-zinc-900')).toHaveCount(1);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(1);
 });
 
 test('invalid repertoire ID redirects to All Graphs', async ({ page }) => {
@@ -120,15 +120,15 @@ test('search input has aria-label', async ({ page }) => {
 });
 
 test('card has colored left border', async ({ page }) => {
-  const card = page.locator('button.bg-zinc-900').first();
+  const card = page.locator('[data-testid="graph-card"]').first();
   const borderLeft = await card.evaluate((el) => getComputedStyle(el).borderLeftColor);
-  // Default color #3f3f46 → rgb(63, 63, 70)
-  expect(borderLeft).toBe('rgb(63, 63, 70)');
+  // Default node color is theme-dependent: dark=#3f3f46 rgb(63,63,70), light=#d4d4d8 rgb(212,212,216)
+  expect(['rgb(63, 63, 70)', 'rgb(212, 212, 216)']).toContain(borderLeft);
 });
 
 test('card shows root node tags and comment', async ({ page }) => {
   // Enter editor
-  await page.locator('button.bg-zinc-900').first().click();
+  await page.locator('[data-testid="graph-card"]').first().click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
   // Add a tag via context menu on root node
@@ -156,7 +156,7 @@ test('card shows root node tags and comment', async ({ page }) => {
   await expect(page.getByText('My Graphs')).toBeVisible();
 
   // Assert tag pill and comment preview are visible on the card
-  const card = page.locator('button.bg-zinc-900').first();
+  const card = page.locator('[data-testid="graph-card"]').first();
   await expect(card.getByText('repertoire-tag')).toBeVisible();
   await expect(card.getByText('This is my repertoire description')).toBeVisible();
 });

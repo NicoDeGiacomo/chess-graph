@@ -1,4 +1,5 @@
 import type { Repertoire } from '../types/index.ts';
+import { resolveNodeColor } from '../utils/themeColor.ts';
 
 interface GraphCardProps {
   repertoire: Repertoire;
@@ -30,37 +31,38 @@ export function GraphCard({ repertoire, nodeCount, tags, comment, color, onClick
 
   return (
     <button
+      data-testid="graph-card"
       onClick={onClick}
-      className="bg-zinc-900 border border-zinc-800 border-l-4 rounded-xl p-4 text-left hover:border-zinc-600 hover:bg-zinc-800/50 transition-colors cursor-pointer w-full"
-      style={{ borderLeftColor: color }}
+      className="bg-card border border-border-subtle border-l-4 rounded-xl p-4 text-left hover:border-border hover:bg-elevated transition-colors cursor-pointer w-full"
+      style={{ borderLeftColor: resolveNodeColor(color) }}
     >
       <div className="flex items-center gap-2 mb-2">
         <span className="text-lg" style={
-          repertoire.side === 'black' ? { WebkitTextStroke: '0.5px #a1a1aa' } : undefined
+          repertoire.side === 'black' ? { WebkitTextStroke: '0.5px var(--color-text-tertiary)' } : undefined
         }>
           {repertoire.side === 'white' ? '\u2659' : '\u265F'}
         </span>
-        <h3 className="text-zinc-100 font-medium truncate">{repertoire.name}</h3>
+        <h3 className="text-primary font-medium truncate">{repertoire.name}</h3>
       </div>
 
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2">
           {visibleTags.map((tag) => (
-            <span key={tag} className="bg-zinc-800 text-zinc-300 rounded px-2 py-0.5 text-xs">
+            <span key={tag} className="bg-input text-secondary rounded px-2 py-0.5 text-xs">
               {tag}
             </span>
           ))}
           {overflowCount > 0 && (
-            <span className="text-zinc-500 text-xs px-1 py-0.5">+{overflowCount}</span>
+            <span className="text-muted text-xs px-1 py-0.5">+{overflowCount}</span>
           )}
         </div>
       )}
 
       {comment && (
-        <p className="text-zinc-400 text-xs truncate mb-2">{comment}</p>
+        <p className="text-tertiary text-xs truncate mb-2">{comment}</p>
       )}
 
-      <div className="flex items-center justify-between text-xs text-zinc-500">
+      <div className="flex items-center justify-between text-xs text-muted">
         <span>{nodeCount} {nodeCount === 1 ? 'node' : 'nodes'}</span>
         <span>{formatRelativeTime(repertoire.updatedAt)}</span>
       </div>

@@ -40,22 +40,23 @@ function ConfirmDialogInner({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ backgroundColor: 'var(--color-overlay)' }}
       onClick={onClose}
     >
       <div
-        className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 w-full max-w-sm mx-4"
+        className="bg-card border border-border rounded-xl p-6 w-full max-w-sm mx-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 id="confirm-dialog-title" className="text-lg font-medium text-zinc-100 mb-2">{title}</h2>
-        <p className="text-sm text-zinc-400 mb-5">{message}</p>
+        <h2 id="confirm-dialog-title" className="text-lg font-medium text-primary mb-2">{title}</h2>
+        <p className="text-sm text-tertiary mb-5">{message}</p>
 
         <div className="flex justify-end gap-2">
           <button
-            className="text-sm text-zinc-400 hover:text-zinc-200 px-3 py-1.5"
+            className="text-sm text-tertiary hover:text-secondary px-3 py-1.5"
             onClick={onClose}
           >
             Cancel

@@ -101,7 +101,7 @@ describe('computeLayout', () => {
     expect(edge.target).toBe('child1');
     expect(edge.type).toBe('default');
     expect(edge.data?.isTransposition).toBe(false);
-    expect(edge.markerEnd).toEqual({ type: MarkerType.ArrowClosed, color: '#71717a' });
+    expect(edge.markerEnd).toEqual({ type: MarkerType.ArrowClosed, color: 'var(--color-graph-edge)' });
   });
 
   it('creates transposition edges with label from transpositionEdges', () => {

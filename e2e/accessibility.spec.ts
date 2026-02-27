@@ -16,7 +16,7 @@ async function resetAndEnterEditor(page: Page) {
   }));
   await page.reload();
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await page.locator('button.bg-zinc-900').first().click();
+  await page.locator('[data-testid="graph-card"]').first().click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
 

@@ -16,7 +16,9 @@ import '@xyflow/react/dist/style.css';
 import { MoveNode } from './MoveNode.tsx';
 import { TranspositionEdge } from './TranspositionEdge.tsx';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { useTheme } from '../hooks/useTheme.tsx';
 import { computeLayout } from '../hooks/useGraphLayout.ts';
+import { resolveNodeColor } from '../utils/themeColor.ts';
 import type { MoveFlowNode, MoveFlowEdge } from '../types/index.ts';
 
 const nodeTypes: NodeTypes = { move: MoveNode };
@@ -25,6 +27,7 @@ const edgeTypes: EdgeTypes = { transposition: TranspositionEdge };
 export function GraphCanvas() {
   const { state, selectNode, setContextMenu } = useRepertoire();
   const { repertoire, nodesMap, selectedNodeId } = state;
+  const { theme } = useTheme();
   const reactFlowInstance = useReactFlow();
   const prevNodeCount = useRef(0);
   const draggedPositions = useRef(new Map<string, { x: number; y: number }>());
@@ -109,7 +112,7 @@ export function GraphCanvas() {
         nodesDraggable={interactive}
         elementsSelectable={interactive}
         nodesConnectable={false}
-        colorMode="dark"
+        colorMode={theme}
         fitView
         minZoom={0.1}
         maxZoom={2}
@@ -118,14 +121,17 @@ export function GraphCanvas() {
         <MiniMap
           nodeColor={(node) => {
             const color = node.data?.color as string | undefined;
-            return color || '#3f3f46';
+            return resolveNodeColor(color || '#3f3f46');
           }}
-          maskColor="rgba(0, 0, 0, 0.7)"
-          className="!bg-zinc-900 !border-zinc-700"
+          maskColor="var(--color-minimap-mask)"
+          style={{
+            backgroundColor: 'var(--color-minimap-bg)',
+            border: '1px solid var(--color-minimap-border)',
+          }}
         />
-        <Background color="#27272a" gap={20} />
+        <Background color="var(--color-graph-bg-dot)" gap={20} />
         <Controls
-          className="!bg-zinc-800 !border-zinc-700 !shadow-lg [&>button]:!bg-zinc-800 [&>button]:!border-zinc-700 [&>button]:!fill-zinc-400 [&>button:hover]:!bg-zinc-700"
+          className="!bg-elevated !border-border !shadow-lg [&>button]:!bg-elevated [&>button]:!border-border [&>button]:!fill-tertiary [&>button:hover]:!bg-input"
           onInteractiveChange={() => setInteractive((prev) => !prev)}
         />
       </ReactFlow>

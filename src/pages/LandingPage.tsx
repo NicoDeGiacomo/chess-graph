@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { useDocumentMeta } from '../hooks/useDocumentMeta.ts';
+import { ThemeToggle } from '../components/ThemeToggle.tsx';
 
 const features = [
   {
@@ -67,7 +68,9 @@ export function LandingPage() {
   });
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="relative min-h-screen bg-page text-primary">
+      <ThemeToggle className="absolute top-4 right-4" />
+
       {/* Hero */}
       <section className="max-w-4xl mx-auto px-4 pt-24 pb-16 text-center">
         <img
@@ -76,7 +79,7 @@ export function LandingPage() {
           className="h-14 sm:h-18 mx-auto"
         />
         <h1 className="sr-only">Chess Graph — Chess Opening Repertoire Builder</h1>
-        <p className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto">
+        <p className="mt-4 text-lg text-tertiary max-w-2xl mx-auto">
           Visualize your opening repertoire as an interactive game tree.
           Branch, explore, and master your lines — all in your browser.
         </p>
@@ -95,7 +98,7 @@ export function LandingPage() {
           <img
             src="/screenshots/chess-graph-after-e4.png"
             alt="Chess Graph showing an opening tree after 1. e4"
-            className="rounded-xl border border-zinc-800 shadow-2xl w-full"
+            className="rounded-xl border border-border-subtle shadow-2xl w-full"
             width={2400}
             height={1636}
             loading="lazy"
@@ -110,11 +113,11 @@ export function LandingPage() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-zinc-900 border border-zinc-800 rounded-xl p-6"
+              className="bg-card border border-border-subtle rounded-xl p-6"
             >
               <div className="text-blue-400 mb-3">{f.icon}</div>
               <h3 className="text-lg font-semibold mb-1">{f.title}</h3>
-              <p className="text-sm text-zinc-400">{f.description}</p>
+              <p className="text-sm text-tertiary">{f.description}</p>
             </div>
           ))}
         </div>
@@ -126,7 +129,7 @@ export function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-2">Build Your Repertoire Visually</h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-tertiary">
               Start from any position and add moves directly on the chess board. Each move
               creates a new node in your opening tree, letting you map out every variation
               you want to study. The graph grows organically as you explore lines, giving you
@@ -135,7 +138,7 @@ export function LandingPage() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-2">Board and Graph Stay in Sync</h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-tertiary">
               Click any node in the graph to instantly load that position on the board.
               Make a move on the board and watch the graph update in real time. This
               two-way sync makes it easy to navigate deep lines without losing your place
@@ -144,7 +147,7 @@ export function LandingPage() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-2">No Account Required</h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-tertiary">
               Chess Graph runs entirely in your browser. Your graphs are saved locally
               using IndexedDB — no sign-up, no server, no data collection. Open the app
               and start building your opening preparation immediately. Export your data
@@ -158,23 +161,23 @@ export function LandingPage() {
       <section className="max-w-4xl mx-auto px-4 pb-24">
         <h2 className="text-2xl font-bold text-center mb-12">Who Uses Chess Graph</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center">
+          <div className="bg-card border border-border-subtle rounded-xl p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">Tournament Players</h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-tertiary">
               Organize your preparation for both colors. Map out main lines and sidelines so
               you&apos;re ready for any opponent.
             </p>
           </div>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center">
+          <div className="bg-card border border-border-subtle rounded-xl p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">Chess Coaches</h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-tertiary">
               Build visual lesson plans for students. Share graphs as exported files and
               walk through variations step by step.
             </p>
           </div>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 text-center">
+          <div className="bg-card border border-border-subtle rounded-xl p-6 text-center">
             <h3 className="text-lg font-semibold mb-2">Casual Improvers</h3>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-tertiary">
               Tired of forgetting your openings? Build a personal cheat sheet that&apos;s
               easy to read and always available in your browser.
             </p>
@@ -186,7 +189,7 @@ export function LandingPage() {
       <section className="max-w-4xl mx-auto px-4 pb-24">
         <h2 className="text-2xl font-bold text-center mb-12">About Chess Graph</h2>
         <div className="max-w-2xl mx-auto text-center">
-          <p className="text-sm text-zinc-400 mb-4">
+          <p className="text-sm text-tertiary mb-4">
             Chess Graph is a free, open-source tool built by{' '}
             <a
               href="https://github.com/NicoDeGiacomo"
@@ -209,7 +212,7 @@ export function LandingPage() {
             </a>{' '}
             and released under the MIT License.
           </p>
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-tertiary">
             Contributions, bug reports, and feature requests are welcome.
             If you find Chess Graph useful, consider starring the repository to help others discover it.
           </p>
@@ -217,14 +220,14 @@ export function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 py-8">
-        <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-500">
+      <footer className="border-t border-border-subtle py-8">
+        <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted">
           <span>Chess Graph &middot; MIT License &middot; {new Date().getFullYear()}</span>
           <a
             href="https://github.com/NicoDeGiacomo/chess-graph"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-zinc-300 transition-colors"
+            className="hover:text-secondary transition-colors"
             aria-label="GitHub (opens in new tab)"
           >
             GitHub

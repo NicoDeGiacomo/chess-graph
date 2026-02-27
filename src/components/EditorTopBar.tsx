@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { ConfirmDialog } from './ConfirmDialog.tsx';
+import { ThemeToggle } from './ThemeToggle.tsx';
 import type { ExportData } from '../types/index.ts';
 
 export function EditorTopBar() {
@@ -74,11 +75,11 @@ export function EditorTopBar() {
 
   return (
     <>
-      <header className="h-12 border-b border-zinc-800 flex items-center gap-3 px-4 bg-zinc-950 shrink-0">
+      <header className="h-12 border-b border-border-subtle flex items-center gap-3 px-4 bg-page shrink-0">
         {/* Back button */}
         <Link
           to="/repertoires"
-          className="text-zinc-400 hover:text-zinc-100 text-sm flex items-center gap-1"
+          className="text-tertiary hover:text-primary text-sm flex items-center gap-1"
           title="All Graphs"
           aria-label="Back to all graphs"
         >
@@ -88,14 +89,14 @@ export function EditorTopBar() {
           Back
         </Link>
 
-        <div className="h-4 w-px bg-zinc-700" />
+        <div className="h-4 w-px bg-border" />
 
         {/* Repertoire name + side */}
         {isRenaming ? (
           <div className="flex items-center gap-1">
             <input
               autoFocus
-              className="bg-zinc-900 border border-zinc-700 rounded px-2 py-0.5 text-sm text-zinc-100 outline-none focus:border-blue-500 w-40"
+              className="bg-card border border-border rounded px-2 py-0.5 text-sm text-primary outline-none focus:border-blue-500 w-40"
               value={renameDraft}
               onChange={(e) => setRenameDraft(e.target.value)}
               onKeyDown={(e) => {
@@ -113,10 +114,10 @@ export function EditorTopBar() {
         ) : (
           <>
             {repertoire && (
-              <span className="text-sm text-zinc-100 font-medium">{repertoire.name}</span>
+              <span className="text-sm text-primary font-medium">{repertoire.name}</span>
             )}
             {repertoire && (
-              <span className="text-xs text-zinc-500">({repertoire.side})</span>
+              <span className="text-xs text-muted">({repertoire.side})</span>
             )}
           </>
         )}
@@ -124,7 +125,7 @@ export function EditorTopBar() {
         {/* Rename button */}
         {!isRenaming && (
           <button
-            className="text-xs text-zinc-500 hover:text-zinc-300"
+            className="text-xs text-muted hover:text-secondary"
             onClick={startRename}
             title="Rename graph"
           >
@@ -136,7 +137,7 @@ export function EditorTopBar() {
 
         {/* Clear */}
         <button
-          className="text-xs text-zinc-500 hover:text-red-400"
+          className="text-xs text-muted hover:text-red-400"
           onClick={() => setShowClearConfirm(true)}
           title="Clear graph"
         >
@@ -145,18 +146,18 @@ export function EditorTopBar() {
 
         {/* Delete */}
         <button
-          className="text-xs text-zinc-500 hover:text-red-400"
+          className="text-xs text-muted hover:text-red-400"
           onClick={() => setShowDeleteConfirm(true)}
           title="Delete graph"
         >
           Delete
         </button>
 
-        <div className="h-4 w-px bg-zinc-700" />
+        <div className="h-4 w-px bg-border" />
 
         {/* Export */}
         <button
-          className="text-xs text-zinc-400 hover:text-zinc-200"
+          className="text-xs text-tertiary hover:text-secondary"
           onClick={handleExport}
         >
           Export
@@ -171,11 +172,15 @@ export function EditorTopBar() {
           onChange={handleImport}
         />
         <button
-          className="text-xs text-zinc-400 hover:text-zinc-200"
+          className="text-xs text-tertiary hover:text-secondary"
           onClick={() => fileInputRef.current?.click()}
         >
           Import
         </button>
+
+        <div className="h-4 w-px bg-border" />
+
+        <ThemeToggle />
       </header>
 
       <ConfirmDialog

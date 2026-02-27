@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { useDocumentMeta } from '../hooks/useDocumentMeta.ts';
+import { ThemeToggle } from '../components/ThemeToggle.tsx';
 
 export function NotFoundPage() {
   useDocumentMeta({
@@ -8,10 +9,11 @@ export function NotFoundPage() {
   });
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
+    <div className="relative min-h-screen bg-page text-primary flex items-center justify-center">
+      <ThemeToggle className="absolute top-4 right-4" />
       <div className="text-center">
         <h1 className="text-6xl font-bold mb-4">404</h1>
-        <p className="text-lg text-zinc-400 mb-8">
+        <p className="text-lg text-tertiary mb-8">
           The page you&apos;re looking for doesn&apos;t exist.
         </p>
         <Link
