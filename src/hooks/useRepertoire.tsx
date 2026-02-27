@@ -20,6 +20,7 @@ import type {
 } from '../types/index.ts';
 import { NODE_COLORS } from '../types/index.ts';
 import { positionKey, findTransposition } from '../utils/fen.ts';
+import { validateImportData } from '../utils/importValidation.ts';
 
 const DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
@@ -511,8 +512,9 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const importData = useCallback(async (data: ExportData) => {
-    if (!Array.isArray(data.repertoires) || !Array.isArray(data.nodes)) {
-      throw new Error('Invalid import data');
+    const validationError = validateImportData(data);
+    if (validationError) {
+      throw new Error(validationError);
     }
 
     // Normalize nodes: ensure transpositionEdges exists, strip legacy transposesTo

@@ -21,12 +21,11 @@
 
 ## Improvements
 
-- Are we using too much storage? Should we implement a compression strategy to save the graphs on the browser?
+- ~~Storage compression~~ Not needed — even 100K nodes uses ~40 MB vs browser quotas of 1-10+ GB
 
 ## Security
 
-- Should we make sure editing the json of the graph is not possible / detect when it was tampered? Is that a security risk?
-- Should we save a file different that .json? To hide a bit the functionality to avoid tampering. Should/can we use a custom .chessgraph for example? Can/should it be a binary or something else?
+- ~~Custom file format / tamper detection~~ Not needed — client-only app, no attack surface. Added import validation instead.
 
 ## Non Code 
 - Check all features are documented to the user in some page.
