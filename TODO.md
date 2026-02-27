@@ -2,15 +2,11 @@
 
 ## High Priority
 
-- ~~PGN import — paste or upload a PGN file and auto-generate the graph~~ Done — full RAV support, multi-game merge, transposition detection, undoable
-- Keyboard-driven move entry — type moves in algebraic notation (e.g. "e4", "Nf3") to add nodes without clicking the board
-- ~~Sometimes quite randomly the arrows start working backwards (up goes to the down node and down goes to the up node)~~ Done — siblings now sorted by visual y-position
+- ~~Keyboard-driven move entry — type moves in algebraic notation (e.g. "e4", "Nf3") to add nodes without clicking the board~~ Done
 
 ## Medium Priority
 
 - Sidebar graph switcher — jump between graphs without going back to All Graphs page
-- ~~Collapse/expand subtrees — click to collapse a branch in the graph for deep repertoires~~ Done
-- ~~Undo/redo — Ctrl+Z / Ctrl+Shift+Z to undo last move addition or deletion~~ Done
 
 ## Low Priority
 
@@ -18,6 +14,7 @@
 - Groupings (folders) of graphs
 - More optional views: top-down, floating window
 - Convert the repertoire on my main obsidian as an example graph to show the users. Use the full length of the features (tags, colors, branches, transpositions, etc)
+- Ugly symbol/icon difference between white and black graphs.
 
 ## Accessibility
 
@@ -26,13 +23,6 @@
 ## New Features
 
 - v2: login
-
-## Done
-
-- ~~Dark/light theme support with inline toggle on every page~~
-- ~~Collapse/expand subtrees — double-click to collapse, badge shows +N hidden count, ArrowRight expands~~
-- ~~Undo/redo — snapshot-based undo for all tree mutations, Ctrl+Z / Ctrl+Shift+Z, toolbar buttons~~
-- ~~PGN import with full RAV support — tokenizer, recursive descent parser, merge pipeline, transposition detection, paste/upload dialog~~
 
 ## Improvements
 
