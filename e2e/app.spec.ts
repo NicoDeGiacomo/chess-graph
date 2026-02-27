@@ -526,6 +526,70 @@ test('arrow down cycles to next sibling', async ({ page }) => {
   await expect(page.locator('text=3P4')).toBeVisible();
 });
 
+test('arrow down navigates siblings in visual top-to-bottom order', async ({ page }) => {
+  // Create 3 siblings from root: e4, d4, c4
+  // FEN fragments: e4 → "4P3", d4 → "3P4", c4 → "2P5"
+  await dragPiece(page, 'e2', 'e4');
+  await waitForSettle(page);
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+
+  await dragPiece(page, 'd2', 'd4');
+  await waitForSettle(page);
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+
+  await dragPiece(page, 'c2', 'c4');
+  await waitForSettle(page);
+
+  await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(4);
+
+  // Navigate to the topmost sibling via ArrowRight from root
+  await page.locator('.react-flow__node').first().click({ force: true });
+  await waitForSettle(page);
+  await page.keyboard.press('ArrowRight');
+  await waitForSettle(page);
+
+  // Record which FEN fragment is visible for each step
+  // We detect which sibling is selected by checking unique FEN fragments
+  const fenFragments = ['4P3', '3P4', '2P5'];
+  async function getVisibleFen(): Promise<string> {
+    for (const frag of fenFragments) {
+      const isVisible = await page.locator(`text=${frag}`).isVisible().catch(() => false);
+      if (isVisible) return frag;
+    }
+    return 'unknown';
+  }
+
+  const firstFen = await getVisibleFen();
+
+  // ArrowDown to second sibling
+  await page.keyboard.press('ArrowDown');
+  await waitForSettle(page);
+  const secondFen = await getVisibleFen();
+
+  // ArrowDown to third sibling
+  await page.keyboard.press('ArrowDown');
+  await waitForSettle(page);
+  const thirdFen = await getVisibleFen();
+
+  // All three should be different positions
+  expect(firstFen).not.toBe(secondFen);
+  expect(secondFen).not.toBe(thirdFen);
+  expect(firstFen).not.toBe(thirdFen);
+
+  // ArrowUp should reverse direction consistently
+  await page.keyboard.press('ArrowUp');
+  await waitForSettle(page);
+  const backToSecond = await getVisibleFen();
+  expect(backToSecond).toBe(secondFen);
+
+  await page.keyboard.press('ArrowUp');
+  await waitForSettle(page);
+  const backToFirst = await getVisibleFen();
+  expect(backToFirst).toBe(firstFen);
+});
+
 // ─── External Analysis Links ─────────────────────────────────────────
 
 test('external links visible when node selected', async ({ page }) => {

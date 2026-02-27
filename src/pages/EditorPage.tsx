@@ -63,7 +63,8 @@ export function EditorPage() {
     });
   }, [selectNode]);
 
-  useArrowKeyNav(state, selectNode, collapsedNodes, toggleCollapse);
+  const nodePositionsRef = useRef(new Map<string, { x: number; y: number }>());
+  useArrowKeyNav(state, selectNode, collapsedNodes, toggleCollapse, nodePositionsRef);
   const repertoireName = state.repertoire?.name;
   useDocumentMeta({
     title: repertoireName ? `${repertoireName} — Chess Graph` : 'Chess Graph',
@@ -122,7 +123,7 @@ export function EditorPage() {
         <EditorTopBar />
         <div className="flex flex-1 min-h-0">
           <ReactFlowProvider>
-            <GraphCanvas collapsedNodes={collapsedNodes} toggleCollapse={toggleCollapse} />
+            <GraphCanvas collapsedNodes={collapsedNodes} toggleCollapse={toggleCollapse} nodePositionsRef={nodePositionsRef} />
           </ReactFlowProvider>
           <Sidebar />
         </div>

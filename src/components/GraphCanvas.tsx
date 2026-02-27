@@ -42,9 +42,10 @@ function collectDescendantIds(nodeId: string, nodesMap: Map<string, RepertoireNo
 interface GraphCanvasProps {
   collapsedNodes: Set<string>;
   toggleCollapse: (nodeId: string) => void;
+  nodePositionsRef?: React.RefObject<Map<string, { x: number; y: number }>>;
 }
 
-export function GraphCanvas({ collapsedNodes, toggleCollapse }: GraphCanvasProps) {
+export function GraphCanvas({ collapsedNodes, toggleCollapse, nodePositionsRef }: GraphCanvasProps) {
   const { state, selectNode, setContextMenu } = useRepertoire();
   const { repertoire, nodesMap, selectedNodeId } = state;
   const { theme } = useTheme();
@@ -109,6 +110,15 @@ export function GraphCanvas({ collapsedNodes, toggleCollapse }: GraphCanvasProps
       if (!layoutIds.has(id)) draggedPositions.current.delete(id);
     }
 
+    // Populate node positions for arrow key navigation (y-sorted siblings)
+    if (nodePositionsRef?.current) {
+      nodePositionsRef.current.clear();
+      for (const node of visibleNodes) {
+        const dragged = draggedPositions.current.get(node.id);
+        nodePositionsRef.current.set(node.id, dragged ?? node.position);
+      }
+    }
+
     setNodes(
       visibleNodes.map((node) => {
         const dragged = draggedPositions.current.get(node.id);
@@ -116,7 +126,7 @@ export function GraphCanvas({ collapsedNodes, toggleCollapse }: GraphCanvasProps
       }),
     );
     setEdges(visibleEdges);
-  }, [visibleNodes, visibleEdges, setNodes, setEdges]);
+  }, [visibleNodes, visibleEdges, setNodes, setEdges, nodePositionsRef]);
 
   useEffect(() => {
     setNodes((prev) =>
@@ -140,7 +150,8 @@ export function GraphCanvas({ collapsedNodes, toggleCollapse }: GraphCanvasProps
 
   const onNodeDragStop: OnNodeDrag = useCallback((_event, node) => {
     draggedPositions.current.set(node.id, node.position);
-  }, []);
+    nodePositionsRef?.current?.set(node.id, node.position);
+  }, [nodePositionsRef]);
 
   const onNodeClick: NodeMouseHandler = useCallback((_event, node) => {
     selectNode(node.id);

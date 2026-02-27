@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, type RefObject } from 'react';
 import type { RepertoireState } from './useRepertoire.tsx';
 
 export function useArrowKeyNav(
@@ -6,6 +6,7 @@ export function useArrowKeyNav(
   selectNode: (nodeId: string) => void,
   collapsedNodes?: Set<string>,
   toggleCollapse?: (nodeId: string) => void,
+  nodePositionsRef?: RefObject<Map<string, { x: number; y: number }>>,
 ) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -34,23 +35,15 @@ export function useArrowKeyNav(
             toggleCollapse(selectedNodeId);
             return;
           }
-          // Combine childIds with transposition edge targets
-          const rightTargets = [
-            ...node.childIds,
-            ...node.transpositionEdges.map((te) => te.targetId),
-          ];
-          if (rightTargets.length > 0) targetId = rightTargets[0];
+          const children = getSortedChildren(node, nodePositionsRef);
+          if (children.length > 0) targetId = children[0];
           break;
         }
         case 'ArrowUp': {
           if (!node.parentId) break;
           const parent = nodesMap.get(node.parentId);
           if (!parent) break;
-          // Combine childIds with transposition edge targets for sibling navigation
-          const siblings = [
-            ...parent.childIds,
-            ...parent.transpositionEdges.map((te) => te.targetId),
-          ];
+          const siblings = getSortedChildren(parent, nodePositionsRef);
           if (siblings.length <= 1) break;
           const idx = siblings.indexOf(selectedNodeId);
           const prevIdx = idx <= 0 ? siblings.length - 1 : idx - 1;
@@ -61,11 +54,7 @@ export function useArrowKeyNav(
           if (!node.parentId) break;
           const parent = nodesMap.get(node.parentId);
           if (!parent) break;
-          // Combine childIds with transposition edge targets for sibling navigation
-          const siblings = [
-            ...parent.childIds,
-            ...parent.transpositionEdges.map((te) => te.targetId),
-          ];
+          const siblings = getSortedChildren(parent, nodePositionsRef);
           if (siblings.length <= 1) break;
           const idx = siblings.indexOf(selectedNodeId);
           const nextIdx = idx >= siblings.length - 1 ? 0 : idx + 1;
@@ -82,5 +71,22 @@ export function useArrowKeyNav(
 
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [state, selectNode, collapsedNodes, toggleCollapse]);
+  }, [state, selectNode, collapsedNodes, toggleCollapse, nodePositionsRef]);
+}
+
+/** Build a deduplicated, y-sorted list of child node IDs */
+function getSortedChildren(
+  parent: { childIds: string[]; transpositionEdges: { targetId: string }[] },
+  nodePositionsRef?: RefObject<Map<string, { x: number; y: number }>>,
+): string[] {
+  const childSet = new Set([
+    ...parent.childIds,
+    ...parent.transpositionEdges.map((te) => te.targetId),
+  ]);
+  const children = [...childSet];
+  const positions = nodePositionsRef?.current;
+  if (positions) {
+    children.sort((a, b) => (positions.get(a)?.y ?? 0) - (positions.get(b)?.y ?? 0));
+  }
+  return children;
 }

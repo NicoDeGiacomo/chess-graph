@@ -4,7 +4,7 @@
 
 - PGN import — paste or upload a PGN file and auto-generate the graph (chess.js already supports `loadPgn()`)
 - Keyboard-driven move entry — type moves in algebraic notation (e.g. "e4", "Nf3") to add nodes without clicking the board
-- Sometimes quite randomly the arrows start working backwards (up goes to the down node and down goes to the up node)
+- ~~Sometimes quite randomly the arrows start working backwards (up goes to the down node and down goes to the up node)~~ Done — siblings now sorted by visual y-position
 
 ## Medium Priority
 
