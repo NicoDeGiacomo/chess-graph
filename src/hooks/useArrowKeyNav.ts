@@ -4,6 +4,8 @@ import type { RepertoireState } from './useRepertoire.tsx';
 export function useArrowKeyNav(
   state: RepertoireState,
   selectNode: (nodeId: string) => void,
+  collapsedNodes?: Set<string>,
+  toggleCollapse?: (nodeId: string) => void,
 ) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -26,6 +28,12 @@ export function useArrowKeyNav(
           break;
         }
         case 'ArrowRight': {
+          // If node is collapsed, expand it instead of navigating
+          if (collapsedNodes?.has(selectedNodeId) && toggleCollapse) {
+            e.preventDefault();
+            toggleCollapse(selectedNodeId);
+            return;
+          }
           // Combine childIds with transposition edge targets
           const rightTargets = [
             ...node.childIds,
@@ -74,5 +82,5 @@ export function useArrowKeyNav(
 
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [state, selectNode]);
+  }, [state, selectNode, collapsedNodes, toggleCollapse]);
 }

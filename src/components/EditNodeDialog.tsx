@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { useUndoRedo } from '../hooks/useUndoRedo.tsx';
 import type { RepertoireNode } from '../types/index.ts';
 
 function EditNodeForm({ node, onSave, onClose }: { node: RepertoireNode; onSave: (comment: string) => void; onClose: () => void }) {
@@ -43,7 +44,8 @@ function EditNodeForm({ node, onSave, onClose }: { node: RepertoireNode; onSave:
 }
 
 export function EditNodeDialog() {
-  const { state, updateNode, setEditingNodeId } = useRepertoire();
+  const { state, setEditingNodeId } = useRepertoire();
+  const { updateNode } = useUndoRedo();
   const { editingNodeId, nodesMap } = state;
 
   const node = editingNodeId ? nodesMap.get(editingNodeId) : null;

@@ -40,6 +40,7 @@ interface RepertoireContextValue {
   clearGraph: () => Promise<void>;
   updateNode: (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags' | 'arrows' | 'highlightedSquares'>>) => Promise<void>;
   removeTranspositionEdge: (nodeId: string, targetId: string) => Promise<void>;
+  replaceNodesMap: (nodesMap: Map<string, RepertoireNode>) => Promise<void>;
   switchRepertoire: (id: string) => Promise<void>;
   createRepertoire: (name: string, side: RepertoireSide) => Promise<string>;
   deleteRepertoire: (id: string) => Promise<void>;
@@ -313,6 +314,24 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const replaceNodesMap = useCallback(async (newNodesMap: Map<string, RepertoireNode>) => {
+    setState((prev) => {
+      if (!prev.repertoire) return prev;
+
+      const repertoireId = prev.repertoire.id;
+
+      db.transaction('rw', db.nodes, db.repertoires, async () => {
+        // Delete all current nodes for this repertoire
+        await db.nodes.where('repertoireId').equals(repertoireId).delete();
+        // Bulk add the new nodes
+        await db.nodes.bulkAdd(Array.from(newNodesMap.values()));
+        await db.repertoires.update(repertoireId, { updatedAt: Date.now() });
+      }).catch(console.error);
+
+      return { ...prev, nodesMap: newNodesMap };
+    });
+  }, []);
+
   const switchRepertoire = useCallback(async (id: string) => {
     const { repertoire, nodesMap } = await loadRepertoire(id);
     setState((prev) => ({
@@ -482,6 +501,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     clearGraph,
     updateNode,
     removeTranspositionEdge,
+    replaceNodesMap,
     switchRepertoire,
     createRepertoire,
     deleteRepertoire,

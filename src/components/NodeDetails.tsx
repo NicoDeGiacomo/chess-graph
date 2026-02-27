@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { useUndoRedo } from '../hooks/useUndoRedo.tsx';
 
 function CopyButton({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = useState(false);
@@ -32,7 +33,8 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 }
 
 export function NodeDetails() {
-  const { state, updateNode, selectNode } = useRepertoire();
+  const { state, selectNode } = useRepertoire();
+  const { updateNode } = useUndoRedo();
   const { nodesMap, selectedNodeId } = state;
   const [isEditingComment, setIsEditingComment] = useState(false);
   const [commentDraft, setCommentDraft] = useState('');

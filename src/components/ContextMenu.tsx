@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { useUndoRedo } from '../hooks/useUndoRedo.tsx';
 import { NODE_COLORS, NODE_COLOR_LABELS, type NodeColor } from '../types/index.ts';
 
 export function ContextMenu() {
-  const { state, deleteNode, updateNode, removeTranspositionEdge, setContextMenu, setEditingNodeId } = useRepertoire();
+  const { state, setContextMenu, setEditingNodeId } = useRepertoire();
+  const { deleteNode, updateNode, removeTranspositionEdge } = useUndoRedo();
   const { contextMenu, nodesMap } = state;
   const menuRef = useRef<HTMLDivElement>(null);
   const prevNodeIdRef = useRef<string | null>(null);

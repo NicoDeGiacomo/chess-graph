@@ -3,6 +3,7 @@ import { Chessboard } from 'react-chessboard';
 import type { Arrow } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
+import { useUndoRedo } from '../hooks/useUndoRedo.tsx';
 import { useTheme } from '../hooks/useTheme.tsx';
 import type { HighlightedSquare } from '../types/index.ts';
 import chesscomLogo from '../../logos/chesscom.png';
@@ -25,7 +26,8 @@ function isOwnPiece(pieceType: string, turn: 'w' | 'b'): boolean {
 }
 
 export function ChessboardPanel() {
-  const { state, addChildNode, updateNode, flipBoardSide } = useRepertoire();
+  const { state, updateNode, flipBoardSide } = useRepertoire();
+  const { addChildNode } = useUndoRedo();
   const { repertoire, nodesMap, selectedNodeId } = state;
   const { theme } = useTheme();
 

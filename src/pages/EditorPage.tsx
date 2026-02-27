@@ -1,21 +1,69 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDocumentMeta } from '../hooks/useDocumentMeta.ts';
 import { useParams, useNavigate, Navigate } from 'react-router';
 import { ReactFlowProvider } from '@xyflow/react';
 import { useRepertoire } from '../hooks/useRepertoire.tsx';
 import { useArrowKeyNav } from '../hooks/useArrowKeyNav.ts';
+import { UndoRedoProvider } from '../hooks/useUndoRedo.tsx';
 import { EditorTopBar } from '../components/EditorTopBar.tsx';
 import { GraphCanvas } from '../components/GraphCanvas.tsx';
 import { Sidebar } from '../components/Sidebar.tsx';
 import { ContextMenu } from '../components/ContextMenu.tsx';
 import { EditNodeDialog } from '../components/EditNodeDialog.tsx';
+import type { RepertoireNode } from '../types/index.ts';
+
+function collectDescendantIds(nodeId: string, nodesMap: Map<string, RepertoireNode>): Set<string> {
+  const ids = new Set<string>();
+  const stack = [...(nodesMap.get(nodeId)?.childIds ?? [])];
+  while (stack.length > 0) {
+    const current = stack.pop()!;
+    ids.add(current);
+    const node = nodesMap.get(current);
+    if (node) {
+      for (const childId of node.childIds) {
+        stack.push(childId);
+      }
+    }
+  }
+  return ids;
+}
 
 export function EditorPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { state, selectNode, switchRepertoire } = useRepertoire();
   const switchingRef = useRef<string | null>(null);
-  useArrowKeyNav(state, selectNode);
+
+  // Collapse state lives here so useArrowKeyNav can access it
+  const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
+  const stateRef = useRef(state);
+  useEffect(() => { stateRef.current = state; });
+
+  // Clear collapse state when repertoire changes (React pattern: adjust state during render)
+  const repertoireId = state.repertoire?.id;
+  const [prevRepertoireId, setPrevRepertoireId] = useState(repertoireId);
+  if (repertoireId !== prevRepertoireId) {
+    setPrevRepertoireId(repertoireId);
+    setCollapsedNodes(new Set());
+  }
+
+  const toggleCollapse = useCallback((nodeId: string) => {
+    setCollapsedNodes((prev) => {
+      const next = new Set(prev);
+      if (next.has(nodeId)) {
+        next.delete(nodeId);
+      } else {
+        next.add(nodeId);
+        const descendants = collectDescendantIds(nodeId, stateRef.current.nodesMap);
+        if (stateRef.current.selectedNodeId && descendants.has(stateRef.current.selectedNodeId)) {
+          selectNode(nodeId);
+        }
+      }
+      return next;
+    });
+  }, [selectNode]);
+
+  useArrowKeyNav(state, selectNode, collapsedNodes, toggleCollapse);
   const repertoireName = state.repertoire?.name;
   useDocumentMeta({
     title: repertoireName ? `${repertoireName} — Chess Graph` : 'Chess Graph',
@@ -69,16 +117,18 @@ export function EditorPage() {
   }
 
   return (
-    <main className="h-screen bg-page text-primary flex flex-col overflow-hidden">
-      <EditorTopBar />
-      <div className="flex flex-1 min-h-0">
-        <ReactFlowProvider>
-          <GraphCanvas />
-        </ReactFlowProvider>
-        <Sidebar />
-      </div>
-      <ContextMenu />
-      <EditNodeDialog />
-    </main>
+    <UndoRedoProvider>
+      <main className="h-screen bg-page text-primary flex flex-col overflow-hidden">
+        <EditorTopBar />
+        <div className="flex flex-1 min-h-0">
+          <ReactFlowProvider>
+            <GraphCanvas collapsedNodes={collapsedNodes} toggleCollapse={toggleCollapse} />
+          </ReactFlowProvider>
+          <Sidebar />
+        </div>
+        <ContextMenu />
+        <EditNodeDialog />
+      </main>
+    </UndoRedoProvider>
   );
 }

@@ -86,6 +86,8 @@ export function computeLayout(
     const dagreNode = g.node(id);
     if (!dagreNode) continue;
 
+    const hasChildren = node.childIds.length > 0 || node.transpositionEdges.length > 0;
+
     const nodeData: MoveNodeData = {
       move: node.move,
       fen: node.fen,
@@ -95,6 +97,9 @@ export function computeLayout(
       isRoot: id === rootNodeId,
       repertoireName,
       isSelected: false,
+      hasChildren,
+      isCollapsed: false,
+      hiddenCount: 0,
     };
 
     flowNodes.push({

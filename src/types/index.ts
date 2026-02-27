@@ -74,6 +74,9 @@ export interface MoveNodeData extends Record<string, unknown> {
   isRoot: boolean;
   repertoireName: string;
   isSelected: boolean;
+  hasChildren: boolean;
+  isCollapsed: boolean;
+  hiddenCount: number;
 }
 
 export type MoveFlowNode = Node<MoveNodeData, 'move'>;
