@@ -5,6 +5,7 @@ import { LandingPage } from './pages/LandingPage.tsx';
 import { AllGraphsPage } from './pages/AllGraphsPage.tsx';
 import { EditorPage } from './pages/EditorPage.tsx';
 import { NotFoundPage } from './pages/NotFoundPage.tsx';
+import { FeaturesPage } from './pages/FeaturesPage.tsx';
 import { useRepertoire } from './hooks/useRepertoire.tsx';
 
 function AppRoutes() {
@@ -21,6 +22,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/features" element={<FeaturesPage />} />
       <Route path="/repertoires" element={<AllGraphsPage />} />
       <Route path="/repertoire/:id" element={<EditorPage />} />
       <Route path="*" element={<NotFoundPage />} />

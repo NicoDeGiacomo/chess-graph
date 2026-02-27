@@ -62,3 +62,10 @@ test('footer is visible', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('footer').getByText('MIT License')).toBeVisible();
 });
+
+test('footer Features link navigates to /features', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('footer').getByRole('link', { name: 'Features' }).click();
+  await expect(page.getByRole('heading', { name: 'Features', exact: true })).toBeVisible({ timeout: 5000 });
+  expect(page.url()).toContain('/features');
+});
