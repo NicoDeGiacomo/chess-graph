@@ -7,7 +7,12 @@ import { ImportPgnDialog } from './ImportPgnDialog.tsx';
 import { ThemeToggle } from './ThemeToggle.tsx';
 import type { ExportData } from '../types/index.ts';
 
-export function EditorTopBar() {
+interface EditorTopBarProps {
+  panelOpen: boolean;
+  onTogglePanel: () => void;
+}
+
+export function EditorTopBar({ panelOpen, onTogglePanel }: EditorTopBarProps) {
   const {
     state,
     deleteRepertoire,
@@ -79,6 +84,19 @@ export function EditorTopBar() {
   return (
     <>
       <header className="h-12 border-b border-border-subtle flex items-center gap-3 px-4 bg-page shrink-0">
+        {/* Panel toggle */}
+        <button
+          className="text-tertiary hover:text-secondary"
+          onClick={onTogglePanel}
+          aria-label="Toggle graph list"
+          aria-expanded={panelOpen}
+          data-testid="panel-toggle"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+            <path fillRule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 5A.75.75 0 012.75 9h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 9.75zm0 5a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75a.75.75 0 01-.75-.75z" clipRule="evenodd" />
+          </svg>
+        </button>
+
         {/* Back button */}
         <Link
           to="/repertoires"

@@ -7,6 +7,7 @@ import { useArrowKeyNav } from '../hooks/useArrowKeyNav.ts';
 import { UndoRedoProvider } from '../hooks/useUndoRedo.tsx';
 import { EditorTopBar } from '../components/EditorTopBar.tsx';
 import { GraphCanvas } from '../components/GraphCanvas.tsx';
+import { GraphPanel } from '../components/GraphPanel.tsx';
 import { Sidebar } from '../components/Sidebar.tsx';
 import { ContextMenu } from '../components/ContextMenu.tsx';
 import { EditNodeDialog } from '../components/EditNodeDialog.tsx';
@@ -33,6 +34,8 @@ export function EditorPage() {
   const navigate = useNavigate();
   const { state, selectNode, switchRepertoire } = useRepertoire();
   const switchingRef = useRef<string | null>(null);
+
+  const [panelOpen, setPanelOpen] = useState(false);
 
   // Collapse state lives here so useArrowKeyNav can access it
   const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
@@ -120,8 +123,16 @@ export function EditorPage() {
   return (
     <UndoRedoProvider>
       <main className="h-screen bg-page text-primary flex flex-col overflow-hidden">
-        <EditorTopBar />
+        <EditorTopBar panelOpen={panelOpen} onTogglePanel={() => setPanelOpen((v) => !v)} />
         <div className="flex flex-1 min-h-0">
+          <GraphPanel open={panelOpen} onClose={() => setPanelOpen(false)} />
+          {!panelOpen && (
+            <div
+              className="fixed left-0 top-12 bottom-0 w-2 z-10"
+              onMouseEnter={() => setPanelOpen(true)}
+              data-testid="panel-hover-zone"
+            />
+          )}
           <ReactFlowProvider>
             <GraphCanvas collapsedNodes={collapsedNodes} toggleCollapse={toggleCollapse} nodePositionsRef={nodePositionsRef} />
           </ReactFlowProvider>

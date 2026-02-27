@@ -3,10 +3,11 @@
 ## High Priority
 
 - ~~Keyboard-driven move entry — type moves in algebraic notation (e.g. "e4", "Nf3") to add nodes without clicking the board~~ Done
+- Draw arrows are being preserved across nodes 
 
 ## Medium Priority
 
-- Sidebar graph switcher — jump between graphs without going back to All Graphs page
+- ~~Sidebar graph switcher — jump between graphs without going back to All Graphs page~~ Done
 
 ## Low Priority
 
@@ -14,7 +15,7 @@
 - Groupings (folders) of graphs
 - More optional views: top-down, floating window
 - Convert the repertoire on my main obsidian as an example graph to show the users. Use the full length of the features (tags, colors, branches, transpositions, etc)
-- Ugly symbol/icon difference between white and black graphs.
+- Ugly symbol/icon difference between white and black graphs. Use ♙/♟.
 
 ## Accessibility
 
