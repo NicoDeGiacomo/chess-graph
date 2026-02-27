@@ -26,7 +26,7 @@ async function resetAndEnterEditor(page: Page) {
   }));
   await page.reload();
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
 
@@ -45,9 +45,10 @@ async function countArrowPaths(page: Page): Promise<number> {
   return page.locator('svg[style*="pointer-events"] path[stroke]').count();
 }
 
-/** Read arrows from IndexedDB for root or child node */
+/** Read arrows from IndexedDB for root or child node in the current repertoire */
 async function getNodeArrows(page: Page, type: 'root' | 'child'): Promise<unknown[]> {
-  return page.evaluate(async (nodeType) => {
+  const repId = page.url().split('/repertoire/')[1];
+  return page.evaluate(async ({ nodeType, repertoireId }) => {
     return new Promise<unknown[]>((resolve, reject) => {
       const req = indexedDB.open('chess-graph');
       req.onerror = () => reject(req.error);
@@ -57,16 +58,17 @@ async function getNodeArrows(page: Page, type: 'root' | 'child'): Promise<unknow
         const store = tx.objectStore('nodes');
         const getAll = store.getAll();
         getAll.onsuccess = () => {
-          const nodes = getAll.result as Array<{ parentId: string | null; arrows: unknown[] }>;
+          const nodes = getAll.result as Array<{ parentId: string | null; arrows: unknown[]; repertoireId: string }>;
+          const repNodes = nodes.filter((n) => n.repertoireId === repertoireId);
           const node = nodeType === 'root'
-            ? nodes.find((n) => n.parentId === null)
-            : nodes.find((n) => n.parentId !== null);
+            ? repNodes.find((n) => n.parentId === null)
+            : repNodes.find((n) => n.parentId !== null);
           resolve(node?.arrows ?? []);
         };
         getAll.onerror = () => reject(getAll.error);
       };
     });
-  }, type);
+  }, { nodeType: type, repertoireId: repId });
 }
 
 test.beforeEach(async ({ page }) => {

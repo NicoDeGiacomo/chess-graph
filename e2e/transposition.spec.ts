@@ -26,7 +26,7 @@ async function resetAndEnterEditor(page: Page) {
   }));
   await page.reload();
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
 

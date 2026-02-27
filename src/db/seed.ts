@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from './index.ts';
 import type { Repertoire, RepertoireNode } from '../types/index.ts';
 import { NODE_COLORS } from '../types/index.ts';
+import { buildExampleRepertoire } from './exampleRepertoire.ts';
 
 const DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
@@ -40,9 +41,13 @@ export async function ensureDefaultRepertoire(): Promise<string> {
     updatedAt: now,
   };
 
+  const example = buildExampleRepertoire();
+
   await db.transaction('rw', db.repertoires, db.nodes, async () => {
     await db.nodes.add(rootNode);
     await db.repertoires.add(repertoire);
+    await db.nodes.bulkAdd(example.nodes);
+    await db.repertoires.add(example.repertoire);
   });
 
   return repertoireId;

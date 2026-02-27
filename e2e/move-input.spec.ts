@@ -24,7 +24,7 @@ async function resetAndEnterEditor(page: Page) {
   }));
   await page.reload();
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
 
@@ -116,7 +116,7 @@ test('input is disabled on All Graphs page (no node selected)', async ({ page })
   await expect(page.getByText('My Graphs')).toBeVisible();
   // MoveInput is only rendered in the editor sidebar, not on All Graphs
   // Navigate back and verify input is functional once a node is selected
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
   await expect(page.getByTestId('move-input')).not.toBeDisabled();
 });

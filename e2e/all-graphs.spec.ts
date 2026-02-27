@@ -18,8 +18,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('page loads with repertoire cards', async ({ page }) => {
-  // Should show at least the default repertoire card
-  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(1);
+  // Should show the default + example repertoire cards
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(2);
 });
 
 test('search filters cards', async ({ page }) => {
@@ -32,8 +32,8 @@ test('search filters cards', async ({ page }) => {
   await page.getByText('Back').click();
   await expect(page.getByText('My Graphs')).toBeVisible();
 
-  // Both cards visible
-  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(2);
+  // All three cards visible (default + example + Sicilian)
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(3);
 
   // Search for "sicilian"
   const searchInput = page.getByPlaceholder('Search graphs...');
@@ -63,8 +63,8 @@ test('create new repertoire from dialog', async ({ page }) => {
 });
 
 test('click card navigates to editor', async ({ page }) => {
-  // Click the first card
-  await page.locator('[data-testid="graph-card"]').first().click();
+  // Click the My Initial Graph card
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
 
   // Should be in editor with graph visible
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
@@ -74,7 +74,7 @@ test('click card navigates to editor', async ({ page }) => {
 
 test('back button returns to All Graphs', async ({ page }) => {
   // Enter editor
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
   // Click back
@@ -96,9 +96,9 @@ test('delete from editor redirects to All Graphs', async ({ page }) => {
   await expect(page.getByText('Delete Graph')).toBeVisible();
   await page.locator('.bg-red-600').click();
 
-  // Should be back at All Graphs
+  // Should be back at All Graphs (default + example remain, Temp deleted)
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(1);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(2);
 });
 
 test('invalid repertoire ID redirects to All Graphs', async ({ page }) => {
@@ -119,8 +119,14 @@ test('search input has aria-label', async ({ page }) => {
   await expect(searchInput).toHaveAttribute('aria-label', 'Search graphs');
 });
 
+test('example repertoire card is visible with name and tag', async ({ page }) => {
+  const card = page.locator('[data-testid="graph-card"]').filter({ hasText: '1.e4 Repertoire' });
+  await expect(card).toBeVisible();
+  await expect(card.getByText('Example', { exact: true })).toBeVisible();
+});
+
 test('card has colored left border', async ({ page }) => {
-  const card = page.locator('[data-testid="graph-card"]').first();
+  const card = page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' });
   const borderLeft = await card.evaluate((el) => getComputedStyle(el).borderLeftColor);
   // Default node color is theme-dependent: dark=#3f3f46 rgb(63,63,70), light=#d4d4d8 rgb(212,212,216)
   expect(['rgb(63, 63, 70)', 'rgb(212, 212, 216)']).toContain(borderLeft);
@@ -128,7 +134,7 @@ test('card has colored left border', async ({ page }) => {
 
 test('card shows root node tags and comment', async ({ page }) => {
   // Enter editor
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
   // Add a tag via context menu on root node
@@ -156,7 +162,7 @@ test('card shows root node tags and comment', async ({ page }) => {
   await expect(page.getByText('My Graphs')).toBeVisible();
 
   // Assert tag pill and comment preview are visible on the card
-  const card = page.locator('[data-testid="graph-card"]').first();
+  const card = page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' });
   await expect(card.getByText('repertoire-tag')).toBeVisible();
   await expect(card.getByText('This is my repertoire description')).toBeVisible();
 });

@@ -11,7 +11,7 @@ async function resetAndEnterEditor(page: Page) {
   }));
   await page.reload();
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
 
@@ -28,7 +28,7 @@ async function createSecondRepertoire(page: Page) {
   // Go back and enter the first repertoire again
   await page.getByText('Back').click();
   await expect(page.getByText('My Graphs')).toBeVisible();
-  await page.locator('[data-testid="graph-card"]').first().click();
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
 

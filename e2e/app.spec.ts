@@ -28,8 +28,8 @@ async function resetAndEnterEditor(page: Page) {
   await page.reload();
   // Wait for All Graphs page to load with at least one card
   await expect(page.getByText('My Graphs')).toBeVisible();
-  // Click the first repertoire card to enter the editor
-  await page.locator('[data-testid="graph-card"]').first().click();
+  // Click the "My Initial Graph" card to enter the editor
+  await page.locator('[data-testid="graph-card"]').filter({ hasText: 'My Initial Graph' }).click();
   // Wait for the editor to load (graph node visible)
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 }
@@ -189,9 +189,9 @@ test('create repertoire from All Graphs page', async ({ page }) => {
   // Should be in editor now
   await expect(page.locator('[data-testid^="rf__node-"]').first()).toBeVisible({ timeout: 5000 });
 
-  // Go back — should see 2 cards
+  // Go back — should see 3 cards (default + example + Sicilian)
   await page.getByText('Back').click();
-  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(2);
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(3);
 });
 
 test('rename repertoire', async ({ page }) => {
@@ -226,8 +226,8 @@ test('delete repertoire redirects to All Graphs', async ({ page }) => {
 
   // Should redirect to All Graphs
   await expect(page.getByText('My Graphs')).toBeVisible();
-  // Should see 1 remaining card
-  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(1);
+  // Should see 2 remaining cards (default + example, Temp deleted)
+  await expect(page.locator('[data-testid="graph-card"]')).toHaveCount(2);
 });
 
 test('delete confirm dialog can be cancelled', async ({ page }) => {
