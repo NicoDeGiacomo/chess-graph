@@ -23,6 +23,17 @@ export const NODE_COLOR_LABELS: Record<NodeColor, string> = {
 
 export type RepertoireSide = 'white' | 'black';
 
+export interface BoardArrow {
+  startSquare: string;
+  endSquare: string;
+  color: string;
+}
+
+export interface HighlightedSquare {
+  square: string;
+  color: string;
+}
+
 export interface TranspositionEdge {
   targetId: string;  // Existing node this move transposes to
   move: string;      // SAN notation (e.g., "e4")
@@ -40,6 +51,8 @@ export interface RepertoireNode {
   parentId: string | null;   // null for root node
   childIds: string[];
   transpositionEdges: TranspositionEdge[];
+  arrows: BoardArrow[];
+  highlightedSquares: HighlightedSquare[];
 }
 
 export interface Repertoire {

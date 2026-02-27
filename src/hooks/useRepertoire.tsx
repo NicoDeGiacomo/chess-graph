@@ -38,12 +38,13 @@ interface RepertoireContextValue {
   addChildNode: (parentId: string, move: string, fen: string) => Promise<void>;
   deleteNode: (nodeId: string) => Promise<void>;
   clearGraph: () => Promise<void>;
-  updateNode: (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags'>>) => Promise<void>;
+  updateNode: (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags' | 'arrows' | 'highlightedSquares'>>) => Promise<void>;
   removeTranspositionEdge: (nodeId: string, targetId: string) => Promise<void>;
   switchRepertoire: (id: string) => Promise<void>;
   createRepertoire: (name: string, side: RepertoireSide) => Promise<string>;
   deleteRepertoire: (id: string) => Promise<void>;
   renameRepertoire: (id: string, name: string) => Promise<void>;
+  flipBoardSide: (id: string) => Promise<void>;
   refreshRepertoireList: () => Promise<void>;
   exportData: () => Promise<ExportData>;
   importData: (data: ExportData) => Promise<void>;
@@ -173,6 +174,8 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         parentId,
         childIds: [],
         transpositionEdges: [],
+        arrows: [],
+        highlightedSquares: [],
       };
 
       const updatedParent: RepertoireNode = {
@@ -261,13 +264,13 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       const root = prev.nodesMap.get(rootNodeId);
       if (!root) return prev;
 
-      const updatedRoot = { ...root, childIds: [] as string[], transpositionEdges: [] };
+      const updatedRoot = { ...root, childIds: [] as string[], transpositionEdges: [], arrows: [] as RepertoireNode['arrows'], highlightedSquares: [] as RepertoireNode['highlightedSquares'] };
       const newMap = new Map<string, RepertoireNode>();
       newMap.set(rootNodeId, updatedRoot);
 
       db.transaction('rw', db.nodes, db.repertoires, async () => {
         await db.nodes.bulkDelete(idsToDelete);
-        await db.nodes.update(rootNodeId, { childIds: [], transpositionEdges: [] });
+        await db.nodes.update(rootNodeId, { childIds: [], transpositionEdges: [], arrows: [], highlightedSquares: [] });
         await db.repertoires.update(prev.repertoire!.id, { updatedAt: Date.now() });
       }).catch(console.error);
 
@@ -275,7 +278,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const updateNode = useCallback(async (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags'>>) => {
+  const updateNode = useCallback(async (nodeId: string, updates: Partial<Pick<RepertoireNode, 'comment' | 'color' | 'tags' | 'arrows' | 'highlightedSquares'>>) => {
     setState((prev) => {
       const node = prev.nodesMap.get(nodeId);
       if (!node) return prev;
@@ -338,6 +341,8 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       parentId: null,
       childIds: [],
       transpositionEdges: [],
+      arrows: [],
+      highlightedSquares: [],
     };
 
     const repertoire: Repertoire = {
@@ -393,6 +398,19 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  const flipBoardSide = useCallback(async (id: string) => {
+    const rep = await db.repertoires.get(id);
+    if (!rep) return;
+    const newSide = rep.side === 'white' ? 'black' : 'white';
+    await db.repertoires.update(id, { side: newSide, updatedAt: Date.now() });
+    const repertoireList = await db.repertoires.toArray();
+    setState((prev) => ({
+      ...prev,
+      repertoire: prev.repertoire?.id === id ? { ...prev.repertoire, side: newSide } : prev.repertoire,
+      repertoireList,
+    }));
+  }, []);
+
   const exportData = useCallback(async (): Promise<ExportData> => {
     const repertoires = await db.repertoires.toArray();
     const nodes = await db.nodes.toArray();
@@ -409,6 +427,12 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       const n = { ...node } as Record<string, unknown>;
       if (!Array.isArray(n.transpositionEdges)) {
         n.transpositionEdges = [];
+      }
+      if (!Array.isArray(n.arrows)) {
+        n.arrows = [];
+      }
+      if (!Array.isArray(n.highlightedSquares)) {
+        n.highlightedSquares = [];
       }
       delete n.transposesTo;
       return n as unknown as RepertoireNode;
@@ -462,6 +486,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     createRepertoire,
     deleteRepertoire,
     renameRepertoire,
+    flipBoardSide,
     refreshRepertoireList,
     exportData,
     importData,

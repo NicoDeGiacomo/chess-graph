@@ -155,6 +155,8 @@ export function ChessboardPanel() {
             animationDurationInMs: 200,
             darkSquareStyle: { backgroundColor: '#52525b' },
             lightSquareStyle: { backgroundColor: '#a1a1aa' },
+            darkSquareNotationStyle: { color: '#a1a1aa', pointerEvents: 'none' as const },
+            lightSquareNotationStyle: { color: '#52525b', pointerEvents: 'none' as const },
             boardStyle: {
               borderRadius: '4px',
               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',

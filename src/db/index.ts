@@ -59,6 +59,17 @@ export class ChessGraphDB extends Dexie {
         });
       }
     });
+
+    // Add arrows and highlightedSquares to all existing nodes
+    this.version(3).stores({
+      repertoires: 'id, name, createdAt',
+      nodes: 'id, repertoireId, parentId, fen',
+    }).upgrade(async (tx) => {
+      await tx.table('nodes').toCollection().modify((node: Record<string, unknown>) => {
+        if (!Array.isArray(node.arrows)) node.arrows = [];
+        if (!Array.isArray(node.highlightedSquares)) node.highlightedSquares = [];
+      });
+    });
   }
 }
 

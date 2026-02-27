@@ -27,6 +27,8 @@ export async function ensureDefaultRepertoire(): Promise<string> {
     parentId: null,
     childIds: [],
     transpositionEdges: [],
+    arrows: [],
+    highlightedSquares: [],
   };
 
   const repertoire: Repertoire = {

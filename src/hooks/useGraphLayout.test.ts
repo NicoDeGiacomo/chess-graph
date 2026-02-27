@@ -15,6 +15,8 @@ function makeNode(overrides: Partial<RepertoireNode> & { id: string }): Repertoi
     parentId: null,
     childIds: [],
     transpositionEdges: [],
+    arrows: [],
+    highlightedSquares: [],
     ...overrides,
   };
 }

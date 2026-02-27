@@ -395,7 +395,7 @@ test('clear graph removes all moves and keeps root', async ({ page }) => {
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(4);
 
   // Clear via styled confirm dialog
-  await page.getByRole('button', { name: 'Clear' }).click();
+  await page.getByRole('button', { name: 'Clear', exact: true }).click();
   await expect(page.getByText('Clear Graph')).toBeVisible();
   await page.locator('.bg-red-600').click();
 
@@ -409,7 +409,7 @@ test('clear graph cancel does not remove moves', async ({ page }) => {
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
 
   // Open clear dialog and cancel
-  await page.getByRole('button', { name: 'Clear' }).click();
+  await page.getByRole('button', { name: 'Clear', exact: true }).click();
   await expect(page.getByText('Clear Graph')).toBeVisible();
   await page.getByRole('button', { name: 'Cancel' }).click();
 
@@ -424,7 +424,7 @@ test('clear graph persists after reload', async ({ page }) => {
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(3);
 
   // Clear
-  await page.getByRole('button', { name: 'Clear' }).click();
+  await page.getByRole('button', { name: 'Clear', exact: true }).click();
   await page.locator('.bg-red-600').click();
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(1);
   await waitForSettle(page);
@@ -566,7 +566,7 @@ test('ESC dismiss of confirm dialog does not leave selection rectangle', async (
   await expect(page.locator('[data-testid^="rf__node-"]')).toHaveCount(2);
 
   // Open clear confirm dialog
-  await page.getByRole('button', { name: 'Clear' }).click();
+  await page.getByRole('button', { name: 'Clear', exact: true }).click();
   await expect(page.getByText('Clear Graph')).toBeVisible();
 
   // Dismiss with ESC

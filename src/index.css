@@ -27,3 +27,8 @@ body {
 .react-flow__nodesselection-rect {
   display: none !important;
 }
+
+/* Suppress browser focus ring on chessboard drag handles */
+[data-square] [role="button"]:focus-visible {
+  outline: none;
+}
