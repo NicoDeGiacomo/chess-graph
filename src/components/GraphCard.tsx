@@ -8,6 +8,9 @@ interface GraphCardProps {
   comment: string;
   color: string;
   onClick: () => void;
+  draggable?: boolean;
+  onDragStart?: (e: React.DragEvent) => void;
+  onContextMenu?: (e: React.MouseEvent) => void;
 }
 
 function formatRelativeTime(timestamp: number): string {
@@ -25,7 +28,7 @@ function formatRelativeTime(timestamp: number): string {
 
 const MAX_VISIBLE_TAGS = 3;
 
-export function GraphCard({ repertoire, nodeCount, tags, comment, color, onClick }: GraphCardProps) {
+export function GraphCard({ repertoire, nodeCount, tags, comment, color, onClick, draggable, onDragStart, onContextMenu }: GraphCardProps) {
   const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS);
   const overflowCount = tags.length - MAX_VISIBLE_TAGS;
 
@@ -33,6 +36,9 @@ export function GraphCard({ repertoire, nodeCount, tags, comment, color, onClick
     <button
       data-testid="graph-card"
       onClick={onClick}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onContextMenu={onContextMenu}
       className="bg-card border border-border-subtle border-l-4 rounded-xl p-4 text-left hover:border-border hover:bg-elevated transition-colors cursor-pointer w-full"
       style={{ borderLeftColor: resolveNodeColor(color) }}
     >

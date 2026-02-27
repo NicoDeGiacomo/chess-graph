@@ -1,15 +1,19 @@
 import { useState, useCallback } from 'react';
+import type { Folder } from '../types/index.ts';
 import type { RepertoireSide } from '../types/index.ts';
 
 interface CreateRepertoireDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (name: string, side: RepertoireSide) => void;
+  onCreate: (name: string, side: RepertoireSide, folderId: string | null) => void;
+  folders?: Folder[];
+  defaultFolderId?: string | null;
 }
 
-function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoireDialogProps, 'open'>) {
+function CreateRepertoireDialogInner({ onClose, onCreate, folders = [], defaultFolderId = null }: Omit<CreateRepertoireDialogProps, 'open'>) {
   const [name, setName] = useState('');
   const [side, setSide] = useState<RepertoireSide>('white');
+  const [folderId, setFolderId] = useState<string | null>(defaultFolderId);
 
   const inputRef = useCallback((el: HTMLInputElement | null) => {
     el?.focus();
@@ -17,7 +21,7 @@ function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoir
 
   const handleCreate = () => {
     if (!name.trim()) return;
-    onCreate(name.trim(), side);
+    onCreate(name.trim(), side, folderId);
   };
 
   return (
@@ -60,6 +64,23 @@ function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoir
               <option value="black">Black</option>
             </select>
           </div>
+
+          {folders.length > 0 && (
+            <div>
+              <label htmlFor="create-graph-folder" className="block text-xs text-tertiary mb-1">Folder</label>
+              <select
+                id="create-graph-folder"
+                className="w-full bg-input border border-border rounded px-3 py-2 text-sm text-primary outline-none focus:border-blue-500"
+                value={folderId ?? ''}
+                onChange={(e) => setFolderId(e.target.value || null)}
+              >
+                <option value="">Uncategorized</option>
+                {folders.map((f) => (
+                  <option key={f.id} value={f.id}>{f.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end gap-2 mt-5">
@@ -82,7 +103,7 @@ function CreateRepertoireDialogInner({ onClose, onCreate }: Omit<CreateRepertoir
 }
 
 // Conditionally rendering inner component resets state each time dialog opens
-export function CreateRepertoireDialog({ open, onClose, onCreate }: CreateRepertoireDialogProps) {
+export function CreateRepertoireDialog({ open, ...rest }: CreateRepertoireDialogProps) {
   if (!open) return null;
-  return <CreateRepertoireDialogInner onClose={onClose} onCreate={onCreate} />;
+  return <CreateRepertoireDialogInner {...rest} />;
 }

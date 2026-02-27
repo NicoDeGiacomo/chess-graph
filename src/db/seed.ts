@@ -37,6 +37,7 @@ export async function ensureDefaultRepertoire(): Promise<string> {
     name: 'My Initial Graph',
     side: 'white',
     rootNodeId,
+    folderId: null,
     createdAt: now,
     updatedAt: now,
   };

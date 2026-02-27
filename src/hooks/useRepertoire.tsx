@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db/index.ts';
 import { ensureDefaultRepertoire } from '../db/seed.ts';
 import type {
+  Folder,
   Repertoire,
   RepertoireNode,
   RepertoireSide,
@@ -28,6 +29,7 @@ export interface RepertoireState {
   selectedNodeId: string | null;
   contextMenu: ContextMenuState | null;
   repertoireList: Repertoire[];
+  folderList: Folder[];
   isLoading: boolean;
   editingNodeId: string | null;
 }
@@ -42,11 +44,17 @@ interface RepertoireContextValue {
   removeTranspositionEdge: (nodeId: string, targetId: string) => Promise<void>;
   replaceNodesMap: (nodesMap: Map<string, RepertoireNode>) => Promise<void>;
   switchRepertoire: (id: string) => Promise<void>;
-  createRepertoire: (name: string, side: RepertoireSide) => Promise<string>;
+  createRepertoire: (name: string, side: RepertoireSide, folderId?: string | null) => Promise<string>;
   deleteRepertoire: (id: string) => Promise<void>;
   renameRepertoire: (id: string, name: string) => Promise<void>;
   flipBoardSide: (id: string) => Promise<void>;
   refreshRepertoireList: () => Promise<void>;
+  createFolder: (name: string) => Promise<string>;
+  renameFolder: (id: string, name: string) => Promise<void>;
+  deleteFolder: (id: string) => Promise<void>;
+  toggleFolderCollapsed: (id: string) => Promise<void>;
+  moveRepertoireToFolder: (repertoireId: string, folderId: string | null) => Promise<void>;
+  refreshFolderList: () => Promise<void>;
   exportData: () => Promise<ExportData>;
   importData: (data: ExportData) => Promise<void>;
   setContextMenu: (menu: ContextMenuState | null) => void;
@@ -93,6 +101,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     selectedNodeId: null,
     contextMenu: null,
     repertoireList: [],
+    folderList: [],
     isLoading: true,
     editingNodeId: null,
   });
@@ -106,10 +115,14 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
 
     (async () => {
       await ensureDefaultRepertoire();
-      const repertoireList = await db.repertoires.toArray();
+      const [repertoireList, folderList] = await Promise.all([
+        db.repertoires.toArray(),
+        db.folders.orderBy('sortOrder').toArray(),
+      ]);
       setState((prev) => ({
         ...prev,
         repertoireList,
+        folderList,
         isLoading: false,
       }));
     })();
@@ -344,7 +357,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const createRepertoire = useCallback(async (name: string, side: RepertoireSide): Promise<string> => {
+  const createRepertoire = useCallback(async (name: string, side: RepertoireSide, folderId?: string | null): Promise<string> => {
     const rootNodeId = uuidv4();
     const repertoireId = uuidv4();
     const now = Date.now();
@@ -369,6 +382,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       name,
       side,
       rootNodeId,
+      folderId: folderId ?? null,
       createdAt: now,
       updatedAt: now,
     };
@@ -430,10 +444,70 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  const createFolder = useCallback(async (name: string): Promise<string> => {
+    const id = uuidv4();
+    const now = Date.now();
+    const folderList = await db.folders.orderBy('sortOrder').toArray();
+    const maxSort = folderList.length > 0 ? Math.max(...folderList.map((f) => f.sortOrder)) : 0;
+    const folder: Folder = {
+      id,
+      name,
+      sortOrder: maxSort + 1,
+      collapsed: false,
+      createdAt: now,
+      updatedAt: now,
+    };
+    await db.folders.add(folder);
+    const newFolderList = await db.folders.orderBy('sortOrder').toArray();
+    setState((prev) => ({ ...prev, folderList: newFolderList }));
+    return id;
+  }, []);
+
+  const renameFolder = useCallback(async (id: string, name: string) => {
+    await db.folders.update(id, { name, updatedAt: Date.now() });
+    const folderList = await db.folders.orderBy('sortOrder').toArray();
+    setState((prev) => ({ ...prev, folderList }));
+  }, []);
+
+  const deleteFolder = useCallback(async (id: string) => {
+    await db.transaction('rw', db.folders, db.repertoires, async () => {
+      // Move contained repertoires to uncategorized
+      await db.repertoires.where('folderId').equals(id).modify({ folderId: null, updatedAt: Date.now() });
+      await db.folders.delete(id);
+    });
+    const [folderList, repertoireList] = await Promise.all([
+      db.folders.orderBy('sortOrder').toArray(),
+      db.repertoires.toArray(),
+    ]);
+    setState((prev) => ({ ...prev, folderList, repertoireList }));
+  }, []);
+
+  const toggleFolderCollapsed = useCallback(async (id: string) => {
+    const folder = await db.folders.get(id);
+    if (!folder) return;
+    await db.folders.update(id, { collapsed: !folder.collapsed });
+    const folderList = await db.folders.orderBy('sortOrder').toArray();
+    setState((prev) => ({ ...prev, folderList }));
+  }, []);
+
+  const moveRepertoireToFolder = useCallback(async (repertoireId: string, folderId: string | null) => {
+    await db.repertoires.update(repertoireId, { folderId, updatedAt: Date.now() });
+    const repertoireList = await db.repertoires.toArray();
+    setState((prev) => ({ ...prev, repertoireList }));
+  }, []);
+
+  const refreshFolderList = useCallback(async () => {
+    const folderList = await db.folders.orderBy('sortOrder').toArray();
+    setState((prev) => ({ ...prev, folderList }));
+  }, []);
+
   const exportData = useCallback(async (): Promise<ExportData> => {
-    const repertoires = await db.repertoires.toArray();
-    const nodes = await db.nodes.toArray();
-    return { version: 2, repertoires, nodes };
+    const [repertoires, nodes, folders] = await Promise.all([
+      db.repertoires.toArray(),
+      db.nodes.toArray(),
+      db.folders.orderBy('sortOrder').toArray(),
+    ]);
+    return { version: 3, repertoires, nodes, folders };
   }, []);
 
   const importData = useCallback(async (data: ExportData) => {
@@ -457,14 +531,29 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
       return n as unknown as RepertoireNode;
     });
 
-    await db.transaction('rw', db.repertoires, db.nodes, async () => {
+    // Normalize repertoires: ensure folderId exists
+    const normalizedRepertoires = data.repertoires.map((r) => ({
+      ...r,
+      folderId: r.folderId ?? null,
+    }));
+
+    const folders = data.folders ?? [];
+
+    await db.transaction('rw', db.repertoires, db.nodes, db.folders, async () => {
       await db.repertoires.clear();
       await db.nodes.clear();
-      await db.repertoires.bulkAdd(data.repertoires);
+      await db.folders.clear();
+      await db.repertoires.bulkAdd(normalizedRepertoires);
       await db.nodes.bulkAdd(normalizedNodes);
+      if (folders.length > 0) {
+        await db.folders.bulkAdd(folders);
+      }
     });
 
-    const repertoireList = await db.repertoires.toArray();
+    const [repertoireList, folderList] = await Promise.all([
+      db.repertoires.toArray(),
+      db.folders.orderBy('sortOrder').toArray(),
+    ]);
     if (repertoireList.length > 0) {
       const { repertoire, nodesMap } = await loadRepertoire(repertoireList[0].id);
       setState((prev) => ({
@@ -473,6 +562,7 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
         nodesMap,
         selectedNodeId: repertoire.rootNodeId,
         repertoireList,
+        folderList,
         contextMenu: null,
         editingNodeId: null,
         isLoading: false,
@@ -508,6 +598,12 @@ export function RepertoireProvider({ children }: { children: ReactNode }) {
     renameRepertoire,
     flipBoardSide,
     refreshRepertoireList,
+    createFolder,
+    renameFolder,
+    deleteFolder,
+    toggleFolderCollapsed,
+    moveRepertoireToFolder,
+    refreshFolderList,
     exportData,
     importData,
     setContextMenu,

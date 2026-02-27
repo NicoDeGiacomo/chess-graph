@@ -1,10 +1,11 @@
 import Dexie from 'dexie';
 import type { Table } from 'dexie';
-import type { Repertoire, RepertoireNode } from '../types/index.ts';
+import type { Folder, Repertoire, RepertoireNode } from '../types/index.ts';
 
 export class ChessGraphDB extends Dexie {
   repertoires!: Table<Repertoire, string>;
   nodes!: Table<RepertoireNode, string>;
+  folders!: Table<Folder, string>;
 
   constructor() {
     super('chess-graph');
@@ -68,6 +69,17 @@ export class ChessGraphDB extends Dexie {
       await tx.table('nodes').toCollection().modify((node: Record<string, unknown>) => {
         if (!Array.isArray(node.arrows)) node.arrows = [];
         if (!Array.isArray(node.highlightedSquares)) node.highlightedSquares = [];
+      });
+    });
+
+    // Add folders table and folderId to repertoires
+    this.version(4).stores({
+      repertoires: 'id, name, createdAt, folderId',
+      nodes: 'id, repertoireId, parentId, fen',
+      folders: 'id, sortOrder',
+    }).upgrade(async (tx) => {
+      await tx.table('repertoires').toCollection().modify((r: Record<string, unknown>) => {
+        if (r.folderId === undefined) r.folderId = null;
       });
     });
   }

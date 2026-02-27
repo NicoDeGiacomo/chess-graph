@@ -55,11 +55,21 @@ export interface RepertoireNode {
   highlightedSquares: HighlightedSquare[];
 }
 
+export interface Folder {
+  id: string;
+  name: string;
+  sortOrder: number;
+  collapsed: boolean;
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface Repertoire {
   id: string;
   name: string;
   side: RepertoireSide;
   rootNodeId: string;
+  folderId: string | null;
   createdAt: number;
   updatedAt: number;
 }
@@ -96,7 +106,8 @@ export interface ContextMenuState {
 }
 
 export interface ExportData {
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   repertoires: Repertoire[];
   nodes: RepertoireNode[];
+  folders?: Folder[];
 }

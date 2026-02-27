@@ -15,15 +15,16 @@ vi.mock('react-router', async () => {
 });
 
 const mockState = {
-  repertoire: { id: 'rep-1', name: 'Italian Game', side: 'white' as const, rootNodeId: 'n1', createdAt: 0, updatedAt: 0 },
+  repertoire: { id: 'rep-1', name: 'Italian Game', side: 'white' as const, rootNodeId: 'n1', folderId: null, createdAt: 0, updatedAt: 0 },
   nodesMap: new Map(),
   selectedNodeId: null,
   contextMenu: null,
   repertoireList: [
-    { id: 'rep-1', name: 'Italian Game', side: 'white' as const, rootNodeId: 'n1', createdAt: 0, updatedAt: 0 },
-    { id: 'rep-2', name: 'Sicilian Defense', side: 'black' as const, rootNodeId: 'n2', createdAt: 0, updatedAt: 0 },
-    { id: 'rep-3', name: 'French Defense', side: 'black' as const, rootNodeId: 'n3', createdAt: 0, updatedAt: 0 },
+    { id: 'rep-1', name: 'Italian Game', side: 'white' as const, rootNodeId: 'n1', folderId: null, createdAt: 0, updatedAt: 0 },
+    { id: 'rep-2', name: 'Sicilian Defense', side: 'black' as const, rootNodeId: 'n2', folderId: null, createdAt: 0, updatedAt: 0 },
+    { id: 'rep-3', name: 'French Defense', side: 'black' as const, rootNodeId: 'n3', folderId: null, createdAt: 0, updatedAt: 0 },
   ],
+  folderList: [],
   isLoading: false,
   editingNodeId: null,
 };

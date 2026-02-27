@@ -509,6 +509,7 @@ export function buildExampleRepertoire(): {
     name: '1.e4 Repertoire',
     side: 'white',
     rootNodeId,
+    folderId: null,
     createdAt: now - 1, // slightly earlier so "My Initial Graph" sorts first
     updatedAt: now - 1,
   };
