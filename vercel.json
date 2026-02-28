@@ -1,5 +1,7 @@
 {
+  "cleanUrls": true,
   "rewrites": [
-    { "source": "/((?!assets|screenshots|favicon|logo|manifest|robots|sitemap|blog).*)", "destination": "/index.html" }
+    { "source": "/repertoires", "destination": "/index.html" },
+    { "source": "/repertoire/:id", "destination": "/index.html" }
   ]
 }

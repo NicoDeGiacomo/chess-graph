@@ -2,12 +2,12 @@ import { test, expect } from '@playwright/test';
 
 test('page loads with correct title', async ({ page }) => {
   await page.goto('/features');
-  await expect(page).toHaveTitle('Features — Chess Graph');
+  await expect(page).toHaveTitle('Chess Opening Tree Features — Chess Graph');
 });
 
 test('hero heading is visible', async ({ page }) => {
   await page.goto('/features');
-  await expect(page.getByRole('heading', { name: 'Features', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Chess Graph Features', exact: true })).toBeVisible();
 });
 
 test('table of contents has 9 links', async ({ page }) => {

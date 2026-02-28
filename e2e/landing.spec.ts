@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('landing page hero loads', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('img', { name: 'Chess Graph', exact: true })).toBeVisible();
-  await expect(page.getByText('Visualize your opening repertoire')).toBeVisible();
+  await expect(page.getByText('Visualize your opening repertoire as an interactive game tree.')).toBeVisible();
 });
 
 test('Get Started CTA navigates to repertoires', async ({ page }) => {
@@ -16,10 +16,10 @@ test('Get Started CTA navigates to repertoires', async ({ page }) => {
 test('features section is visible', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Chess Opening Visualization Features' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Interactive Game Tree' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Synced Chess Board' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'PGN Import & Export' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Local Persistence' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Interactive Game Tree', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Synced Chess Board', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'PGN Import & Export', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Local Persistence', exact: true })).toBeVisible();
 });
 
 test('how it works section is visible', async ({ page }) => {
@@ -66,6 +66,6 @@ test('footer is visible', async ({ page }) => {
 test('footer Features link navigates to /features', async ({ page }) => {
   await page.goto('/');
   await page.locator('footer').getByRole('link', { name: 'Features' }).click();
-  await expect(page.getByRole('heading', { name: 'Features', exact: true })).toBeVisible({ timeout: 5000 });
+  await expect(page.getByRole('heading', { name: 'Chess Graph Features', exact: true })).toBeVisible({ timeout: 5000 });
   expect(page.url()).toContain('/features');
 });

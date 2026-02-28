@@ -78,11 +78,10 @@ export function LandingPage() {
           alt="Chess Graph"
           className="h-14 sm:h-18 mx-auto"
         />
-        <h1 className="sr-only">Chess Graph — Chess Opening Repertoire Builder</h1>
-        <p className="mt-4 text-lg text-tertiary max-w-2xl mx-auto">
+        <h1 className="mt-4 text-lg text-tertiary max-w-2xl mx-auto">
           Visualize your opening repertoire as an interactive game tree.
           Branch, explore, and master your lines — all in your browser.
-        </p>
+        </h1>
         <Link
           to="/repertoires"
           className="inline-block mt-8 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg px-6 py-3 text-lg transition-colors"
@@ -101,7 +100,7 @@ export function LandingPage() {
             className="rounded-xl border border-border-subtle shadow-2xl w-full"
             width={2400}
             height={1636}
-            loading="lazy"
+            fetchPriority="high"
           />
         </picture>
       </section>

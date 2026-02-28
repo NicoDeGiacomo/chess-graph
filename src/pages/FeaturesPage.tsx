@@ -22,6 +22,8 @@ function FeatureScreenshot({ src, alt }: { src: string; alt: string }) {
         src={src}
         alt={alt}
         className="rounded-lg border border-border-subtle w-full"
+        width={1280}
+        height={800}
         loading="lazy"
       />
     </picture>
@@ -38,10 +40,11 @@ function Kbd({ children }: { children: React.ReactNode }) {
 
 export function FeaturesPage() {
   useDocumentMeta({
-    title: 'Features — Chess Graph',
+    title: 'Chess Opening Tree Features — Chess Graph',
     description:
       'Explore all Chess Graph features: interactive game tree, board annotations, PGN import, keyboard shortcuts, and more.',
     canonical: 'https://chessgraph.net/features',
+    ogImage: 'https://chessgraph.net/screenshots/features/game-tree.png',
   });
 
   return (
@@ -57,7 +60,7 @@ export function FeaturesPage() {
             className="h-14 sm:h-18 mx-auto"
           />
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold mt-6">Features</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mt-6">Chess Graph Features</h1>
         <p className="mt-4 text-lg text-tertiary max-w-2xl mx-auto">
           Everything you need to build, explore, and master your chess opening repertoire.
         </p>
