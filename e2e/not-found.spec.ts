@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('unknown route shows 404 page', async ({ page }) => {
   await page.goto('/some-nonexistent-page');
-  await expect(page.getByRole('heading', { name: '404' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Page Not Found' })).toBeVisible();
   await expect(page.getByText("doesn't exist")).toBeVisible();
 });
 

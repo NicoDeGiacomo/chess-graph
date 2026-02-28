@@ -12,7 +12,8 @@ export function NotFoundPage() {
     <div className="relative min-h-screen bg-page text-primary flex items-center justify-center">
       <ThemeToggle className="absolute top-4 right-4" />
       <div className="text-center">
-        <h1 className="text-6xl font-bold mb-4">404</h1>
+        <span className="text-6xl font-bold mb-4 block" aria-hidden="true">404</span>
+        <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
         <p className="text-lg text-tertiary mb-8">
           The page you&apos;re looking for doesn&apos;t exist.
         </p>

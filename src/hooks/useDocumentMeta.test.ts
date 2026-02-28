@@ -33,6 +33,8 @@ describe('useDocumentMeta', () => {
     ensureMeta('meta[property="og:url"]', 'content', 'https://chessgraph.net/');
     ensureMeta('meta[name="twitter:title"]', 'content', 'default');
     ensureMeta('meta[name="twitter:description"]', 'content', 'default');
+    ensureMeta('meta[property="og:image"]', 'content', 'https://chessgraph.net/screenshots/chess-graph-after-e4.png');
+    ensureMeta('meta[name="twitter:image"]', 'content', 'https://chessgraph.net/screenshots/chess-graph-after-e4.png');
   });
 
   afterEach(() => {
@@ -88,6 +90,31 @@ describe('useDocumentMeta', () => {
     );
     expect(document.querySelector('meta[property="og:title"]')?.getAttribute('content')).toBe('Fallback');
     expect(document.querySelector('meta[property="og:description"]')?.getAttribute('content')).toBe('Fallback desc');
+  });
+
+  it('sets og:image and twitter:image when ogImage is provided', () => {
+    renderHook(() =>
+      useDocumentMeta({
+        title: 'T',
+        description: 'D',
+        ogImage: 'https://chessgraph.net/screenshots/features/game-tree.png',
+      }),
+    );
+    expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
+      'https://chessgraph.net/screenshots/features/game-tree.png',
+    );
+    expect(document.querySelector('meta[name="twitter:image"]')?.getAttribute('content')).toBe(
+      'https://chessgraph.net/screenshots/features/game-tree.png',
+    );
+  });
+
+  it('defaults og:image to landing screenshot', () => {
+    renderHook(() =>
+      useDocumentMeta({ title: 'T', description: 'D' }),
+    );
+    expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
+      'https://chessgraph.net/screenshots/chess-graph-after-e4.png',
+    );
   });
 
   it('restores defaults on unmount', () => {
