@@ -3,6 +3,7 @@ import { StaticRouter, Routes, Route } from 'react-router';
 import { ThemeProvider } from './hooks/useTheme.tsx';
 import { LandingPage } from './pages/LandingPage.tsx';
 import { FeaturesPage } from './pages/FeaturesPage.tsx';
+import { AllGraphsPageSSR } from './pages/AllGraphsPageSSR.tsx';
 import { NotFoundPage } from './pages/NotFoundPage.tsx';
 
 export function render(url: string): string {
@@ -12,6 +13,7 @@ export function render(url: string): string {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/features" element={<FeaturesPage />} />
+          <Route path="/repertoires" element={<AllGraphsPageSSR />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ThemeProvider>
