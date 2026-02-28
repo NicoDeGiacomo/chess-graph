@@ -7,7 +7,7 @@ test('page loads with correct title', async ({ page }) => {
 
 test('hero heading is visible', async ({ page }) => {
   await page.goto('/features');
-  await expect(page.getByRole('heading', { name: 'Chess Graph Features', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Chess Opening Tree Features', exact: true })).toBeVisible();
 });
 
 test('table of contents has 9 links', async ({ page }) => {

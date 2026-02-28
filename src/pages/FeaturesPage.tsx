@@ -60,7 +60,7 @@ export function FeaturesPage() {
             className="h-14 sm:h-18 mx-auto"
           />
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold mt-6">Chess Graph Features</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mt-6">Chess Opening Tree Features</h1>
         <p className="mt-4 text-lg text-tertiary max-w-2xl mx-auto">
           Everything you need to build, explore, and master your chess opening repertoire.
         </p>
