@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chessgraph.net/sitemap.xml
+Sitemap: https://www.chessgraph.net/sitemap.xml

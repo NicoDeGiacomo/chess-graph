@@ -31,7 +31,7 @@ export function AllGraphsPage() {
     title: 'My Graphs — Chess Graph',
     description:
       'Browse and manage your chess graphs. Create, edit, and organize your variations in interactive graph form.',
-    canonical: 'https://chessgraph.net/repertoires',
+    canonical: 'https://www.chessgraph.net/repertoires',
   });
   const {
     state,

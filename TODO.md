@@ -4,6 +4,7 @@
 
 - ~~Pre-render /repertoires page for SSR (crawlers were getting homepage meta tags)~~ Done
 - ~~Fix /repertoires 404 on live site (removed Vercel rewrite, now served as static HTML)~~ Done
+- ~~Fix www vs non-www canonical mismatch — all URLs now use `www.chessgraph.net` to match Vercel's primary domain~~ Done
 
 ## Medium Priority
 

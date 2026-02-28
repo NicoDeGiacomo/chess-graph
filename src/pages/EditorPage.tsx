@@ -74,7 +74,7 @@ export function EditorPage() {
     description: repertoireName
       ? `Editing ${repertoireName} — explore moves and variations as an interactive graph.`
       : 'Chess opening repertoire editor with interactive game tree visualization.',
-    canonical: 'https://chessgraph.net/repertoires',
+    canonical: 'https://www.chessgraph.net/repertoires',
   });
 
   // Trigger switchRepertoire when id changes and list is ready

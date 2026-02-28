@@ -18,8 +18,8 @@ const routes = [
     title: 'Chess Graph — Visualize Your Opening Repertoire',
     description:
       'Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser.',
-    canonical: 'https://chessgraph.net/',
-    ogImage: 'https://chessgraph.net/screenshots/chess-graph-after-e4.png',
+    canonical: 'https://www.chessgraph.net/',
+    ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
     sitemapPriority: '1.0',
   },
   {
@@ -28,12 +28,12 @@ const routes = [
     title: 'Chess Opening Tree Features — Chess Graph',
     description:
       'Explore all Chess Graph features: interactive game tree, board annotations, PGN import, keyboard shortcuts, and more.',
-    canonical: 'https://chessgraph.net/features',
-    ogImage: 'https://chessgraph.net/screenshots/features/game-tree.png',
+    canonical: 'https://www.chessgraph.net/features',
+    ogImage: 'https://www.chessgraph.net/screenshots/features/game-tree.png',
     sitemapPriority: '0.8',
     breadcrumbs: [
-      { name: 'Home', url: 'https://chessgraph.net/' },
-      { name: 'Features', url: 'https://chessgraph.net/features' },
+      { name: 'Home', url: 'https://www.chessgraph.net/' },
+      { name: 'Features', url: 'https://www.chessgraph.net/features' },
     ],
   },
   {
@@ -42,12 +42,12 @@ const routes = [
     title: 'My Graphs — Chess Graph',
     description:
       'Browse and manage your chess opening repertoires. Create, edit, and organize your variations in interactive graph form.',
-    canonical: 'https://chessgraph.net/repertoires',
-    ogImage: 'https://chessgraph.net/screenshots/chess-graph-after-e4.png',
+    canonical: 'https://www.chessgraph.net/repertoires',
+    ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
     sitemapPriority: '0.6',
     breadcrumbs: [
-      { name: 'Home', url: 'https://chessgraph.net/' },
-      { name: 'My Graphs', url: 'https://chessgraph.net/repertoires' },
+      { name: 'Home', url: 'https://www.chessgraph.net/' },
+      { name: 'My Graphs', url: 'https://www.chessgraph.net/repertoires' },
     ],
   },
   {
@@ -55,8 +55,8 @@ const routes = [
     outputFile: '404.html',
     title: 'Page Not Found — Chess Graph',
     description: 'The page you were looking for could not be found.',
-    canonical: 'https://chessgraph.net/',
-    ogImage: 'https://chessgraph.net/screenshots/chess-graph-after-e4.png',
+    canonical: 'https://www.chessgraph.net/',
+    ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
     noindex: true,
   },
 ];
@@ -107,7 +107,7 @@ for (const route of routes) {
 
   // Fix JSON-LD url field per page
   html = html.replace(
-    /"url": "https:\/\/chessgraph\.net\/"/,
+    /"url": "https:\/\/www\.chessgraph\.net\/"/,
     `"url": "${route.canonical}"`,
   );
 

@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 const DEFAULT_TITLE = 'Chess Graph — Visualize Your Opening Repertoire';
 const DEFAULT_DESCRIPTION =
   'Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser.';
-const DEFAULT_CANONICAL = 'https://chessgraph.net/';
+const DEFAULT_CANONICAL = 'https://www.chessgraph.net/';
 const DEFAULT_OG_IMAGE =
-  'https://chessgraph.net/screenshots/chess-graph-after-e4.png';
+  'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png';
 
 interface DocumentMeta {
   title: string;

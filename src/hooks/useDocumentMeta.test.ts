@@ -27,14 +27,14 @@ describe('useDocumentMeta', () => {
   beforeEach(() => {
     document.title = 'Chess Graph — Visualize Your Opening Repertoire';
     ensureMeta('meta[name="description"]', 'content', 'default desc');
-    ensureMeta('link[rel="canonical"]', 'href', 'https://chessgraph.net/');
+    ensureMeta('link[rel="canonical"]', 'href', 'https://www.chessgraph.net/');
     ensureMeta('meta[property="og:title"]', 'content', 'default');
     ensureMeta('meta[property="og:description"]', 'content', 'default');
-    ensureMeta('meta[property="og:url"]', 'content', 'https://chessgraph.net/');
+    ensureMeta('meta[property="og:url"]', 'content', 'https://www.chessgraph.net/');
     ensureMeta('meta[name="twitter:title"]', 'content', 'default');
     ensureMeta('meta[name="twitter:description"]', 'content', 'default');
-    ensureMeta('meta[property="og:image"]', 'content', 'https://chessgraph.net/screenshots/chess-graph-after-e4.png');
-    ensureMeta('meta[name="twitter:image"]', 'content', 'https://chessgraph.net/screenshots/chess-graph-after-e4.png');
+    ensureMeta('meta[property="og:image"]', 'content', 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png');
+    ensureMeta('meta[name="twitter:image"]', 'content', 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png');
   });
 
   afterEach(() => {
@@ -62,11 +62,11 @@ describe('useDocumentMeta', () => {
       useDocumentMeta({
         title: 'T',
         description: 'D',
-        canonical: 'https://chessgraph.net/repertoires',
+        canonical: 'https://www.chessgraph.net/repertoires',
       }),
     );
     const link = document.querySelector('link[rel="canonical"]');
-    expect(link?.getAttribute('href')).toBe('https://chessgraph.net/repertoires');
+    expect(link?.getAttribute('href')).toBe('https://www.chessgraph.net/repertoires');
   });
 
   it('sets OG and Twitter tags', () => {
@@ -97,14 +97,14 @@ describe('useDocumentMeta', () => {
       useDocumentMeta({
         title: 'T',
         description: 'D',
-        ogImage: 'https://chessgraph.net/screenshots/features/game-tree.png',
+        ogImage: 'https://www.chessgraph.net/screenshots/features/game-tree.png',
       }),
     );
     expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
-      'https://chessgraph.net/screenshots/features/game-tree.png',
+      'https://www.chessgraph.net/screenshots/features/game-tree.png',
     );
     expect(document.querySelector('meta[name="twitter:image"]')?.getAttribute('content')).toBe(
-      'https://chessgraph.net/screenshots/features/game-tree.png',
+      'https://www.chessgraph.net/screenshots/features/game-tree.png',
     );
   });
 
@@ -113,7 +113,7 @@ describe('useDocumentMeta', () => {
       useDocumentMeta({ title: 'T', description: 'D' }),
     );
     expect(document.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
-      'https://chessgraph.net/screenshots/chess-graph-after-e4.png',
+      'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
     );
   });
 

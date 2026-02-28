@@ -43,8 +43,8 @@ export function FeaturesPage() {
     title: 'Chess Opening Tree Features — Chess Graph',
     description:
       'Explore all Chess Graph features: interactive game tree, board annotations, PGN import, keyboard shortcuts, and more.',
-    canonical: 'https://chessgraph.net/features',
-    ogImage: 'https://chessgraph.net/screenshots/features/game-tree.png',
+    canonical: 'https://www.chessgraph.net/features',
+    ogImage: 'https://www.chessgraph.net/screenshots/features/game-tree.png',
   });
 
   return (

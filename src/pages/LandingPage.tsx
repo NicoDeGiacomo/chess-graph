@@ -64,7 +64,7 @@ export function LandingPage() {
     title: 'Chess Graph — Visualize Your Opening Repertoire',
     description:
       'Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser.',
-    canonical: 'https://chessgraph.net/',
+    canonical: 'https://www.chessgraph.net/',
   });
 
   return (
