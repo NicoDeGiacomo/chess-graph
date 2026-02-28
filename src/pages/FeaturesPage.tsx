@@ -42,7 +42,7 @@ export function FeaturesPage() {
   useDocumentMeta({
     title: 'Chess Opening Tree Features — Chess Graph',
     description:
-      'Explore all Chess Graph features: interactive game tree, board annotations, PGN import, keyboard shortcuts, and more.',
+      'Chess Graph features: interactive opening tree, board annotations with arrows, PGN import/export, keyboard shortcuts, and local-first privacy. Free, no sign-up.',
     canonical: 'https://www.chessgraph.net/features',
     ogImage: 'https://www.chessgraph.net/screenshots/features/game-tree.png',
   });

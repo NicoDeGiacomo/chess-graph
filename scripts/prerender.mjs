@@ -17,19 +17,53 @@ const routes = [
     outputFile: 'index.html',
     title: 'Chess Graph — Visualize Your Opening Repertoire',
     description:
-      'Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser.',
+      'Free chess opening tree visualizer. Explore variations as interactive graphs, import PGN, annotate moves, and master your repertoire — no account needed.',
     canonical: 'https://www.chessgraph.net/',
     ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
+    ogImageWidth: 2400,
+    ogImageHeight: 1636,
     sitemapPriority: '1.0',
+    faqSchema: {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How do I build an opening repertoire with Chess Graph?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Start from any position and add moves directly on the chess board. Each move creates a new node in your opening tree, letting you map out every variation you want to study.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How does the board sync with the graph?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Click any node in the graph to instantly load that position on the board. Make a move on the board and watch the graph update in real time.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Do I need an account to use Chess Graph?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No. Chess Graph runs entirely in your browser. Your graphs are saved locally using IndexedDB — no sign-up, no server, no data collection. Export your data anytime as a backup.',
+          },
+        },
+      ],
+    },
   },
   {
     path: '/features',
     outputFile: 'features.html',
     title: 'Chess Opening Tree Features — Chess Graph',
     description:
-      'Explore all Chess Graph features: interactive game tree, board annotations, PGN import, keyboard shortcuts, and more.',
+      'Chess Graph features: interactive opening tree, board annotations with arrows, PGN import/export, keyboard shortcuts, and local-first privacy. Free, no sign-up.',
     canonical: 'https://www.chessgraph.net/features',
     ogImage: 'https://www.chessgraph.net/screenshots/features/game-tree.png',
+    ogImageWidth: 1280,
+    ogImageHeight: 800,
     sitemapPriority: '0.8',
     breadcrumbs: [
       { name: 'Home', url: 'https://www.chessgraph.net/' },
@@ -44,6 +78,8 @@ const routes = [
       'Browse and manage your chess opening repertoires. Create, edit, and organize your variations in interactive graph form.',
     canonical: 'https://www.chessgraph.net/repertoires',
     ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
+    ogImageWidth: 2400,
+    ogImageHeight: 1636,
     sitemapPriority: '0.6',
     breadcrumbs: [
       { name: 'Home', url: 'https://www.chessgraph.net/' },
@@ -57,6 +93,8 @@ const routes = [
     description: 'The page you were looking for could not be found.',
     canonical: 'https://www.chessgraph.net/',
     ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
+    ogImageWidth: 2400,
+    ogImageHeight: 1636,
     noindex: true,
   },
 ];
@@ -105,6 +143,19 @@ for (const route of routes) {
       `$1${route.ogImage}"`,
     );
 
+  // Set OG image dimensions per route
+  if (route.ogImageWidth && route.ogImageHeight) {
+    html = html
+      .replace(
+        /(<meta property="og:image:width" content=").*?"/,
+        `$1${route.ogImageWidth}"`,
+      )
+      .replace(
+        /(<meta property="og:image:height" content=").*?"/,
+        `$1${route.ogImageHeight}"`,
+      );
+  }
+
   // Fix JSON-LD url field per page
   html = html.replace(
     /"url": "https:\/\/www\.chessgraph\.net\/"/,
@@ -134,6 +185,14 @@ for (const route of routes) {
     html = html.replace(
       '</head>',
       `    <script type="application/ld+json">\n    ${JSON.stringify(breadcrumbLd, null, 2).replace(/\n/g, '\n    ')}\n    </script>\n  </head>`,
+    );
+  }
+
+  // Add FAQ structured data
+  if (route.faqSchema) {
+    html = html.replace(
+      '</head>',
+      `    <script type="application/ld+json">\n    ${JSON.stringify(route.faqSchema, null, 2).replace(/\n/g, '\n    ')}\n    </script>\n  </head>`,
     );
   }
 

@@ -13,6 +13,7 @@
 - ~~Add `noindex` to 404 page~~ Done
 - ~~Add breadcrumb structured data to /features and /repertoires~~ Done
 - ~~Auto-generate sitemap.xml at build time with current date~~ Done
+- ~~SEO audit fixes: keyword-rich meta descriptions, OG image dimensions, Twitter desc fix, FAQ schema, cache headers, SSR content for /repertoires~~ Done
 
 
 ## Low Priority
@@ -33,6 +34,10 @@
 ## Security
 
 
-## Non Code 
+## Non Code
 - Reddit, Threads, Twitter, Chess.com, Lichess, Chess Forums, Product Hunt, etc, posts.
+- Vercel Dashboard: ensure `www.chessgraph.net` is primary domain (for 301 instead of 307 redirects)
+- Google Search Console: submit `/features` and `/repertoires` for indexing
+- Validate structured data at https://search.google.com/test/rich-results
+- Test OG tags at https://www.opengraph.xyz/
 

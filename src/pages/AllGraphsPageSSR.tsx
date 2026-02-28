@@ -22,6 +22,19 @@ export function AllGraphsPageSSR() {
             </button>
           </div>
         </div>
+        {/* SEO content — visible in SSR, replaced after hydration */}
+        <div className="text-tertiary text-sm space-y-3 mb-8">
+          <p>
+            Chess Graph lets you organize your opening repertoires as interactive game trees.
+            Create graphs for White and Black, add moves from any starting position,
+            and visualize your entire opening preparation at a glance.
+          </p>
+          <p>
+            Import PGN files, annotate positions with tags and comments,
+            and organize your graphs into folders. All data is stored locally in your
+            browser — no account required.
+          </p>
+        </div>
         <p className="text-muted text-center py-12">Loading your graphs...</p>
       </div>
     </div>

@@ -63,7 +63,7 @@ export function LandingPage() {
   useDocumentMeta({
     title: 'Chess Graph — Visualize Your Opening Repertoire',
     description:
-      'Explore chess openings as interactive node-based graphs. Branch, annotate, and master your repertoire — all in your browser.',
+      'Free chess opening tree visualizer. Explore variations as interactive graphs, import PGN, annotate moves, and master your repertoire — no account needed.',
     canonical: 'https://www.chessgraph.net/',
   });
 
