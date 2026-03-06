@@ -30,7 +30,7 @@ export function AllGraphsPage() {
   useDocumentMeta({
     title: 'My Graphs — Chess Graph',
     description:
-      'Browse and manage your chess graphs. Create, edit, and organize your variations in interactive graph form.',
+      'Browse and manage your chess opening repertoires. Create, edit, and organize your variations in interactive graph form.',
     canonical: 'https://www.chessgraph.net/repertoires',
   });
   const {

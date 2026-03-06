@@ -2,19 +2,15 @@
 
 ## High Priority
 
-- ~~Pre-render /repertoires page for SSR (crawlers were getting homepage meta tags)~~ Done
-- ~~Fix /repertoires 404 on live site (removed Vercel rewrite, now served as static HTML)~~ Done
-- ~~Fix www vs non-www canonical mismatch — all URLs now use `www.chessgraph.net` to match Vercel's primary domain~~ Done
+- ~~Fix `/repertoire/:id` rewrite returning 404 (changed destination from `/index.html` to `/` for cleanUrls compatibility)~~ Done
 
 ## Medium Priority
 
-- ~~Fix JSON-LD `url` field — was hardcoded to homepage on all pages~~ Done
-- ~~Add `og:site_name`, `og:locale`, `robots` meta tags to index.html~~ Done
-- ~~Add `noindex` to 404 page~~ Done
-- ~~Add breadcrumb structured data to /features and /repertoires~~ Done
-- ~~Auto-generate sitemap.xml at build time with current date~~ Done
-- ~~SEO audit fixes: keyword-rich meta descriptions, OG image dimensions, Twitter desc fix, FAQ schema, cache headers, SSR content for /repertoires~~ Done
-
+- ~~Align meta description mismatch on `/repertoires` between prerender and client~~ Done
+- ~~Add `og:image:alt` meta tags to `index.html` and prerender script (per-route alt text)~~ Done
+- ~~Add `twitter:site` and `twitter:creator` meta tags~~ Done
+- ~~Add immutable cache headers for Vite-hashed `/assets/*` files~~ Done
+- ~~Add "My Graphs" link to footers on landing and features pages (internal linking to `/repertoires`)~~ Done
 
 ## Low Priority
 

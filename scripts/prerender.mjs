@@ -22,6 +22,7 @@ const routes = [
     ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
     ogImageWidth: 2400,
     ogImageHeight: 1636,
+    ogImageAlt: 'Chess Graph showing an opening tree after 1. e4',
     sitemapPriority: '1.0',
     faqSchema: {
       '@context': 'https://schema.org',
@@ -64,6 +65,7 @@ const routes = [
     ogImage: 'https://www.chessgraph.net/screenshots/features/game-tree.png',
     ogImageWidth: 1280,
     ogImageHeight: 800,
+    ogImageAlt: 'Chess Graph interactive game tree feature showing branching opening variations',
     sitemapPriority: '0.8',
     breadcrumbs: [
       { name: 'Home', url: 'https://www.chessgraph.net/' },
@@ -80,6 +82,7 @@ const routes = [
     ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
     ogImageWidth: 2400,
     ogImageHeight: 1636,
+    ogImageAlt: 'Chess Graph showing an opening tree after 1. e4',
     sitemapPriority: '0.6',
     breadcrumbs: [
       { name: 'Home', url: 'https://www.chessgraph.net/' },
@@ -95,6 +98,7 @@ const routes = [
     ogImage: 'https://www.chessgraph.net/screenshots/chess-graph-after-e4.png',
     ogImageWidth: 2400,
     ogImageHeight: 1636,
+    ogImageAlt: 'Chess Graph showing an opening tree after 1. e4',
     noindex: true,
   },
 ];
@@ -154,6 +158,14 @@ for (const route of routes) {
         /(<meta property="og:image:height" content=").*?"/,
         `$1${route.ogImageHeight}"`,
       );
+  }
+
+  // Set OG image alt text per route
+  if (route.ogImageAlt) {
+    html = html.replace(
+      /(<meta property="og:image:alt" content=").*?"/,
+      `$1${route.ogImageAlt}"`,
+    );
   }
 
   // Fix JSON-LD url field per page

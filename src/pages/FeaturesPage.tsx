@@ -423,6 +423,12 @@ export function FeaturesPage() {
             >
               Features
             </Link>
+            <Link
+              to="/repertoires"
+              className="hover:text-secondary transition-colors"
+            >
+              My Graphs
+            </Link>
             <a
               href="https://github.com/NicoDeGiacomo/chess-graph"
               target="_blank"
