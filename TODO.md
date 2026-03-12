@@ -32,8 +32,8 @@
 
 ## Non Code
 - Reddit, Threads, Twitter, Chess.com, Lichess, Chess Forums, Product Hunt, etc, posts.
-- Vercel Dashboard: ensure `www.chessgraph.net` is primary domain (for 301 instead of 307 redirects)
-- Google Search Console: submit `/features` and `/repertoires` for indexing
-- Validate structured data at https://search.google.com/test/rich-results
-- Test OG tags at https://www.opengraph.xyz/
+- ~~Vercel Dashboard: ensure `www.chessgraph.net` is primary domain (for 301 instead of 307 redirects)~~ Done
+- ~~Google Search Console: submit `/features` and `/repertoires` for indexing~~ Done
+- ~~Validate structured data at https://search.google.com/test/rich-results~~ Done
+- ~~Test OG tags at https://www.opengraph.xyz/~~ Done
 
