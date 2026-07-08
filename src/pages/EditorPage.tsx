@@ -36,6 +36,8 @@ export function EditorPage() {
   const switchingRef = useRef<string | null>(null);
 
   const [panelOpen, setPanelOpen] = useState(false);
+  // On small screens the board and graph don't fit side by side, so show one at a time.
+  const [mobileView, setMobileView] = useState<'board' | 'graph'>('board');
 
   // Collapse state lives here so useArrowKeyNav can access it
   const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
@@ -133,11 +135,23 @@ export function EditorPage() {
               data-testid="panel-hover-zone"
             />
           )}
-          <ReactFlowProvider>
-            <GraphCanvas collapsedNodes={collapsedNodes} toggleCollapse={toggleCollapse} nodePositionsRef={nodePositionsRef} />
-          </ReactFlowProvider>
-          <Sidebar />
+          <div className={`flex-1 min-h-0 ${mobileView === 'graph' ? 'flex' : 'hidden'} md:flex`}>
+            <ReactFlowProvider>
+              <GraphCanvas collapsedNodes={collapsedNodes} toggleCollapse={toggleCollapse} nodePositionsRef={nodePositionsRef} />
+            </ReactFlowProvider>
+          </div>
+          <div className={`${mobileView === 'board' ? 'flex' : 'hidden'} md:flex w-full md:w-[35%] md:min-w-[300px] md:max-w-[450px] min-h-0`}>
+            <Sidebar />
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={() => setMobileView((v) => (v === 'board' ? 'graph' : 'board'))}
+          className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-20 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-full px-5 py-2 shadow-lg"
+          aria-label={mobileView === 'board' ? 'Show graph view' : 'Show board view'}
+        >
+          {mobileView === 'board' ? 'Show graph' : 'Show board'}
+        </button>
         <ContextMenu />
         <EditNodeDialog />
       </main>

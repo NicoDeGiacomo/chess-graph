@@ -48,7 +48,7 @@ const features = [
   {
     title: 'Local Persistence',
     description:
-      'All data lives in your browser via IndexedDB. No account required, no data sent to any server.',
+      'Your chess data never leaves the browser, stored locally via IndexedDB. No account required.',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8" aria-hidden="true">
         <path d="M12 2a4 4 0 00-4 4v4h8V6a4 4 0 00-4-4z" />
@@ -159,7 +159,7 @@ export function LandingPage() {
             <h3 className="text-lg font-semibold mb-2">No Account Required</h3>
             <p className="text-sm text-tertiary">
               Chess Graph runs entirely in your browser. Your graphs are saved locally
-              using IndexedDB — no sign-up, no server, no data collection. Open the app
+              using IndexedDB, and your chess data never leaves the browser. Open the app
               and start building your opening preparation immediately. Export your data
               anytime as a backup.
             </p>

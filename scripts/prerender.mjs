@@ -51,7 +51,7 @@ const routes = [
           name: 'Do I need an account to use Chess Graph?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'No. Chess Graph runs entirely in your browser. Your graphs are saved locally using IndexedDB — no sign-up, no server, no data collection. Export your data anytime as a backup.',
+            text: 'No. Chess Graph runs entirely in your browser, and your graphs are saved locally using IndexedDB. Your chess data never leaves the browser, and you can export it anytime as a backup.',
           },
         },
       ],
