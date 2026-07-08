@@ -1,0 +1,14 @@
+# Chess Graph
+
+> Chess Graph is a free, open-source web app for visualizing chess opening repertoires as interactive node graphs. Positions are nodes and moves are the edges between them. It runs entirely in the browser with no account, storing data locally via IndexedDB.
+
+## Pages
+
+- [Home](https://www.chessgraph.net/): Visualize your chess opening repertoire as an interactive graph. Build variations on a chess board, annotate positions, and import PGN games.
+- [Features](https://www.chessgraph.net/features): Interactive game tree, synced chess board, PGN import/export, transposition detection, keyboard move entry, board annotations, and local-first storage.
+- [My Graphs](https://www.chessgraph.net/repertoires): Browse and manage your saved opening repertoires.
+
+## About
+
+- Built by Nico De Giacomo. Open-source under the MIT License: https://github.com/NicoDeGiacomo/chess-graph
+- Key concepts: opening repertoire, game tree, transposition, PGN, variations, board and graph sync.

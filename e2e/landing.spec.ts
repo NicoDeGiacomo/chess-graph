@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('landing page hero loads', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('img', { name: 'Chess Graph', exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Visualize Your Opening Repertoire' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Visualize Your Chess Opening Repertoire' })).toBeVisible();
 });
 
 test('Get Started CTA navigates to repertoires', async ({ page }) => {

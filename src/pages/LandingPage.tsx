@@ -79,7 +79,7 @@ export function LandingPage() {
           className="h-14 sm:h-18 mx-auto"
         />
         <h1 className="mt-6 text-3xl sm:text-4xl font-bold">
-          Visualize Your Opening Repertoire
+          Visualize Your Chess Opening Repertoire
         </h1>
         <p className="mt-4 text-lg text-tertiary max-w-2xl mx-auto">
           Explore chess openings as an interactive game tree.
@@ -199,6 +199,12 @@ export function LandingPage() {
       <section className="max-w-4xl mx-auto px-4 pb-24">
         <h2 className="text-2xl font-bold text-center mb-12">About Chess Graph</h2>
         <div className="max-w-2xl mx-auto text-center">
+          <p className="text-sm text-tertiary mb-4">
+            Chess Graph started as a sketch on paper. I study chess on and off, and a
+            board with the moves listed down the side never let me see my whole
+            repertoire or picture how different lines transpose. So I drew the move tree
+            by hand, and this is that sketch turned into a real tool.
+          </p>
           <p className="text-sm text-tertiary mb-4">
             Chess Graph is a free, open-source tool built by{' '}
             <a
